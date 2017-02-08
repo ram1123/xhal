@@ -1,0 +1,7 @@
+Makefile~
+*.*~
+*.h~
+*.cpp~
+*.o
+test/bin
+test/bin/*
