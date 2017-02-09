@@ -25,11 +25,11 @@ void xhal::XHALInterface::init()
   try {
 		rpc.connect(m_board_domain_name);
 	}
-	catch (RPCSvc::ConnectionFailedException &e) {
+	catch (wisc::RPCSvc::ConnectionFailedException &e) {
 		//ERROR("Caught RPCErrorException: " << e.message.c_str());
     throw xhal::utils::Exception(strcat("RPC exception: ",e.message.c_str()));
 	}
-	catch (RPCSvc::RPCException &e) {
+	catch (wisc::RPCSvc::RPCException &e) {
 		//ERROR("Caught exception: " << e.message.c_str());
     throw xhal::utils::Exception(strcat("RPC exception: ",e.message.c_str()));
 	}
@@ -77,7 +77,7 @@ uint32_t xhal::XHALInterface::readReg(std::string regName)
   if (auto t_node = m_parser->getNode(regName.c_str()))
   {
     m_node = t_node.value();
-	  req = RPCMsg("memory.read");
+	  req = wisc::RPCMsg("memory.read");
     req.set_word("address", m_node.real_address);
     req.set_word("count", 1);
     try {
@@ -90,6 +90,16 @@ uint32_t xhal::XHALInterface::readReg(std::string regName)
 	    rsp.get_word_array("data", &result);
     }
 	  STANDARD_CATCH;
+    result = result & m_node.mask;
+    for (int i = 0; i < 32; i++)
+    {
+      if (result & 0x01) 
+      {
+        break;
+      }else {
+        result = result >> 1;
+      }
+    }
     return result;
   } else {
     //ERROR("Register not found in address table!");
@@ -99,7 +109,7 @@ uint32_t xhal::XHALInterface::readReg(std::string regName)
 
 uint32_t xhal::XHALInterface::readReg(uint32_t address)
 {
-  req = RPCMsg("memory.read");
+  req = wisc::RPCMsg("memory.read");
   req.set_word("address", address);
   req.set_word("count", 1);
   try {

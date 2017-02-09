@@ -22,15 +22,19 @@ OBJS_XHAL = $(SRCS_XHAL:.cpp=.o)
 SRCS_TEST = test/main_test.cpp
 OBJS_TEST = $(SRCS_TEST:.cpp=.o)
 
-TARGET_LIB=lib/libxhal.so
-TARGET_TEST=test/bin/test
+SRCS_RPC_SA = $(shell echo src/common/rpc_standalone_client/*.cpp)
+OBJS_RPC_SA = $(SRCS_RPC_SA:.cpp=.o)
 
-all:${TARGET_LIB} ${TARGET_TEST}
+TARGET_LIB=${XHAL_ROOT}/lib/libxhal.so
+TARGET_TEST=${XHAL_ROOT}/test/bin/test
+RPC_SA_LIB=${XHAL_ROOT}/lib/librwreg.so
+
+all:${TARGET_LIB} ${TARGET_TEST} ${RPC_SA_LIB}
 
 utils:${TARGET_LIB}
 
 $(TARGET_LIB): $(OBJS) $(OBJS_XHAL)
-	    $(CC) $(CCFLAGS) $(ADDFLAGS) ${LDFLAGS} $(INC) $(LIB) -lrpcsvc -o $@ $^
+	    $(CC) $(CCFLAGS) $(ADDFLAGS) ${LDFLAGS} $(INC) $(LIB) -lwiscrpcsvc -o $@ $^
 
 #$(SRCS:.cpp=.d):%.d:%.cpp
 $(OBJS):$(SRCS)
@@ -41,14 +45,21 @@ $(OBJS_XHAL):$(SRCS_XHAL)
 
 test:${TARGET_TEST}
 $(TARGET_TEST): $(OBJS_TEST)
-	    $(CC) $(CCFLAGS) $(ADDFLAGS) $(INC) $(LIB) -lxhal -lrpcsvc -o $@ $^
+	    $(CC) $(CCFLAGS) $(ADDFLAGS) $(INC) $(LIB) -lxhal -lwiscrpcsvc -o $@ $^
 
 $(OBJS_TEST):$(SRCS_TEST)
 	    $(CC) $(CCFLAGS) $(ADDFLAGS) $(INC) $(LIB) -lxhal -c -o $@ $<
 
+rpc_standalone:${RPC_SA_LIB}
+$(RPC_SA_LIB): $(OBJS_RPC_SA)
+	    $(CC) $(CCFLAGS) $(ADDFLAGS) ${LDFLAGS} $(INC) $(LIB) -lwiscrpcsvc -o $@ $^
+
+$(OBJS_RPC_SA):$(SRCS_RPC_SA)
+	    $(CC) $(CCFLAGS) $(ADDFLAGS) $(INC) $(LIB) -lwiscrpcsvc -c -o $@ $<
+
 .PHONY: clean
 clean:
-	    -${RM} ${TARGET_LIB} ${OBJS} ${OBJS_XHAL} ${TARGET_TEST} ${OBJS_TEST}
+	    -${RM} ${TARGET_LIB} ${OBJS} ${OBJS_XHAL} ${TARGET_TEST} ${OBJS_TEST} ${RPC_SA_LIB} ${OBJS_RPC_SA}
 
 
 

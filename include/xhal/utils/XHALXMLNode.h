@@ -33,7 +33,7 @@ namespace xhal {
           address = 0x0; 
           real_address = 0x0; 
           permission = ""; 
-          mask = 0x0; 
+          mask = 0xFFFFFFFF; 
           isModule = false; 
           parent = nullptr; 
           level = 0; 

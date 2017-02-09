@@ -10,24 +10,24 @@
 #define XHALINTERFACE_H
 
 #include <string>
-#include "xhal/rpc/librpcsvc.h"
+#include "xhal/rpc/wiscrpcsvc.h"
 #include "xhal/utils/XHALXMLParser.h"
 #include "xhal/utils/Exception.h"
 
 #define STANDARD_CATCH \
-	catch (RPCSvc::NotConnectedException &e) { \
+	catch (wisc::RPCSvc::NotConnectedException &e) { \
 		ERROR("Caught NotConnectedException: " << e.message.c_str()); \
     throw xhal::utils::Exception(strcat("RPC exception: ", e.message.c_str()));\
 	} \
-	catch (RPCSvc::RPCErrorException &e) { \
+	catch (wisc::RPCSvc::RPCErrorException &e) { \
 		ERROR("Caught RPCErrorException: " << e.message.c_str()); \
     throw xhal::utils::Exception(strcat("RPC exception: ", e.message.c_str()));\
 	} \
-	catch (RPCSvc::RPCException &e) { \
+	catch (wisc::RPCSvc::RPCException &e) { \
 		ERROR("Caught exception: " << e.message.c_str()); \
     throw xhal::utils::Exception(strcat("RPC exception: ", e.message.c_str()));\
 	} \
-  catch (RPCMsg::BadKeyException &e) { \
+  catch (wisc::RPCMsg::BadKeyException &e) { \
     ERROR("Caught exception: " << e.key.c_str()); \
     throw xhal::utils::Exception(strcat("RPC exception (most probably remote register not accessible): ", e.key.c_str()));\
 	} 
@@ -93,8 +93,8 @@ namespace xhal {
       xhal::utils::XHALXMLParser * m_parser;
       xhal::utils::Node m_node;
       log4cplus::Logger m_logger;
-      RPCSvc rpc;
-      RPCMsg req, rsp;
+      wisc::RPCSvc rpc;
+      wisc::RPCMsg req, rsp;
   };
 }
 #endif  // XHALINTERFACE_H
