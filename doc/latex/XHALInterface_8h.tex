@@ -3,7 +3,7 @@
 \label{XHALInterface_8h}\index{/home/mdalchen/work/xhal/include/xhal/XHALInterface.h@{/home/mdalchen/work/xhal/include/xhal/XHALInterface.h}}
 }
 {\ttfamily \#include $<$string$>$}\par
-{\ttfamily \#include \char`\"{}xhal/rpc/librpcsvc.h\char`\"{}}\par
+{\ttfamily \#include \char`\"{}xhal/rpc/wiscrpcsvc.h\char`\"{}}\par
 {\ttfamily \#include \char`\"{}xhal/utils/XHALXMLParser.h\char`\"{}}\par
 {\ttfamily \#include \char`\"{}xhal/utils/Exception.h\char`\"{}}\par
 \subsection*{Classes}
@@ -54,19 +54,19 @@ do { \
 \label{XHALInterface_8h_a7943f6ebfdb3fb8f902de5403d356810}
 {\bfseries Value:}
 \begin{DoxyCode}
-catch (RPCSvc::NotConnectedException &e) { \
+catch (wisc::RPCSvc::NotConnectedException &e) { \
                 ERROR("Caught NotConnectedException: " << e.message.c_str()); \
     throw xhal::utils::Exception(strcat("RPC exception: ", e.message.c_str()));\
         } \
-        catch (RPCSvc::RPCErrorException &e) { \
+        catch (wisc::RPCSvc::RPCErrorException &e) { \
                 ERROR("Caught RPCErrorException: " << e.message.c_str()); \
     throw xhal::utils::Exception(strcat("RPC exception: ", e.message.c_str()));\
         } \
-        catch (RPCSvc::RPCException &e) { \
+        catch (wisc::RPCSvc::RPCException &e) { \
                 ERROR("Caught exception: " << e.message.c_str()); \
     throw xhal::utils::Exception(strcat("RPC exception: ", e.message.c_str()));\
         } \
-  catch (RPCMsg::BadKeyException &e) { \
+  catch (wisc::RPCMsg::BadKeyException &e) { \
     ERROR("Caught exception: " << e.key.c_str()); \
     throw xhal::utils::Exception(strcat("RPC exception (most probably remote regi
       ster not accessible): ", e.key.c_str()));\

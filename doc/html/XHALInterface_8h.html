@@ -43,7 +43,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div>
 <div class="contents">
 <h1>/home/mdalchen/work/xhal/include/xhal/XHALInterface.h File Reference</h1><code>#include &lt;string&gt;</code><br/>
-<code>#include &quot;xhal/rpc/librpcsvc.h&quot;</code><br/>
+<code>#include &quot;xhal/rpc/wiscrpcsvc.h&quot;</code><br/>
 <code>#include &quot;<a class="el" href="XHALXMLParser_8h_source.html">xhal/utils/XHALXMLParser.h</a>&quot;</code><br/>
 <code>#include &quot;<a class="el" href="Exception_8h_source.html">xhal/utils/Exception.h</a>&quot;</code><br/>
 
@@ -95,19 +95,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       </table>
 </div>
 <div class="memdoc">
-<b>Value:</b><div class="fragment"><pre class="fragment"><span class="keywordflow">catch</span> (RPCSvc::NotConnectedException &amp;e) { \
+<b>Value:</b><div class="fragment"><pre class="fragment"><span class="keywordflow">catch</span> (wisc::RPCSvc::NotConnectedException &amp;e) { \
                 ERROR(<span class="stringliteral">&quot;Caught NotConnectedException: &quot;</span> &lt;&lt; e.message.c_str()); \
     <span class="keywordflow">throw</span> xhal::utils::Exception(strcat(<span class="stringliteral">&quot;RPC exception: &quot;</span>, e.message.c_str()));\
         } \
-        <span class="keywordflow">catch</span> (RPCSvc::RPCErrorException &amp;e) { \
+        <span class="keywordflow">catch</span> (wisc::RPCSvc::RPCErrorException &amp;e) { \
                 ERROR(<span class="stringliteral">&quot;Caught RPCErrorException: &quot;</span> &lt;&lt; e.message.c_str()); \
     <span class="keywordflow">throw</span> xhal::utils::Exception(strcat(<span class="stringliteral">&quot;RPC exception: &quot;</span>, e.message.c_str()));\
         } \
-        <span class="keywordflow">catch</span> (<a class="code" href="classRPCSvc_1_1RPCException.html">RPCSvc::RPCException</a> &amp;e) { \
+        <span class="keywordflow">catch</span> (<a class="code" href="classwisc_1_1RPCSvc_1_1RPCException.html">wisc::RPCSvc::RPCException</a> &amp;e) { \
                 ERROR(<span class="stringliteral">&quot;Caught exception: &quot;</span> &lt;&lt; e.message.c_str()); \
     <span class="keywordflow">throw</span> xhal::utils::Exception(strcat(<span class="stringliteral">&quot;RPC exception: &quot;</span>, e.message.c_str()));\
         } \
-  <span class="keywordflow">catch</span> (<a class="code" href="classRPCMsg_1_1BadKeyException.html">RPCMsg::BadKeyException</a> &amp;e) { \
+  <span class="keywordflow">catch</span> (<a class="code" href="classwisc_1_1RPCMsg_1_1BadKeyException.html">wisc::RPCMsg::BadKeyException</a> &amp;e) { \
     ERROR(<span class="stringliteral">&quot;Caught exception: &quot;</span> &lt;&lt; e.key.c_str()); \
     <span class="keywordflow">throw</span> xhal::utils::Exception(strcat(<span class="stringliteral">&quot;RPC exception (most probably remote register not accessible): &quot;</span>, e.key.c_str()));\
         }
@@ -129,7 +129,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </iframe>
 </div>
 
-<hr size="1"/><address style="text-align: right;"><small>Generated on 8 Feb 2017 for XHAL by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on 9 Feb 2017 for XHAL by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

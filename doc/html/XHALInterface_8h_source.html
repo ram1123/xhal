@@ -45,24 +45,24 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00010"></a>00010 <span class="preprocessor"></span><span class="preprocessor">#define XHALINTERFACE_H</span>
 <a name="l00011"></a>00011 <span class="preprocessor"></span>
 <a name="l00012"></a>00012 <span class="preprocessor">#include &lt;string&gt;</span>
-<a name="l00013"></a>00013 <span class="preprocessor">#include &quot;xhal/rpc/librpcsvc.h&quot;</span>
+<a name="l00013"></a>00013 <span class="preprocessor">#include &quot;xhal/rpc/wiscrpcsvc.h&quot;</span>
 <a name="l00014"></a>00014 <span class="preprocessor">#include &quot;<a class="code" href="XHALXMLParser_8h.html">xhal/utils/XHALXMLParser.h</a>&quot;</span>
 <a name="l00015"></a>00015 <span class="preprocessor">#include &quot;<a class="code" href="Exception_8h.html">xhal/utils/Exception.h</a>&quot;</span>
 <a name="l00016"></a>00016 
 <a name="l00017"></a>00017 <span class="preprocessor">#define STANDARD_CATCH \</span>
-<a name="l00018"></a>00018 <span class="preprocessor">        catch (RPCSvc::NotConnectedException &amp;e) { \</span>
+<a name="l00018"></a>00018 <span class="preprocessor">        catch (wisc::RPCSvc::NotConnectedException &amp;e) { \</span>
 <a name="l00019"></a>00019 <span class="preprocessor">                ERROR(&quot;Caught NotConnectedException: &quot; &lt;&lt; e.message.c_str()); \</span>
 <a name="l00020"></a>00020 <span class="preprocessor">    throw xhal::utils::Exception(strcat(&quot;RPC exception: &quot;, e.message.c_str()));\</span>
 <a name="l00021"></a>00021 <span class="preprocessor">        } \</span>
-<a name="l00022"></a>00022 <span class="preprocessor">        catch (RPCSvc::RPCErrorException &amp;e) { \</span>
+<a name="l00022"></a>00022 <span class="preprocessor">        catch (wisc::RPCSvc::RPCErrorException &amp;e) { \</span>
 <a name="l00023"></a>00023 <span class="preprocessor">                ERROR(&quot;Caught RPCErrorException: &quot; &lt;&lt; e.message.c_str()); \</span>
 <a name="l00024"></a>00024 <span class="preprocessor">    throw xhal::utils::Exception(strcat(&quot;RPC exception: &quot;, e.message.c_str()));\</span>
 <a name="l00025"></a>00025 <span class="preprocessor">        } \</span>
-<a name="l00026"></a>00026 <span class="preprocessor">        catch (RPCSvc::RPCException &amp;e) { \</span>
+<a name="l00026"></a>00026 <span class="preprocessor">        catch (wisc::RPCSvc::RPCException &amp;e) { \</span>
 <a name="l00027"></a>00027 <span class="preprocessor">                ERROR(&quot;Caught exception: &quot; &lt;&lt; e.message.c_str()); \</span>
 <a name="l00028"></a>00028 <span class="preprocessor">    throw xhal::utils::Exception(strcat(&quot;RPC exception: &quot;, e.message.c_str()));\</span>
 <a name="l00029"></a>00029 <span class="preprocessor">        } \</span>
-<a name="l00030"></a>00030 <span class="preprocessor">  catch (RPCMsg::BadKeyException &amp;e) { \</span>
+<a name="l00030"></a>00030 <span class="preprocessor">  catch (wisc::RPCMsg::BadKeyException &amp;e) { \</span>
 <a name="l00031"></a>00031 <span class="preprocessor">    ERROR(&quot;Caught exception: &quot; &lt;&lt; e.key.c_str()); \</span>
 <a name="l00032"></a>00032 <span class="preprocessor">    throw xhal::utils::Exception(strcat(&quot;RPC exception (most probably remote register not accessible): &quot;, e.key.c_str()));\</span>
 <a name="l00033"></a>00033 <span class="preprocessor">        } </span>
@@ -86,21 +86,21 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00068"></a>00068 
 <a name="l00078"></a>00078       <span class="keywordtype">void</span> <a class="code" href="classxhal_1_1XHALInterface.html#af04487e30a68e8d479d8ae2ad7d0fc81" title="sets amount of logging/debugging information to display">setLogLevel</a>(<span class="keywordtype">int</span> loglevel);
 <a name="l00079"></a>00079 
-<a name="l00083"></a>00083       uint32_t <a class="code" href="classxhal_1_1XHALInterface.html#a06882bc51142d2eaf54a3980ee5c9ead" title="read FW register by its name">readReg</a>(std::string regName);
-<a name="l00087"></a>00087       uint32_t <a class="code" href="classxhal_1_1XHALInterface.html#a06882bc51142d2eaf54a3980ee5c9ead" title="read FW register by its name">readReg</a>(uint32_t address);
-<a name="l00088"></a>00088       <span class="comment">//void writeReg(std::string regName, uint32_t value);</span>
-<a name="l00089"></a>00089       <span class="comment">//void writeReg(uint32_t address, uint32_t value);</span>
-<a name="l00090"></a>00090     <span class="keyword">private</span>:
-<a name="l00091"></a>00091       std::string m_board_domain_name;
-<a name="l00092"></a>00092       std::string m_address_table_filename;
-<a name="l00093"></a>00093       <a class="code" href="classxhal_1_1utils_1_1XHALXMLParser.html" title="provide parsing interface and search through flattened node tree">xhal::utils::XHALXMLParser</a> * m_parser;
-<a name="l00094"></a>00094       <a class="code" href="classxhal_1_1utils_1_1Node.html" title="stores single XML node with its attributes">xhal::utils::Node</a> m_node;
-<a name="l00095"></a>00095       log4cplus::Logger m_logger;
-<a name="l00096"></a>00096       <a class="code" href="classRPCSvc.html">RPCSvc</a> rpc;
-<a name="l00097"></a>00097       <a class="code" href="classRPCMsg.html">RPCMsg</a> req, rsp;
-<a name="l00098"></a>00098   };
-<a name="l00099"></a>00099 }
-<a name="l00100"></a>00100 <span class="preprocessor">#endif  // XHALINTERFACE_H</span>
+<a name="l00084"></a>00084       uint32_t <a class="code" href="classxhal_1_1XHALInterface.html#a06882bc51142d2eaf54a3980ee5c9ead" title="read FW register by its name applies reading mask if any">readReg</a>(std::string regName);
+<a name="l00088"></a>00088       uint32_t <a class="code" href="classxhal_1_1XHALInterface.html#a06882bc51142d2eaf54a3980ee5c9ead" title="read FW register by its name applies reading mask if any">readReg</a>(uint32_t address);
+<a name="l00089"></a>00089       <span class="comment">//void writeReg(std::string regName, uint32_t value);</span>
+<a name="l00090"></a>00090       <span class="comment">//void writeReg(uint32_t address, uint32_t value);</span>
+<a name="l00091"></a>00091     <span class="keyword">private</span>:
+<a name="l00092"></a>00092       std::string m_board_domain_name;
+<a name="l00093"></a>00093       std::string m_address_table_filename;
+<a name="l00094"></a>00094       <a class="code" href="classxhal_1_1utils_1_1XHALXMLParser.html" title="provide parsing interface and search through flattened node tree">xhal::utils::XHALXMLParser</a> * m_parser;
+<a name="l00095"></a>00095       <a class="code" href="classxhal_1_1utils_1_1Node.html" title="stores single XML node with its attributes">xhal::utils::Node</a> m_node;
+<a name="l00096"></a>00096       log4cplus::Logger m_logger;
+<a name="l00097"></a>00097       <a class="code" href="classwisc_1_1RPCSvc.html">wisc::RPCSvc</a> rpc;
+<a name="l00098"></a>00098       <a class="code" href="classwisc_1_1RPCMsg.html">wisc::RPCMsg</a> req, rsp;
+<a name="l00099"></a>00099   };
+<a name="l00100"></a>00100 }
+<a name="l00101"></a>00101 <span class="preprocessor">#endif  // XHALINTERFACE_H</span>
 </pre></div></div>
 <!--- window showing the filter options -->
 <div id="MSearchSelectWindow"
@@ -116,7 +116,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </iframe>
 </div>
 
-<hr size="1"/><address style="text-align: right;"><small>Generated on 8 Feb 2017 for XHAL by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on 9 Feb 2017 for XHAL by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

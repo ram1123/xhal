@@ -79,6 +79,7 @@ namespace xhal {
 
       /**
        * @brief read FW register by its name
+       * applies reading mask if any
        */
       uint32_t readReg(std::string regName);
       /**
