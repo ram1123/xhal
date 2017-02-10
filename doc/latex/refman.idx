@@ -13,10 +13,10 @@
 \indexentry{xhal::XHALInterface@{xhal::XHALInterface}|hyperpage}{14}
 \indexentry{xhal::XHALInterface@{xhal::XHALInterface}!XHALInterface@{XHALInterface}|hyperpage}{14}
 \indexentry{XHALInterface@{XHALInterface}!xhal::XHALInterface@{xhal::XHALInterface}|hyperpage}{14}
-\indexentry{xhal::XHALInterface@{xhal::XHALInterface}!init@{init}|hyperpage}{14}
-\indexentry{init@{init}!xhal::XHALInterface@{xhal::XHALInterface}|hyperpage}{14}
-\indexentry{xhal::XHALInterface@{xhal::XHALInterface}!setLogLevel@{setLogLevel}|hyperpage}{14}
-\indexentry{setLogLevel@{setLogLevel}!xhal::XHALInterface@{xhal::XHALInterface}|hyperpage}{14}
+\indexentry{xhal::XHALInterface@{xhal::XHALInterface}!init@{init}|hyperpage}{15}
+\indexentry{init@{init}!xhal::XHALInterface@{xhal::XHALInterface}|hyperpage}{15}
+\indexentry{xhal::XHALInterface@{xhal::XHALInterface}!setLogLevel@{setLogLevel}|hyperpage}{15}
+\indexentry{setLogLevel@{setLogLevel}!xhal::XHALInterface@{xhal::XHALInterface}|hyperpage}{15}
 \indexentry{xhal::utils::XHALXMLParser@{xhal::utils::XHALXMLParser}|hyperpage}{16}
 \indexentry{xhal::utils::XHALXMLParser@{xhal::utils::XHALXMLParser}!XHALXMLParser@{XHALXMLParser}|hyperpage}{16}
 \indexentry{XHALXMLParser@{XHALXMLParser}!xhal::utils::XHALXMLParser@{xhal::utils::XHALXMLParser}|hyperpage}{16}

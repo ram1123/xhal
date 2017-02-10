@@ -84,9 +84,14 @@ namespace xhal {
       uint32_t readReg(std::string regName);
       /**
        * @brief read FW register by its address
+       * reg mask is ignored!!
        */
       uint32_t readReg(uint32_t address);
-      //void writeReg(std::string regName, uint32_t value);
+      /**
+       * @brief write FW register by its name
+       * applies read/write mask if any
+       */
+      void writeReg(std::string regName, uint32_t value);
       //void writeReg(uint32_t address, uint32_t value);
     private:
       std::string m_board_domain_name;

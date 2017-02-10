@@ -22,7 +22,7 @@
   \indexspace
 
   \item {init}
-    \subitem {xhal::XHALInterface}, \hyperpage{14}
+    \subitem {xhal::XHALInterface}, \hyperpage{15}
 
   \indexspace
 
@@ -33,7 +33,7 @@
 
   \item {setLogLevel}
     \subitem {xhal::utils::XHALXMLParser}, \hyperpage{16}
-    \subitem {xhal::XHALInterface}, \hyperpage{14}
+    \subitem {xhal::XHALInterface}, \hyperpage{15}
   \item {STANDARD\_\discretionary {-}{}{}CATCH}
     \subitem {XHALInterface.h}, \hyperpage{21}
 
@@ -56,8 +56,8 @@
     \subitem {setLogLevel}, \hyperpage{16}
     \subitem {XHALXMLParser}, \hyperpage{16}
   \item {xhal::XHALInterface}, \hyperpage{14}
-    \subitem {init}, \hyperpage{14}
-    \subitem {setLogLevel}, \hyperpage{14}
+    \subitem {init}, \hyperpage{15}
+    \subitem {setLogLevel}, \hyperpage{15}
     \subitem {XHALInterface}, \hyperpage{14}
   \item {XHAL\_\discretionary {-}{}{}UTILS\_\discretionary {-}{}{}DEFINE\_\discretionary {-}{}{}EXCEPTION}
     \subitem {Exception.h}, \hyperpage{17}

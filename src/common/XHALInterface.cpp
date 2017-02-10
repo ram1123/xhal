@@ -26,11 +26,11 @@ void xhal::XHALInterface::init()
 		rpc.connect(m_board_domain_name);
 	}
 	catch (wisc::RPCSvc::ConnectionFailedException &e) {
-		//ERROR("Caught RPCErrorException: " << e.message.c_str());
+		ERROR("Caught RPCErrorException: " << e.message.c_str());
     throw xhal::utils::Exception(strcat("RPC exception: ",e.message.c_str()));
 	}
 	catch (wisc::RPCSvc::RPCException &e) {
-		//ERROR("Caught exception: " << e.message.c_str());
+		ERROR("Caught exception: " << e.message.c_str());
     throw xhal::utils::Exception(strcat("RPC exception: ",e.message.c_str()));
 	}
 }
@@ -45,7 +45,6 @@ void xhal::XHALInterface::loadModule(const std::string& module_name, const std::
 
 void xhal::XHALInterface::setLogLevel(int loglevel)
 {
-  /*
   switch(loglevel)
   {
     case 0:
@@ -69,7 +68,6 @@ void xhal::XHALInterface::setLogLevel(int loglevel)
       m_parser->setLogLevel(4);
       break;
   }
-  */
 }
 
 uint32_t xhal::XHALInterface::readReg(std::string regName)
@@ -102,7 +100,7 @@ uint32_t xhal::XHALInterface::readReg(std::string regName)
     }
     return result;
   } else {
-    //ERROR("Register not found in address table!");
+    ERROR("Register not found in address table!");
     throw xhal::utils::Exception(strcat("XHAL XML exception: can't find node", regName.c_str()));
   }
 }
@@ -122,5 +120,61 @@ uint32_t xhal::XHALInterface::readReg(uint32_t address)
     rsp.get_word_array("data", &result);
   }
   STANDARD_CATCH;
+  result = result & m_node.mask;
+  for (int i = 0; i < 32; i++)
+  {
+    if (result & 0x01) 
+    {
+      break;
+    }else {
+      result = result >> 1;
+    }
+  }
   return result;
+}
+
+void xhal::XHALInterface::writeReg(std::string regName, uint32_t value)
+{
+  if (auto t_node = m_parser->getNode(regName.c_str()))
+  {
+    m_node = t_node.value();
+    if (m_node.mask == 0xFFFFFFFF)
+    {
+	    req = wisc::RPCMsg("memory.write");
+      req.set_word("address", m_node.real_address);
+      req.set_word("count", 1);
+	    req.set_word("data", value);
+      try {
+      	rsp = rpc.call_method(req);
+      }
+      STANDARD_CATCH;
+    } else {
+      uint32_t current_val = this->readReg(m_node.real_address);
+      int shift_amount = 0;
+      uint32_t mask = m_node.mask;
+      for (int i = 0; i < 32; i++)
+      {
+        if (mask & 0x01) 
+        {
+          break;
+        } else {
+          shift_amount +=1;
+          mask = mask >> 1;
+        }
+      }
+      uint32_t val_to_write = value << shift_amount;
+      val_to_write = (val_to_write & m_node.mask) | (current_val & ~m_node.mask);
+	    req = wisc::RPCMsg("memory.write");
+      req.set_word("address", m_node.real_address);
+      req.set_word("count", 1);
+	    req.set_word("data", val_to_write);
+      try {
+      	rsp = rpc.call_method(req);
+      }
+      STANDARD_CATCH;
+    }
+  } else {
+    ERROR("Register not found in address table!");
+    throw xhal::utils::Exception(strcat("XHAL XML exception: can't find node", regName.c_str()));
+  }
 }

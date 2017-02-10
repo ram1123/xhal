@@ -19,8 +19,8 @@
 \contentsline {subsection}{\numberline {3.9.1}Detailed Description}{14}{subsection.3.9.1}
 \contentsline {subsection}{\numberline {3.9.2}Constructor \& Destructor Documentation}{14}{subsection.3.9.2}
 \contentsline {subsubsection}{\numberline {3.9.2.1}XHALInterface}{14}{subsubsection.3.9.2.1}
-\contentsline {subsection}{\numberline {3.9.3}Member Function Documentation}{14}{subsection.3.9.3}
-\contentsline {subsubsection}{\numberline {3.9.3.1}init}{14}{subsubsection.3.9.3.1}
+\contentsline {subsection}{\numberline {3.9.3}Member Function Documentation}{15}{subsection.3.9.3}
+\contentsline {subsubsection}{\numberline {3.9.3.1}init}{15}{subsubsection.3.9.3.1}
 \contentsline {subsubsection}{\numberline {3.9.3.2}setLogLevel}{15}{subsubsection.3.9.3.2}
 \contentsline {section}{\numberline {3.10}xhal::utils::XHALXMLParser Class Reference}{16}{section.3.10}
 \contentsline {subsection}{\numberline {3.10.1}Detailed Description}{16}{subsection.3.10.1}

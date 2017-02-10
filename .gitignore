@@ -3,5 +3,6 @@ Makefile~
 *.h~
 *.cpp~
 *.o
+*.pyc
 test/bin
 test/bin/*

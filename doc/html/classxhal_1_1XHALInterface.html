@@ -68,7 +68,10 @@ uint32_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">read FW register by its name applies reading mask if any <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1e3b29169f1bc6c13e469cd186fc662f"></a><!-- doxytag: member="xhal::XHALInterface::readReg" ref="a1e3b29169f1bc6c13e469cd186fc662f" args="(uint32_t address)" -->
 uint32_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classxhal_1_1XHALInterface.html#a1e3b29169f1bc6c13e469cd186fc662f">readReg</a> (uint32_t address)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">read FW register by its address <br/></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">read FW register by its address reg mask is ignored!! <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3dfb7ba89c239806529c9f1415f5b8bd"></a><!-- doxytag: member="xhal::XHALInterface::writeReg" ref="a3dfb7ba89c239806529c9f1415f5b8bd" args="(std::string regName, uint32_t value)" -->
+void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classxhal_1_1XHALInterface.html#a3dfb7ba89c239806529c9f1415f5b8bd">writeReg</a> (std::string regName, uint32_t value)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">write FW register by its name applies read/write mask if any <br/></td></tr>
 </table>
 <hr/><a name="_details"></a><h2>Detailed Description</h2>
 <p>provide interface to call remote procedures at Zynq CPU and basic FW registers manipulation </p>
@@ -174,7 +177,7 @@ uint32_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="
 </iframe>
 </div>
 
-<hr size="1"/><address style="text-align: right;"><small>Generated on 9 Feb 2017 for XHAL by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on 10 Feb 2017 for XHAL by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

@@ -30,7 +30,12 @@ uint32\_\-t \hyperlink{classxhal_1_1XHALInterface_a06882bc51142d2eaf54a3980ee5c9
 uint32\_\-t \hyperlink{classxhal_1_1XHALInterface_a1e3b29169f1bc6c13e469cd186fc662f}{readReg} (uint32\_\-t address)}
 \label{classxhal_1_1XHALInterface_a1e3b29169f1bc6c13e469cd186fc662f}
 
-\begin{DoxyCompactList}\small\item\em read FW register by its address \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em read FW register by its address reg mask is ignored!! \item\end{DoxyCompactList}\item 
+\hypertarget{classxhal_1_1XHALInterface_a3dfb7ba89c239806529c9f1415f5b8bd}{
+void \hyperlink{classxhal_1_1XHALInterface_a3dfb7ba89c239806529c9f1415f5b8bd}{writeReg} (std::string regName, uint32\_\-t value)}
+\label{classxhal_1_1XHALInterface_a3dfb7ba89c239806529c9f1415f5b8bd}
+
+\begin{DoxyCompactList}\small\item\em write FW register by its name applies read/write mask if any \item\end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \subsection{Detailed Description}
