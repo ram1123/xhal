@@ -1,6 +1,6 @@
 import xml.etree.ElementTree as xml
 import sys, os, subprocess
-import uhal
+#import uhal
 from ctypes import *
 
 lib = CDLL(os.getenv("XHAL_ROOT")+"/lib/librwreg.so")
@@ -59,21 +59,21 @@ def main():
     getAllChildren(random_node, kids)
     print len(kids), kids.name
 
-def parseCTP7(uTCAslot=2):
-    uTCA = uTCAslot+160
-    ipaddr = '192.168.0.%d'%(uTCA)
-    address_table = "file://${GEM_AMC}/scripts/address_table/uhal_gem_amc_ctp7.xml"
-    uri = "ipbustcp-2.0://eagle45:60002"
-    # uri = "chtcp-2.0://localhost:10203?target=%s:50001"%(ipaddr)
-    ctp7 = uhal.getDevice( "glib" , uri, address_table )
-    glib_address_table_path = os.getenv('GEM_AMC')+'/scripts/address_table/uhal_gem_amc_ctp7.xml'
-    print 'Parsing',glib_address_table_path,'...'
-    tree = xml.parse(glib_address_table_path)
-    root = tree.getroot()[0]
-    vars = {}
-    makeTree(root,'',0x0,nodes,None,vars,False)
-
-    return ctp7
+#def parseCTP7(uTCAslot=2):
+#    uTCA = uTCAslot+160
+#    ipaddr = '192.168.0.%d'%(uTCA)
+#    address_table = "file://${GEM_AMC}/scripts/address_table/uhal_gem_amc_ctp7.xml"
+#    uri = "ipbustcp-2.0://eagle45:60002"
+#    # uri = "chtcp-2.0://localhost:10203?target=%s:50001"%(ipaddr)
+#    ctp7 = uhal.getDevice( "glib" , uri, address_table )
+#    glib_address_table_path = os.getenv('GEM_AMC')+'/scripts/address_table/uhal_gem_amc_ctp7.xml'
+#    print 'Parsing',glib_address_table_path,'...'
+#    tree = xml.parse(glib_address_table_path)
+#    root = tree.getroot()[0]
+#    vars = {}
+#    makeTree(root,'',0x0,nodes,None,vars,False)
+#
+#    return ctp7
 
 
 def parseXML():

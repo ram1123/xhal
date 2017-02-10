@@ -52,10 +52,10 @@ $(OBJS_TEST):$(SRCS_TEST)
 
 rpc_standalone:${RPC_SA_LIB}
 $(RPC_SA_LIB): $(OBJS_RPC_SA)
-	    $(CC) $(CCFLAGS) $(ADDFLAGS) ${LDFLAGS} $(INC) $(LIB) -lwiscrpcsvc -o $@ $^
+	    $(CC) $(CCFLAGS) $(ADDFLAGS) ${LDFLAGS} $(INC) -L${XHAL_ROOT}/lib -lwiscrpcsvc -o $@ $^
 
 $(OBJS_RPC_SA):$(SRCS_RPC_SA)
-	    $(CC) $(CCFLAGS) $(ADDFLAGS) $(INC) $(LIB) -lwiscrpcsvc -c -o $@ $<
+	    $(CC) $(CCFLAGS) $(ADDFLAGS) $(INC) -L${XHAL_ROOT}/lib -lwiscrpcsvc -c -o $@ $<
 
 .PHONY: clean
 clean:
