@@ -385,11 +385,13 @@ if __name__ == '__main__':
                       help="Function to execute once", metavar="exe", default=None)
     # parser.add_option("-g", "--gtx", type="int", dest="gtx",
     #                   help="GTX on the GLIB", metavar="gtx", default=0)
+    parser.add_option("-n", "--hostname", type="string", dest="hostname",
+                      help="CTP7 hostname, default is the one used at p5", default="amc-s2e01-23-03")
 
     (options, args) = parser.parse_args()
     if options.exe:
         parseXML()
-        if (rpc_connect("eagle45")):
+        if (rpc_connect(options.hostname)):
           print '[Connection error] RPC connection failed'
           exit
         prompt=Prompt()
@@ -398,7 +400,7 @@ if __name__ == '__main__':
     else:
         try:
             parseXML()
-            if (rpc_connect("eagle45")):
+            if (rpc_connect(options.hostname)):
               print '[Connection error] RPC connection failed'
               sys.exit()
             prompt = Prompt()
