@@ -33,10 +33,10 @@
 static wisc::RPCSvc rpc;
 static wisc::RPCMsg req, rsp;
 
-DLLEXPORT uint32_t init()
+DLLEXPORT uint32_t init(char * hostname)
 {
   try {
-		rpc.connect("eagle45");
+		rpc.connect(hostname);
 	}
 	catch (wisc::RPCSvc::ConnectionFailedException &e) {
 		printf("Caught RPCErrorException: %s\n", e.message.c_str());

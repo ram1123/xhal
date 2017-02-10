@@ -389,7 +389,7 @@ if __name__ == '__main__':
     (options, args) = parser.parse_args()
     if options.exe:
         parseXML()
-        if (rpc_connect()):
+        if (rpc_connect("eagle45")):
           print '[Connection error] RPC connection failed'
           exit
         prompt=Prompt()
@@ -398,7 +398,7 @@ if __name__ == '__main__':
     else:
         try:
             parseXML()
-            if (rpc_connect()):
+            if (rpc_connect("eagle45")):
               print '[Connection error] RPC connection failed'
               sys.exit()
             prompt = Prompt()
