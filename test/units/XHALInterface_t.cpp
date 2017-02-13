@@ -27,6 +27,13 @@ namespace xhal {
           uint32_t res = m_interface->readReg("top.GEM_AMC.GEM_SYSTEM.BOARD_ID");
           //std::cout << "Read register top.GEM_AMC.GEM_SYSTEM.BOARD_ID: " << std::hex << res << std::dec << std::endl;
         }
+        void writeReg_only_t()
+        {
+          m_interface->writeReg("top.GEM_AMC.GEM_SYSTEM.GBT.TX_SYNC_PATTERN", 0);
+        }
+        void writeReg_complete_test_t()
+        {
+        }
       private:
         xhal::XHALInterface * m_interface;
         std::string s1,s2;

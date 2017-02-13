@@ -67,8 +67,12 @@ DLLEXPORT unsigned long getReg(unsigned int address)
 
 	uint32_t result;
   try{
-	  ASSERT(rsp.get_word_array_size("data") == 1);
-	  rsp.get_word_array("data", &result);
+	  if (rsp.get_key_exists("error")) {
+      return 0xdeaddead;
+    } else {
+	    ASSERT(rsp.get_word_array_size("data") == 1);
+      rsp.get_word_array("data", &result);
+    }
   }
 	STANDARD_CATCH;
 
@@ -87,8 +91,15 @@ DLLEXPORT unsigned long putReg(unsigned int address, unsigned int value)
 	STANDARD_CATCH;
 
 	uint32_t result;
-	ASSERT(rsp.get_word_array_size("data") == 1);
-	rsp.get_word_array("data", &result);
+   try{
+	  if (rsp.get_key_exists("error")) {
+      return 0xdeaddead;
+    } else {
+	    ASSERT(rsp.get_word_array_size("data") == 1);
+      rsp.get_word_array("data", &result);
+    }
+  }
+	STANDARD_CATCH;
 
 	return result;
 }
