@@ -86,20 +86,23 @@ DLLEXPORT unsigned long putReg(unsigned int address, unsigned int value)
 	//req.set_word("count", 1);
 	req.set_word_array("data", &value,1);
 	try {
-    printf("DEBUG putReg just before rpc_call");
+    printf("DEBUG putReg just before rpc_call\n");
 		rsp = rpc.call_method(req);
 	}
 	STANDARD_CATCH;
+  if (rsp.get_key_exists("error")) {
+    return 0xdeaddead;
+  } else return value;
 
-
+  /*
 	uint32_t result;
    try{
-    printf("DEBUG putReg trying to find error key");
+    printf("DEBUG putReg trying to find error key\n");
 	  if (rsp.get_key_exists("error")) {
-      printf("DEBUG putReg just before ASSERT, error key exist");
+      printf("DEBUG putReg just before ASSERT, error key exist\n");
       return 0xdeaddead;
     } else {
-      printf("DEBUG putReg just before ASSERT, no error key found");
+      printf("DEBUG putReg just before ASSERT, no error key found\n");
 	    ASSERT(rsp.get_word_array_size("data") == 1);
       rsp.get_word_array("data", &result);
     }
@@ -107,4 +110,5 @@ DLLEXPORT unsigned long putReg(unsigned int address, unsigned int value)
 	STANDARD_CATCH;
 
 	return result;
+  */
 }
