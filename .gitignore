@@ -4,5 +4,7 @@ Makefile~
 *.cpp~
 *.o
 *.pyc
+python/*.pyc
+python/reg_interface/*.pyc
 test/bin
 test/bin/*
