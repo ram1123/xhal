@@ -83,8 +83,8 @@ DLLEXPORT unsigned long putReg(unsigned int address, unsigned int value)
 {
 	req = wisc::RPCMsg("memory.write");
 	req.set_word("address", address);
-	req.set_word("count", 1);
-	req.set_word("data", value);
+	//req.set_word("count", 1);
+	req.set_word_array("data", &value,1);
 	try {
     printf("DEBUG putReg just before rpc_call");
 		rsp = rpc.call_method(req);
