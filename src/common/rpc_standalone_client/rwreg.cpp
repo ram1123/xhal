@@ -90,6 +90,8 @@ DLLEXPORT unsigned long putReg(unsigned int address, unsigned int value)
 	}
 	STANDARD_CATCH;
 
+  printf("DEBUG putReg just after rpc_call");
+
 	uint32_t result;
    try{
 	  if (rsp.get_key_exists("error")) {
