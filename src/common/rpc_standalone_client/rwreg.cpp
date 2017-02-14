@@ -102,6 +102,7 @@ DLLEXPORT unsigned long putReg(unsigned int address, unsigned int value)
     }
   }
 	STANDARD_CATCH;
+  printf("DEBUG putReg AFTER ASSERT");
 
 	return result;
 }
