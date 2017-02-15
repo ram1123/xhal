@@ -83,11 +83,17 @@ uint32_t xhal::XHALInterface::readReg(std::string regName)
     }
     STANDARD_CATCH;
 	  uint32_t result;
-    try{
-	    ASSERT(rsp.get_word_array_size("data") == 1);
-	    rsp.get_word_array("data", &result);
+    if (rsp.get_key_exists("error"))
+    {
+	  	ERROR("RPC response returned error, readReg failed"); 
+      throw xhal::utils::Exception("Error during register access");
+    } else {
+      try{
+	      ASSERT(rsp.get_word_array_size("data") == 1);
+	      rsp.get_word_array("data", &result);
+      }
+	    STANDARD_CATCH;
     }
-	  STANDARD_CATCH;
     result = result & m_node.mask;
     for (int i = 0; i < 32; i++)
     {
@@ -115,11 +121,17 @@ uint32_t xhal::XHALInterface::readReg(uint32_t address)
   }
   STANDARD_CATCH;
   uint32_t result;
-  try{
-    ASSERT(rsp.get_word_array_size("data") == 1);
-    rsp.get_word_array("data", &result);
+  if (rsp.get_key_exists("error"))
+  {
+		ERROR("RPC response returned error, readReg failed"); 
+    throw xhal::utils::Exception("Error during register access");
+  } else {
+    try{
+      ASSERT(rsp.get_word_array_size("data") == 1);
+      rsp.get_word_array("data", &result);
+    }
+    STANDARD_CATCH;
   }
-  STANDARD_CATCH;
   result = result & m_node.mask;
   for (int i = 0; i < 32; i++)
   {
@@ -148,6 +160,11 @@ void xhal::XHALInterface::writeReg(std::string regName, uint32_t value)
       	rsp = rpc.call_method(req);
       }
       STANDARD_CATCH;
+      if (rsp.get_key_exists("error"))
+      {
+    		ERROR("RPC response returned error, writeReg failed"); 
+        throw xhal::utils::Exception("Error during register access");
+      }
     } else {
       uint32_t current_val = this->readReg(m_node.real_address);
       int shift_amount = 0;
@@ -171,6 +188,11 @@ void xhal::XHALInterface::writeReg(std::string regName, uint32_t value)
       	rsp = rpc.call_method(req);
       }
       STANDARD_CATCH;
+      if (rsp.get_key_exists("error"))
+      {
+    		ERROR("RPC response returned error, writeReg failed"); 
+        throw xhal::utils::Exception("Error during register access");
+      }
     }
   } else {
     ERROR("Register not found in address table!");

@@ -17,6 +17,7 @@ xhal::utils::XHALXMLParser::XHALXMLParser(const std::string& xmlFile)
 xhal::utils::XHALXMLParser::~XHALXMLParser()
 {
   if (m_nodes) delete m_nodes;
+  m_logger.shutdown();
 }
 
 void xhal::utils::XHALXMLParser::setLogLevel(int loglevel)

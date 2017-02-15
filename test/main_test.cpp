@@ -54,10 +54,8 @@ int main(int argc, char** argv)
   std::cout << "=================================" << std::endl;
   std::cout << "Start init test" << std::endl;
   begin = std::chrono::high_resolution_clock::now();
-  //auto begin = std::chrono::high_resolution_clock::now();
   t3->init_t();
   end = std::chrono::high_resolution_clock::now();
-  //auto end = std::chrono::high_resolution_clock::now();
   std::cout << "init test done in " << std::chrono::duration_cast<std::chrono::microseconds>(end-begin).count() << " us" << std::endl;
   std::cout << "=================================" << std::endl;
   std::cout << "Start loadModule test" << std::endl;
@@ -71,6 +69,18 @@ int main(int argc, char** argv)
   t3->readRegByName_t();
   end = std::chrono::high_resolution_clock::now();
   std::cout << "readRegByName test done in " << std::chrono::duration_cast<std::chrono::microseconds>(end-begin).count() << " us" << std::endl;
+  std::cout << "=================================" << std::endl;
+  std::cout << "Start writeReg test" << std::endl;
+  begin = std::chrono::high_resolution_clock::now();
+  t3->writeReg_only_t();
+  end = std::chrono::high_resolution_clock::now();
+  std::cout << "writeReg test done in " << std::chrono::duration_cast<std::chrono::microseconds>(end-begin).count() << " us" << std::endl;
+  std::cout << "=================================" << std::endl;
+  std::cout << "Start writeReg completeness test" << std::endl;
+  begin = std::chrono::high_resolution_clock::now();
+  t3->writeReg_complete_test_t();
+  end = std::chrono::high_resolution_clock::now();
+  std::cout << "writeReg completeness test done in " << std::chrono::duration_cast<std::chrono::microseconds>(end-begin).count() << " us" << std::endl;
   std::cout << "=================================" << std::endl;
 
   std::cout << "=================================" << std::endl;

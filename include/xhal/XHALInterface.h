@@ -53,7 +53,7 @@ namespace xhal {
        * @param address_table_filename XML address table file name
        */
       XHALInterface(const std::string& board_domain_name, const std::string& address_table_filename);
-      ~XHALInterface(){}
+      ~XHALInterface(){m_logger.shutdown();}
 
       /**
        * @brief Initialize interface and establish RPC service connection with CTP7
