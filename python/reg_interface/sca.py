@@ -1,3 +1,4 @@
+#!/bin/env python
 from rw_reg import *
 from mcs import *
 from time import *
@@ -99,9 +100,10 @@ def main():
         disableJtag()
 
     elif instructions == 'sysmon':
-        enableJtag(2)
+        #enableJtag(2)
 
         while True:
+            enableJtag(2)
             jtagCommand(True, Virtex6Instructions.SYSMON, 10, 0x04000000, 32, False)
             adc1 = jtagCommand(False, None, 0, 0x04010000, 32, True)
             adc2 = jtagCommand(False, None, 0, 0x04020000, 32, True)
@@ -116,8 +118,11 @@ def main():
             printCyan('Core temp = ' + str(coreTemp) + ', voltage #1 = ' + str(volt1) + ', voltage #2 = ' + str(volt2))
 
             sleep(0.5)
+            disableJtag()
+            writeReg(getNode('GEM_AMC.SLOW_CONTROL.SCA.MODULE_RESET'), 0x1)
+            sleep(0.5)
 
-        disableJtag()
+        #disableJtag()
 
     elif instructions == 'program-fpga':
         if len(sys.argv) < 4:
