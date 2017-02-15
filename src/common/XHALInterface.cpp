@@ -166,8 +166,7 @@ void xhal::XHALInterface::writeReg(std::string regName, uint32_t value)
       val_to_write = (val_to_write & m_node.mask) | (current_val & ~m_node.mask);
 	    req = wisc::RPCMsg("memory.write");
       req.set_word("address", m_node.real_address);
-      req.set_word("count", 1);
-	    req.set_word("data", val_to_write);
+	    req.set_word_array("data", &val_to_write,1);
       try {
       	rsp = rpc.call_method(req);
       }
