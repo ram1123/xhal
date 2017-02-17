@@ -17,7 +17,7 @@ namespace xhal {
         void init_t()
         {
           m_interface->init();
-          m_interface->setLogLevel(3);
+          //m_interface->setLogLevel(3);
         }
         void loadModule_t()
         {
@@ -30,16 +30,16 @@ namespace xhal {
         }
         void writeReg_only_t()
         {
-          m_interface->writeReg("top.GEM_AMC.GEM_SYSTEM.GBT.TX_SYNC_PATTERN", 0);
+          m_interface->writeReg("top.GEM_AMC.GEM_SYSTEM.GBT.TX_SYNC_PATTERN", 0xbeef);
         }
         void writeReg_complete_test_t()
         {
           uint32_t test;
           test = m_interface->readReg("top.GEM_AMC.GEM_SYSTEM.GBT.TX_SYNC_PATTERN");
-          std::cout << "Initial value of top.GEM_AMC.GEM_SYSTEM.GBT.TX_SYNC_PATTERN: " << test << std::endl;
-          m_interface->writeReg("top.GEM_AMC.GEM_SYSTEM.GBT.TX_SYNC_PATTERN", 1);
+          std::cout << "Initial value of top.GEM_AMC.GEM_SYSTEM.GBT.TX_SYNC_PATTERN: " << std::hex << test << std::dec << std::endl;
+          m_interface->writeReg("top.GEM_AMC.GEM_SYSTEM.GBT.TX_SYNC_PATTERN", 0x76bc);
           test = m_interface->readReg("top.GEM_AMC.GEM_SYSTEM.GBT.TX_SYNC_PATTERN");
-          std::cout << "Value after write of top.GEM_AMC.GEM_SYSTEM.GBT.TX_SYNC_PATTERN: " << test << std::endl;
+          std::cout << "Value after write of top.GEM_AMC.GEM_SYSTEM.GBT.TX_SYNC_PATTERN: " << std::hex << test << std::dec << std::endl;
         }
       private:
         xhal::XHALInterface * m_interface;

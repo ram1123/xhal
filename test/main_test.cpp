@@ -49,7 +49,7 @@ int main(int argc, char** argv)
   if (t1) delete t1;
   if (t2) delete t2;
 
-  xhal::test::XHALInterface_t * t3 = new xhal::test::XHALInterface_t("eagle45",argv[1]);
+  xhal::test::XHALInterface_t * t3 = new xhal::test::XHALInterface_t("eagle34",argv[1]);
   std::cout << "Start XHALInterface test" << std::endl;
   std::cout << "=================================" << std::endl;
   std::cout << "Start init test" << std::endl;

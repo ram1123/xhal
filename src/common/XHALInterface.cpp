@@ -79,28 +79,33 @@ uint32_t xhal::XHALInterface::readReg(std::string regName)
     req.set_word("address", m_node.real_address);
     req.set_word("count", 1);
     try {
-    	rsp = rpc.call_method(req);
+      rsp = rpc.call_method(req);
     }
     STANDARD_CATCH;
-	  uint32_t result;
+    uint32_t result;
     if (rsp.get_key_exists("error"))
     {
-	  	ERROR("RPC response returned error, readReg failed"); 
+      ERROR("RPC response returned error, readReg failed"); 
       throw xhal::utils::Exception("Error during register access");
     } else {
       try{
-	      ASSERT(rsp.get_word_array_size("data") == 1);
-	      rsp.get_word_array("data", &result);
+        ASSERT(rsp.get_word_array_size("data") == 1);
+        rsp.get_word_array("data", &result);
       }
-	    STANDARD_CATCH;
+      STANDARD_CATCH;
     }
-    result = result & m_node.mask;
+    DEBUG("RESULT: " << std::hex << result);
+    DEBUG("Node mask: " << std::hex << m_node.mask);
+    uint32_t mask = m_node.mask;
+    result = result & mask;
+    DEBUG("RESULT after applying mask: " << std::hex << result);
     for (int i = 0; i < 32; i++)
     {
-      if (result & 0x01) 
+      if (mask & 1) 
       {
         break;
       }else {
+        mask = mask >> 1;
         result = result >> 1;
       }
     }
@@ -123,7 +128,7 @@ uint32_t xhal::XHALInterface::readReg(uint32_t address)
   uint32_t result;
   if (rsp.get_key_exists("error"))
   {
-		ERROR("RPC response returned error, readReg failed"); 
+    ERROR("RPC response returned error, readReg failed"); 
     throw xhal::utils::Exception("Error during register access");
   } else {
     try{
@@ -132,16 +137,17 @@ uint32_t xhal::XHALInterface::readReg(uint32_t address)
     }
     STANDARD_CATCH;
   }
-  result = result & m_node.mask;
-  for (int i = 0; i < 32; i++)
-  {
-    if (result & 0x01) 
-    {
-      break;
-    }else {
-      result = result >> 1;
-    }
-  }
+  //uint32_t mask = m_node.mask;
+  //result = result & mask;
+  //for (int i = 0; i < 32; i++)
+  //{
+  //  if (result & 0x01) 
+  //  {
+  //    break;
+  //  }else {
+  //    result = result >> 1;
+  //  }
+  //}
   return result;
 }
 
@@ -152,17 +158,17 @@ void xhal::XHALInterface::writeReg(std::string regName, uint32_t value)
     m_node = t_node.value();
     if (m_node.mask == 0xFFFFFFFF)
     {
-	    req = wisc::RPCMsg("memory.write");
+      req = wisc::RPCMsg("memory.write");
       req.set_word("address", m_node.real_address);
       req.set_word("count", 1);
-	    req.set_word("data", value);
+      req.set_word("data", value);
       try {
       	rsp = rpc.call_method(req);
       }
       STANDARD_CATCH;
       if (rsp.get_key_exists("error"))
       {
-    		ERROR("RPC response returned error, writeReg failed"); 
+        ERROR("RPC response returned error, writeReg failed"); 
         throw xhal::utils::Exception("Error during register access");
       }
     } else {
@@ -171,7 +177,7 @@ void xhal::XHALInterface::writeReg(std::string regName, uint32_t value)
       uint32_t mask = m_node.mask;
       for (int i = 0; i < 32; i++)
       {
-        if (mask & 0x01) 
+        if (mask & 1) 
         {
           break;
         } else {
@@ -181,16 +187,16 @@ void xhal::XHALInterface::writeReg(std::string regName, uint32_t value)
       }
       uint32_t val_to_write = value << shift_amount;
       val_to_write = (val_to_write & m_node.mask) | (current_val & ~m_node.mask);
-	    req = wisc::RPCMsg("memory.write");
+      req = wisc::RPCMsg("memory.write");
       req.set_word("address", m_node.real_address);
-	    req.set_word_array("data", &val_to_write,1);
+      req.set_word_array("data", &val_to_write,1);
       try {
       	rsp = rpc.call_method(req);
       }
       STANDARD_CATCH;
       if (rsp.get_key_exists("error"))
       {
-    		ERROR("RPC response returned error, writeReg failed"); 
+        ERROR("RPC response returned error, writeReg failed"); 
         throw xhal::utils::Exception("Error during register access");
       }
     }
