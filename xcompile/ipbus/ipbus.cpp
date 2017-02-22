@@ -56,7 +56,13 @@ int main(int argc, char *argv[])
 			FD_SET(listenfd, &rfds);
 			maxfd = listenfd;
 		} else {
-      exit(1);
+      // when MAX_CLIENTS number of sockets reached, close them and drain the queue
+      for (auto it = clients.begin(), eit = clients.end(); it != eit; ++it) {
+        close(it->fd);
+      }
+      clients.clear();
+      FD_SET(listenfd, &rfds);
+      maxfd = listenfd;
     }
 		for (auto it = clients.begin(), eit = clients.end(); it != eit; ++it) {
 			if (it->write_ready()) {
