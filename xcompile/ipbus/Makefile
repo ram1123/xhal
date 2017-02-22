@@ -3,7 +3,7 @@ $(error "Error: PETA_STAGE environment variable not set.  Change to the root of 
 endif
 include ../apps.common.mk
 
-APP = ipbus
+APP = ../../bin/ipbus
 
 # Add any other object files to this list below
 APP_OBJS = ipbus.o Client.o ipacl.o
