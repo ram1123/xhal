@@ -49,7 +49,7 @@ DLLEXPORT uint32_t init(char * hostname)
 
   try {
   		ASSERT(rpc.load_module("memory", "memory v1.0.1"));
-  		ASSERT(rpc.load_module("memoryextras", "memoryextras v1.0.1"));
+  		ASSERT(rpc.load_module("extras", "extras v1.0.1"));
   	}
   	STANDARD_CATCH;
 
@@ -82,7 +82,7 @@ DLLEXPORT unsigned long getReg(unsigned int address)
 
 DLLEXPORT unsigned long getBlock(unsigned int address, uint32_t* result, ssize_t size)
 {
- 	req = wisc::RPCMsg("memoryextras.blockread");
+ 	req = wisc::RPCMsg("extras.blockread");
 	req.set_word("address", address);
 	req.set_word("count", size);
 	try {
