@@ -79,6 +79,29 @@ DLLEXPORT unsigned long getReg(unsigned int address)
 	return result;
 }
 
+DLLEXPORT unsigned long getBlock(unsigned int address, uint32_t* result, ssize_t size)
+{
+	req = wisc::RPCMsg("memory.read");
+	req.set_word("address", address);
+	req.set_word("count", size);
+	try {
+		rsp = rpc.call_method(req);
+	}
+	STANDARD_CATCH;
+
+  try{
+	  if (rsp.get_key_exists("error")) {
+      for (int i=0; i<size; i++) {result[i]=0xdeaddead;}
+    } else {
+	    ASSERT(rsp.get_word_array_size("data") == size);
+      rsp.get_word_array("data", result);
+    }
+  }
+	STANDARD_CATCH;
+  return 0;
+}
+
+
 DLLEXPORT unsigned long putReg(unsigned int address, unsigned int value)
 {
 	req = wisc::RPCMsg("memory.write");

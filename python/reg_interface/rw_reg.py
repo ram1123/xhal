@@ -12,6 +12,9 @@ wReg.argtypes=[c_uint,c_uint]
 rpc_connect = lib.init
 rpc_connect.argtypes = [c_char_p]
 rpc_connect.restype = c_uint
+rBlock = lib.getBlock
+rBlock.restype = c_uint
+rReg.argtypes=[c_uint,POINTER(c_uint32)]
 
 DEBUG = True
 ADDRESS_TABLE_TOP = os.getenv("XHAL_ROOT")+'/etc/gem_amc_top.xml'
