@@ -81,28 +81,23 @@ DLLEXPORT unsigned long getReg(unsigned int address)
 
 DLLEXPORT unsigned long getBlock(unsigned int address, uint32_t* result, ssize_t size)
 {
- 	req = wisc::RPCMsg("memory.read");
+ 	req = wisc::RPCMsg("memory_extras.read_block");
 	req.set_word("address", address);
-	req.set_word("count", 1);
-  for (unsigned int i=0; i<size; i++)
-  {
-	  try {
-	  	rsp = rpc.call_method(req);
-	  }
-	  STANDARD_CATCH;
+	req.set_word("count", size);
+	try {
+		rsp = rpc.call_method(req);
+	}
+	STANDARD_CATCH;
 
-	  uint32_t t_result;
-    try{
-	    if (rsp.get_key_exists("error")) {
-        return 1;
-      } else {
-	      ASSERT(rsp.get_word_array_size("data") == 1);
-        rsp.get_word_array("data", &t_result);
-      }
+  try{
+	  if (rsp.get_key_exists("error")) {
+      return 1;
+    } else {
+	    ASSERT(rsp.get_word_array_size("data") == size);
+      rsp.get_word_array("data", result);
     }
-	  STANDARD_CATCH;
-    result[i] = t_result;
   }
+	STANDARD_CATCH;
   return 0;
 }
 
