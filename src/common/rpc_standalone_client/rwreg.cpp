@@ -49,7 +49,7 @@ DLLEXPORT uint32_t init(char * hostname)
 
   try {
   		ASSERT(rpc.load_module("memory", "memory v1.0.1"));
-  		ASSERT(rpc.load_module("memory_extras", "memory v1.0.1"));
+  		ASSERT(rpc.load_module("memoryextras", "memory v1.0.1"));
   	}
   	STANDARD_CATCH;
 
