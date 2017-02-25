@@ -103,6 +103,7 @@ DLLEXPORT unsigned long getBlock(unsigned int address, uint32_t* result, ssize_t
 	  STANDARD_CATCH;
     result[i] = t_result;
   }
+  return 0;
 }
 
 
