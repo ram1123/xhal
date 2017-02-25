@@ -82,7 +82,7 @@ DLLEXPORT unsigned long getReg(unsigned int address)
 
 DLLEXPORT unsigned long getBlock(unsigned int address, uint32_t* result, ssize_t size)
 {
- 	req = wisc::RPCMsg("memory_extras.block_read");
+ 	req = wisc::RPCMsg("memoryextras.blockread");
 	req.set_word("address", address);
 	req.set_word("count", size);
 	try {
