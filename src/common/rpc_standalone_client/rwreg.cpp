@@ -92,6 +92,7 @@ DLLEXPORT unsigned long getBlock(unsigned int address, uint32_t* result, ssize_t
   try{
 	  if (rsp.get_key_exists("error")) {
       for (int i=0; i<size; i++) {result[i]=0xdeaddead;}
+      return 1;
     } else {
 	    ASSERT(rsp.get_word_array_size("data") == size);
       rsp.get_word_array("data", result);
