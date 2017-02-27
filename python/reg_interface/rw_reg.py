@@ -16,6 +16,11 @@ rBlock = lib.getBlock
 rBlock.restype = c_uint
 rBlock.argtypes=[c_uint,POINTER(c_uint32)]
 
+rList = lib.getList
+rList.restype = c_uint
+rList.argtypes=[POINTER(c_uint32),POINTER(c_uint32)]
+
+
 DEBUG = True
 ADDRESS_TABLE_TOP = os.getenv("XHAL_ROOT")+'/etc/gem_amc_top.xml'
 nodes = []

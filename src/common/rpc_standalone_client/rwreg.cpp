@@ -102,7 +102,27 @@ DLLEXPORT unsigned long getBlock(unsigned int address, uint32_t* result, ssize_t
   return 0;
 }
 
+DLLEXPORT unsigned long getList(uint32_t* addresses, uint32_t* result, ssize_t size)
+{
+ 	req = wisc::RPCMsg("extras.listread");
+	req.set_word_array("addresses", addresses,size);
+	req.set_word("count", size);
+	try {
+		rsp = rpc.call_method(req);
+	}
+	STANDARD_CATCH;
 
+  try{
+	  if (rsp.get_key_exists("error")) {
+      return 1;
+    } else {
+	    ASSERT(rsp.get_word_array_size("data") == size);
+      rsp.get_word_array("data", result);
+    }
+  }
+	STANDARD_CATCH;
+  return 0;
+}
 DLLEXPORT unsigned long putReg(unsigned int address, unsigned int value)
 {
 	req = wisc::RPCMsg("memory.write");
