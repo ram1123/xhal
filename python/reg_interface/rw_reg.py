@@ -18,7 +18,7 @@ rBlock.argtypes=[c_uint,POINTER(c_uint32)]
 
 rList = lib.getList
 rList.restype = c_uint
-rList.argtypes=[POINTER(c_uint),POINTER(c_uint32)]
+rList.argtypes=[POINTER(c_uint32),POINTER(c_uint32)]
 
 
 DEBUG = True
