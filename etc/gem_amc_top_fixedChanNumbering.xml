@@ -1674,7 +1674,7 @@
                                8 MSBits hold the threshold/latency value of the point
                                24 LSBits hold the number of events that have fired
                                If no data is present, an error is returned."/>
-            <node id="MONITOR"    address="0x9">
+            <node id="MONITOR"    address="0x9" permission="r">
               <node id="STATUS"  address="0x0"  mask="0x000000f"  permission="r"
                     description="Status of the scan module
                                  0 = nothing running
@@ -1734,7 +1734,7 @@
                     description="Scan results for VFAT 0"
                     generate="true" generate_size="24" generate_address_step="0x1" generate_idx_var="VFAT_IDX"/>
             </node>
-            <node id="MONITOR"    address="0x20">
+            <node id="MONITOR"    address="0x20" permission="r">
               <node id="STATUS"  address="0x0"  mask="0x000000f"  permission="r"
                     description="Status of the scan module
                                  0 = nothing running
