@@ -161,7 +161,7 @@
       </node>
 
       <node id="OH${OH_IDX}" address="0x100" description="Trigger link for OH ${OH_IDX}"
-            generate="true" generate_size="12" generate_address_step="0x100" generate_idx_var="OH_IDX">
+            generate="true" generate_size="2" generate_address_step="0x100" generate_idx_var="OH_IDX">
         <node id="TRIGGER_RATE" address="0x0" mask="0xffffffff" permission="r"
               description="Trigger rate (Hz) -- this trigger fires whenever there's at least one valid sbit cluster"
               fw_signal="trigger_rate(${OH_IDX})"
@@ -387,7 +387,7 @@
         </node>
         <node id="LINK_${GBT_IDX}"  address="0x10"
               description="Link specific registers for GBT ${GBT_IDX}"
-              generate="true" generate_size="36" generate_address_step="0x10" generate_idx_var="GBT_IDX">
+              generate="true" generate_size="6" generate_address_step="0x10" generate_idx_var="GBT_IDX">
 
           <node id="SYNC_DONE" mask="0x00000001" permission="r" address="0x0"
                 description="Indicates whether or not the sync has been acquired between TX and RX"
@@ -404,7 +404,7 @@
       <node id="8b10b_LOOPBACK" address="0x2000" description="8b10b loopback test submodule">
         <node id="LINK_${OH_IDX}"  address="0x10"
               description="Link specific registers for 8b10b link ${OH_IDX}"
-              generate="true" generate_size="12" generate_address_step="0x10" generate_idx_var="OH_IDX">
+              generate="true" generate_size="2" generate_address_step="0x10" generate_idx_var="OH_IDX">
 
           <node id="DAQ_SYNC_DONE" mask="0x00000001" permission="r" address="0x0"
                 description="Indicates whether or not the sync has been acquired between the DAQ TX and DAQ RX"
@@ -594,7 +594,7 @@
 
       <node id="OH${OH_IDX}"  address="0x10"
             description="Link specific registers for OH${OH_IDX}"
-            generate="true" generate_size="12" generate_address_step="0x10" generate_idx_var="OH_IDX">
+            generate="true" generate_size="2" generate_address_step="0x10" generate_idx_var="OH_IDX">
 
         <node id="CONTROL"  address="0x0">
           <node id="EOE_TIMEOUT" address="0x3"  mask="0x00ffffff" permission="rw"
@@ -778,7 +778,7 @@
       </node>
 
       <node id="OH${OH_IDX}" address="0x100" description="Links for OH ${OH_IDX}"
-            generate="true" generate_size="12" generate_address_step="0x100" generate_idx_var="OH_IDX">
+            generate="true" generate_size="2" generate_address_step="0x100" generate_idx_var="OH_IDX">
         <node id="TRACK_LINK_ERROR_CNT" address="0x0" mask="0xffffffff" permission="r"
               description="Number of times this link didn't see the correct comma character at the correct time"
               fw_signal="tk_error_cnt_arr(${OH_IDX})"
@@ -1086,7 +1086,7 @@
           fw_is_module_external="true">
 
       <node id="OH${OH_IDX}"  address="0x0" description="Optohybrid ${OH_IDX}"
-            generate="true" generate_size="12" generate_address_step="0x00010000" generate_idx_var="OH_IDX">
+            generate="true" generate_size="2" generate_address_step="0x00010000" generate_idx_var="OH_IDX">
 
         <node id="COUNTERS"  address="0xa000"
               description="Counters provided on the OptoHybrid">
@@ -1530,7 +1530,7 @@
         <node id="T1Controller"  address="0x3000"
               description="T1 controller provided on the OptoHybrid">
 
-          <node id="TOGGLE" address="0x0"  permission="w"
+          <node id="TOGGLE" address="0x0"  mask="0x1"  permission="w"
                 description="Toggle the T1 controller on/off"/>
           <node id="MODE"   address="0x1"  mask="0x7"  permission="rw"
                 description="3 bits to select the mode:
@@ -1696,7 +1696,7 @@
 
           <node id="ULTRA"  address="0xB000"  
                 description="Control the onboard ultra threshold/latency scan routine">
-            <node id="START"  address="0x0"  mask="0x1"  permission="w"
+            <node id="START"  address="0x0" permission="w"
                   description="Start the specified scan routine
                                Will also empty the results FIFO from the previous scan"/>
             <node id="MODE"  address="0x1"  mask="0xf"  permission="rw"
@@ -1809,57 +1809,57 @@
                 description="Module to broadcast transactions to multiple VFATs">
             <node id="Request"  address="0x000"
                   description="Which register request will be broadcast to all (non-masked) VFATs">
-              <node id="ContReg0"     address="0x00"    permission="rw"
+              <node id="ContReg0"     address="0x00"  mask="0xffffffff"  permission="rw"
                     description="VFAT control register 0
                                  Hardwired sleep value 0x00
                                  Software default value 0x00"/>
-              <node id="ContReg1"     address="0x01"    permission="rw"
+              <node id="ContReg1"     address="0x01"  mask="0xffffffff"  permission="rw"
                     description="VFAT control register 1"/>
-              <node id="IPreampIn"    address="0x02"    permission="rw"
+              <node id="IPreampIn"    address="0x02"  mask="0xffffffff"  permission="rw"
                     description="
                                  Hardwired sleep value 0x00
                                  Software default value 0xa8"/>
-              <node id="IPreampFeed"  address="0x03"    permission="rw"
+              <node id="IPreampFeed"  address="0x03"  mask="0xffffffff"  permission="rw"
                     description="
                                  Hardwired sleep value 0x00
                                  Software default value 0x50"/>
-              <node id="IPreampOut"   address="0x04"    permission="rw"
+              <node id="IPreampOut"   address="0x04"  mask="0xffffffff"  permission="rw"
                     description="
                                  Hardwired sleep value 0x00
                                  Software default value 0x96"/>
-              <node id="IShaper"      address="0x05"    permission="rw"
+              <node id="IShaper"      address="0x05"  mask="0xffffffff"  permission="rw"
                     description="
                                  Hardwired sleep value 0x00
                                  Software default value 0x96"/>
-              <node id="IShaperFeed"  address="0x06"    permission="rw"
+              <node id="IShaperFeed"  address="0x06"  mask="0xffffffff"  permission="rw"
                     description="
                                  Hardwired sleep value 0x00
                                  Software default value 0x64"/>
-              <node id="IComp"        address="0x07"    permission="rw"
+              <node id="IComp"        address="0x07"  mask="0xffffffff"  permission="rw"
                     description="
                                  Hardwired sleep value 0x00
                                  Software default value 0x78"/>
 
-              <node id="ChipID0"      address="0x08"    permission="r"
+              <node id="ChipID0"      address="0x08"  mask="0xffffffff"  permission="r"
                     description="8 least significant bits in the chip ID"/>
-              <node id="ChipID1"      address="0x09"    permission="r"
+              <node id="ChipID1"      address="0x09"  mask="0xffffffff"  permission="r"
                     description="8 most significant bits in the chip ID"/>
 
-              <node id="UpsetReg"     address="0x0a"    permission="r"
+              <node id="UpsetReg"     address="0x0a"  mask="0xffffffff"  permission="r"
                     description=""/>
 
-              <node id="HitCount0"    address="0x0b"    permission="r"
+              <node id="HitCount0"    address="0x0b"  mask="0xffffffff"  permission="r"
                     description=""/>
-              <node id="HitCount1"    address="0x0c"    permission="r"
+              <node id="HitCount1"    address="0x0c"  mask="0xffffffff"  permission="r"
                     description=""/>
-              <node id="HitCount2"    address="0x0d"    permission="r"
+              <node id="HitCount2"    address="0x0d"  mask="0xffffffff"  permission="r"
                     description=""/>
 
-              <node id="ExtRegPointer"  address="0x0e"    permission="rw"
+              <node id="ExtRegPointer"  address="0x0e"  mask="0xffffffff"  permission="rw"
                     description="Pointer to one of the extended registers
                                  Hardwired sleep value 0x00
                                  Software default value 0x00"/>
-              <node id="ExtRegData"     address="0x0f"    permission="rw"
+              <node id="ExtRegData"     address="0x0f"  mask="0xffffffff"  permission="rw"
                     description="Data to be written to the extended register
                                  pointed to by ExtRegPointer
                                  Hardwired sleep value 0x00
@@ -1867,7 +1867,7 @@
 
               <!--Extended registers, addressed by ExtRegPointer and ExtRegData
                            (should be taken care of in the GLIB-Optohybrid firmware-->
-              <node id="Latency"       address="0x10"    permission="rw"
+              <node id="Latency"       address="0x10"  mask="0xffffffff"  permission="rw"
                     description="Programs the L1A latency, each bit is a single clock
                                  cycle (0-255 clock cycles, up to 6.4us)
                                  Hardwired sleep value 0x80
@@ -1888,32 +1888,32 @@
                 </node>
               </node> <!-- end of VFATChannels -->
 
-              <node id="VCal"           address="0x91"    permission="rw"
+              <node id="VCal"           address="0x91"  mask="0xffffffff"  permission="rw"
                     description="Determines the variable calibration voltage
                                  (between 0.877V and 1.074V)
                                  Hardwired sleep value 0x00
                                  Software default value 0x64"/>
-              <node id="VThreshold1"    address="0x92"    permission="rw"
+              <node id="VThreshold1"    address="0x92"  mask="0xffffffff"  permission="rw"
                     description="
                                  Hardwired sleep value 0x00
                                  Software default value 0x00"/>
-              <node id="VThreshold2"    address="0x93"    permission="rw"
+              <node id="VThreshold2"    address="0x93"  mask="0xffffffff"  permission="rw"
                     description="
                                  Hardwired sleep value 0x00
                                  Software default value 0x1a"/>
-              <node id="CalPhase"       address="0x94"    permission="rw"
+              <node id="CalPhase"       address="0x94"  mask="0xffffffff"  permission="rw"
                     description="
                                  Hardwired sleep value 0x00
                                  Software default value 0x00"/>
-              <node id="ContReg2"       address="0x95"    permission="rw"
+              <node id="ContReg2"       address="0x95"  mask="0xffffffff"  permission="rw"
                     description="Third control register
                                  Hardwired sleep value 0x00
                                  Software default value 0x00"/>
-              <node id="ContReg3"       address="0x96"    permission="rw"
+              <node id="ContReg3"       address="0x96"  mask="0xffffffff"  permission="rw"
                     description="Fourth control register
                                  Hardwired sleep value 0x00
                                  Software default value 0x00"/>
-              <node id="Spare"          address="0x97"    permission="rw"
+              <node id="Spare"          address="0x97"  mask="0xffffffff"  permission="rw"
                     description="Spare register, not currently implemented"/>
             </node> <!-- end of Request -->
             <node id="Mask"  address="0x100"  permission="rw"
@@ -1929,7 +1929,7 @@
                                8 next bits are the VFAT2 id (0 to 23)
                                8 LSBits hold response from the VFAT2
                                If no data is present, an error is returned."/>
-            <node id="Reset"    address="0x102"   permission="w"
+            <node id="Reset"    address="0x102"  mask="0x1"  permission="w"
                   description="Reset the module"/>
             <node id="Running"  address="0x103"  mask="0x1"  permission="r"
                   description="Returns 1 while the broadcast is in progress"/>
