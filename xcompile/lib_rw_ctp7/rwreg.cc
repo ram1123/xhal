@@ -78,9 +78,7 @@ DLLEXPORT unsigned int putReg(unsigned int address, unsigned int value) {
   }
   unsigned int writeBuffer = value;
   if(memsvc_write(memHandle, address, 1, &writeBuffer) != 0) {
-#ifdef EMBED
     printf("Memory access failed: %s\n",memsvc_get_last_error(memHandle));
-#endif
     return 5;
   }
    
