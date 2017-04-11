@@ -11,11 +11,12 @@ from optparse import OptionParser
 
 parser = OptionParser()
 
-parser.add_option("--filename", type="string", dest="filename", default="DACData.txt",
+parser.add_option("--filename", type="string", dest="filename", default="DACData.dat",
                   help="Specify Output Filename", metavar="filename")
-
 parser.add_option("-g", "--gtx", type="int", dest="gtx",
-                  help="GTX on the GLIB", metavar="gtx", default=0)
+                  help="GTX on the AMC", metavar="gtx", default=0)
+parser.add_option("-n", "--nevents", type="int", dest="nevents",
+                  help="Number of events per point", metavar="nevents", default=10)
 
 (options, args) = parser.parse_args()
 filename = options.filename
@@ -33,8 +34,7 @@ print "Parsing XML took %s" %(t1-t0)
 #ohboard = getOHObject(options.slot,options.gtx,options.shelf,options.debug)
 ohboard = 0
 
-N_EVENTS = 10
-#N_EVENTS = Nev[0]
+N_EVENTS = options.nevents
 dacmode = {
     #"IPREAMPIN"   : [1, None, 0,"IPreampIn"],
     #"IPREAMPFEED" : [2, None, 0,"IPreampFeed"],
@@ -76,20 +76,13 @@ try:
                 writeVFAT(ohboard, options.gtx, ((col*8)+i), "ContReg0", 0x37)
                 print "VFAT%d ContReg0 0x%x"%(((col*8)+i),readVFAT(ohboard, options.gtx, ((col*8)+i), "ContReg0"))
                 pass
-        #for dactype in dacmode.keys():
-        #    print "Obtaining DAC scan for %s"%(dactype)
-        #    sys.stdout.flush()
-        #    dac = dacmode[dactype]
             cr0val = []
             for col in range(3):
                 writeVFAT(ohboard, options.gtx, ((col*8)+i), "ContReg1", dac[0])
-                #print "VFAT%d ContReg1 0x%x"%(((col*8)+i),readVFAT(ohboard, options.gtx, ((col*8)+i), "ContReg1"))
                 if dac[1]:
                     cr0val.append(readVFAT(ohboard, options.gtx, ((col*8)+i), "ContReg0"))
-                    #print dac[1]
                     writeval = cr0val[col]|(dac[1]<<6)
                     writeVFAT(ohboard, options.gtx, ((col*8)+i), "ContReg0", writeval)
-                    #print "VFAT%d ContReg0 0x%x"%(((col*8)+i),readVFAT(ohboard, options.gtx, ((col*8)+i), "ContReg0"))
                     pass
             for val in range(256):
                 for col in range(3):
@@ -98,10 +91,6 @@ try:
                 for sample in range(N_EVENTS):
                     for col in range(3):
                         rawval       = readRegister(ohboard,"GEM_AMC.OH.OH%d.ADC.%s"%(options.gtx,adcReg[col][dacmode[dactype][2]]))
-                        #event = {}
-                        #event["VFAT_N"] = col*8+i
-                        #event["DAC_INVAL"] = val
-                        #event["DAC_OUTVAL"] = rawval >> 6
                         event = [col*8+i,val,rawval>>6]
                         final_dict[dactype].append(event)
                         pass
@@ -125,8 +114,6 @@ try:
 except Exception as e:
     print "An exception occurred", e
 finally:
-    #with open(filename,"a") as f:
-        #f.write("%s\n"%(final_dict))
     t2 = time.time()
     print "Scan took %s" %(t2-t1)
     print "Total execution time %s" %(t2-t0)

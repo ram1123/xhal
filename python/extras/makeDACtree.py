@@ -1,14 +1,24 @@
 import ast
 from array import array
 from ROOT import TFile, TTree, vector
+from optparse import OptionParser
 
-filename = "DACData.root"
+parser = OptionParser()
+parser.add_option("-i", type="string", dest="ifilename", default="DACData.dat",
+                  help="Specify input filename", metavar="ifilename")
+parser.add_option("-o", type="string", dest="ofilename", default="DACData.root",
+                  help="Specify output filename", metavar="ofilename")
+parser.add_option("-g", "--gtx", type="int", dest="gtx",
+                  help="GTX on the AMC", metavar="gtx", default=0)
 
-myF = TFile(filename,'recreate')
+
+(options, args) = parser.parse_args()
+ofilename = parser.ofilename
+ifilename = parser.ifilename
+myF = TFile(ofilename,'recreate')
 myT = TTree('dacTree','Tree Holding CMS GEM DAC Data')
 
 Nev = array( 'i', [ 0 ] )
-#Nev[0] = 2
 myT.Branch( 'Nev', Nev, 'Nev/I' )
 dacname = vector('string')()
 dacname.push_back("N/A")
@@ -21,23 +31,9 @@ vfatN = array( 'i', [ 0 ] )
 myT.Branch( 'vfatN', vfatN, 'vfatN/I' )
 link = array( 'i', [ 0 ] )
 myT.Branch( 'link', link, 'link/I' )
-link[0] = 0
+link[0] = options.gtx
 
-#scans = [
-#    "IPREAMPIN"   ,
-#    "IPREAMPFEED" ,
-#    "IPREAMPOUT"  ,
-#    "ISHAPER"     ,
-#    "ISHAPERFEED" ,
-#    "ICOMP"       ,
-#    "VTHRESHOLD1" ,
-#    "VTHRESHOLD2" ,
-#    "VCAL"        ,
-#    "CALOUTVLOW"  ,
-#    "CALOUTVHI"   ,
-#]
-
-with open("DACData.txt","r") as f:
+with open(ifilename,"r") as f:
   for line in f.readlines():
     data = ast.literal_eval(line)
     print "data type (expected dict):"
