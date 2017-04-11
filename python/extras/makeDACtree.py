@@ -13,8 +13,9 @@ parser.add_option("-g", "--gtx", type="int", dest="gtx",
 
 
 (options, args) = parser.parse_args()
-ofilename = parser.ofilename
-ifilename = parser.ifilename
+ofilename = options.ofilename
+ifilename = options.ifilename
+
 myF = TFile(ofilename,'recreate')
 myT = TTree('dacTree','Tree Holding CMS GEM DAC Data')
 
