@@ -90,6 +90,10 @@ namespace xhal {
          * @brief not implemented
          */
         std::experimental::optional<xhal::utils::Node> getNodeFromAddress(const uint32_t nodeAddress);
+        /**
+         * @brief return all nodes
+         */
+        std::unordered_map<std::string,xhal::utils::Node> getAllNodes();
     
       private:
         std::string m_xmlFile;
