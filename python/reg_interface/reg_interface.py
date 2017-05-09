@@ -3,7 +3,7 @@ import sys, os, subprocess
 from rw_reg import *
 from vfat_config import *
 
-MAX_OH_NUM = 3
+MAX_OH_NUM = 12
 
 
 class Prompt(Cmd):
