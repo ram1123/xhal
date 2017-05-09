@@ -3,7 +3,7 @@ import sys, os, subprocess
 from rw_reg import *
 from vfat_config import *
 
-MAX_OH_NUM = 12
+MAX_OH_NUM = 11
 
 
 class Prompt(Cmd):
@@ -46,6 +46,60 @@ class Prompt(Cmd):
     def do_test(self, args):
         print 'Test here!'
         print 'args:',args
+
+    def do_broadcastOH(self, args):
+        """ Begin command by selecting OHs, followed by command. USAGE broadcastOH <OH numbers> <command> register value
+            OH numbers can be separated by comma or include range: 0,2-5 NO SPACES SHOULD BE BETWEEN!!
+            command can be either read or write and should follow by OH register name (see example below). If command is write, add the value to write at the end
+            EXAMPLE:
+            broadcastOH 0,2-5 read CONTROL.CLOCK.REF_CLK
+            OR
+            broadcastOH 0,2-5 write CONTROL.CLOCK.REF_CLK 0x1
+        """
+        arglist = args.split()
+        if len(arglist)<3: print 'Too few arguments.'
+        else: 
+            oh_numbers_list = arglist[0].split(',')
+            #print "OH numbers list %s" %(oh_numbers_list)
+            oh_numbers = []
+            for ohn in oh_numbers_list:
+                #print "OH N : %s" %(ohn)
+                if ('-' in ohn):
+                    borders = ohn.split('-')
+                    if len(borders)!=2:
+                        print "Invalid OH range!"
+                        return
+                    elif borders[0]=='':
+                        print "Invalid OH range!"
+                        return
+                    else:
+                        pass
+                    #print type(borders)
+                    #print borders
+                    #print int(borders[0])
+                    #print int(borders[1])
+                    for x in range(int(borders[0]),int(borders[1])+1):
+                        #print str(x)
+                        oh_numbers.append(str(x))
+                else:
+                    oh_numbers.append(ohn)
+            for ohn in oh_numbers:
+                if int(ohn) < 0 or int(ohn) > MAX_OH_NUM:
+                    print "Invalid OH range!"
+                    return
+            command = arglist[1]
+            register = arglist[2]
+            #print oh_numbers
+            if command == 'read':
+                for ohn in oh_numbers:
+                  #print ohn
+                  self.do_read('GEM_AMC.OH.OH'+ohn+'.'+register)
+            elif command == 'write':
+                value = arglist[3]
+                for ohn in oh_numbers:
+                  self.do_write('GEM_AMC.OH.OH'+ohn+'.'+register+' '+value)
+            else:
+                print "Only read and write functinos implemented"
 
     def do_oh(self, args):
         """ Begin command by selecting OH, followed by command. USAGE oh <number> <command> """
@@ -147,9 +201,6 @@ class Prompt(Cmd):
 
         else: print 'Incorrect usage.'
 
-
-
-
     def do_read(self, args):
         """Reads register. USAGE: read <register name>. OUTPUT <address> <mask> <permission> <name> <value>"""
         reg = getNode(args)
@@ -161,11 +212,9 @@ class Prompt(Cmd):
             else: print hex(address),'\t',reg.name,'\t','No read permission!' 
         else:
             print args,'not found!'
-
     
     def complete_read(self, text, line, begidx, endidx):
         return completeReg(text)
-
 
     def do_write(self, args):
         """Writes register. USAGE: write <register name> <register value>"""

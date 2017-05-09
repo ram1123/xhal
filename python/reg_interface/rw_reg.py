@@ -144,7 +144,10 @@ def getAllChildren(node,kids=[]):
 
 def getNode(nodeName):
     #return next((node for node in nodes if node.name == nodeName),None)
-    return nodes[nodeName]
+    try: 
+        return nodes[nodeName]
+    except KeyError:
+        return None
 
 def getNodeFromAddress(nodeAddress):
     return next((node for node in nodes.values() if node.real_address == nodeAddress),None)
@@ -249,7 +252,7 @@ def writeReg(reg, value):
             else: break
         if initial_value == 0xdeaddead:
              print "Writing masked reg %s failed. Exiting..." %(reg.name)
-             sys.exit()
+             #sys.exit()
         final_value = (shifted_value & reg.mask) | (initial_value & ~reg.mask)
     else: final_value = value
     output = wReg(parseInt(address),parseInt(final_value))
