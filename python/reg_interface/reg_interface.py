@@ -8,6 +8,13 @@ MAX_OH_NUM = 12
 
 class Prompt(Cmd):
 
+    def do_connect(self, hostname):
+        print "Trying to connect to %s"%(hostname)
+        if (rpc_connect(hostname)):
+            print '[Connection error] RPC connection failed'
+        else:
+            pass
+
     def do_outputnode(self, args):
         """Output properies of node matching name. USAGE: outputnode <NAME>"""
         arglist = args.split()
@@ -400,9 +407,9 @@ if __name__ == '__main__':
     else:
         try:
             parseXML()
-            if (rpc_connect(options.hostname)):
-              print '[Connection error] RPC connection failed'
-              sys.exit()
+            #if (rpc_connect(options.hostname)):
+            #  print '[Connection error] RPC connection failed'
+            #  sys.exit()
             prompt = Prompt()
             prompt.prompt = 'CTP7 > '
             prompt.cmdloop('Starting CTP7 Register Command Line Interface.')
