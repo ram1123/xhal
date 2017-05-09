@@ -9,10 +9,11 @@ MAX_OH_NUM = 12
 class Prompt(Cmd):
 
     def do_connect(self, hostname):
-        print "Trying to connect to %s"%(hostname)
         if (rpc_connect(hostname)):
             print '[Connection error] RPC connection failed'
+            self.prompt = 'CTP7 > '
         else:
+            self.prompt = hostname + ' > '
             pass
 
     def do_outputnode(self, args):
@@ -412,7 +413,7 @@ if __name__ == '__main__':
             #  sys.exit()
             prompt = Prompt()
             prompt.prompt = 'CTP7 > '
-            prompt.cmdloop('Starting CTP7 Register Command Line Interface.')
+            prompt.cmdloop('Starting CTP7 Register Command Line Interface. Please connect to CTP7 using connect <hostname> command')
         except TypeError:
             print '[TypeError] Incorrect usage. See help'
         except KeyboardInterrupt:
