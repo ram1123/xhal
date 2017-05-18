@@ -5,6 +5,7 @@ from rw_reg import *
 from helper_main import *
 import threading
 import Queue
+import timeit
 
 
 def hello(request):
@@ -136,7 +137,44 @@ def updateModule(request, module, q):
 t1 = threading.Thread(target=updateMain)
 t2 = threading.Thread(target=updateModule)
 
+def expert_controls_main_imp(request):
+  if request.method=="POST":
+    if "daq_reset" in request.body:
+      reg = getNode("GEM_AMC.DAQ.CONTROL.RESET")
+      writeReg(reg,0x1)
+    elif "daq_enable" in request.body:
+      reg = getNode("GEM_AMC.DAQ.CONTROL.DAQ_ENABLE")
+      writeReg(reg,0x1)
+    elif "daq_disable" in request.body:
+      reg = getNode("GEM_AMC.DAQ.CONTROL.DAQ_ENABLE")
+      writeReg(reg,0x0)
+    elif "block_l1a" in request.body:
+      reg = getNode("GEM_AMC.TTC.CTRL.L1A_ENABLE")
+      writeReg(reg,0x0)
+    elif "unblock_l1a" in request.body:
+      reg = getNode("GEM_AMC.TTC.CTRL.L1A_ENABLE")
+      writeReg(reg,0x1)
+    elif "err_counters_reset" in request.body:
+      for i in range(NOH):
+        reg = getNode("GEM_AMC.OH.OH%s.COUNTERS.GBT_LINK.TRK_ERR.Reset"%(i))
+        writeReg(reg,0x1)
+        reg = getNode("GEM_AMC.OH.OH%s.COUNTERS.GTX_LINK.TRK_ERR.Reset"%(i))
+        writeReg(reg,0x1)
+        reg = getNode("GEM_AMC.OH.OH%s.COUNTERS.GTX_LINK.TRG_ERR.Reset"%(i))
+        writeReg(reg,0x1)
+
+def expert_controls_main(request):
+  start_time = timeit.default_timer()
+  with lock:
+    t=threading.Thread(target=expert_controls_main_imp, args = (request,))
+    t.start()
+    t.join()
+  elapsed = timeit.default_timer() - start_time
+  print "%s time %s" %(request.POST["id"],elapsed)
+  return HttpResponse()
+
 def main(request):
+  start_time = timeit.default_timer()
   global ttclist
   global triggerlist
   global triggerohlist
@@ -152,6 +190,8 @@ def main(request):
     t1.start()
     t1.join()
 
+  elapsed = timeit.default_timer() - start_time
+  print "Update main page time %s" %(elapsed)
   return render(request,'main.html',{'main':True,
                                      'ttclist':ttclist,
                                      'triggerlist':triggerlist,
@@ -163,10 +203,12 @@ def main(request):
                                      'ohlist':ohlist})
 
 def read_fw(request):
-  parseXML()
-  reg=getNode("GEM_AMC.GEM_SYSTEM.BOARD_ID")
-  print reg
-  return HttpResponse('Board ID %s'%(readReg(reg)))
+  start_time = timeit.default_timer()
+  for i in range(1000):
+    reg=getNode("GEM_AMC.GEM_SYSTEM.BOARD_ID")
+    board_id = readReg(reg)
+  exec_time = timeit.default_timer() - start_time
+  return HttpResponse('Board ID %s\n Time to read 1000 times %s'%(board_id,exec_time))
 
 def read_gem_system_module(request,module):
   global t1

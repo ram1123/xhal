@@ -4,7 +4,9 @@
 
     <div class="panel panel-default">
         <div class="panel-heading">
-            <h4 align="center">DAQ</h4>
+            <h4 align="center">
+	          	DAQ
+            </h4>
             <span class="label label-default full-width"> IEMASK
             {% for ie in iemask %}
               <span class="label label-{{ie}}">{{ forloop.counter0 }}</span>
@@ -32,8 +34,19 @@
             {% endautoescape %}
             </table>
             </small>
+            <span class="label label-default full-width"> 
+            {% csrf_token %}
+            EXPERT CONTROLS:
+            <button class="btn btn-danger btn-sm" type="button" onclick="config_action(this.id)" id="daq_reset" name="daq_reset">DAQ RESET</button>
+            <button class="btn btn-danger btn-sm" type="button" onclick="config_action(this.id)" id="daq_enable" name="daq_enable">ENABLE DAQ</button>
+            <button class="btn btn-danger btn-sm" type="button" onclick="config_action(this.id)" id="daq_disable" name="daq_disable">DISABLE DAQ</button>
+            <button class="btn btn-danger btn-sm" type="button" onclick="config_action(this.id)" id="block_l1a" name="bloc_l1a">BLOCK L1A</button>
+            <button class="btn btn-danger btn-sm" type="button" onclick="config_action(this.id)" id="unblock_l1a" name="unbloc_l1a">ENABLE L1A</button>
+            </span>
+
         </div>
         <!--/panel-body-->
+  
     </div>
     <div class="panel panel-default">
         <div class="panel-heading">
@@ -69,6 +82,12 @@
             {% endautoescape %}
             </table>
             </small>    
+            <span class="label label-default full-width"> 
+            {% csrf_token %}
+            EXPERT CONTROLS:
+            <button class="btn btn-success btn-sm" type="button" onclick="config_action(this.id)" id="err_counters_reset" name="err_counters_reset">RESET ERROR COUNTERS</button>
+            </span>
+
         </div>
         <!--/panel-body-->
     </div>

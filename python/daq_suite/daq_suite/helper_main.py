@@ -1,5 +1,5 @@
 from rw_reg import *
-NOH=4
+NOH=10
 
 def getTTCmain():
   values=[]
@@ -13,7 +13,7 @@ def getTTCmain():
   reg = getNode('GEM_AMC.TTC.STATUS.TTC_SINGLE_ERROR_CNT')
   value=int(readReg(reg),16)
   if value:
-    displaystring.append('<div class="progress"><div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="%s" aria-valuemin="0" aria-valuemax="65535" style="min-width: 3em;">%s</div></div>' % (value,value))
+    displaystring.append('<div class="progress"><div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="%s" aria-valuemin="0" aria-valuemax="65535" style="min-width: 3em; width:%s%%">%s</div></div>' % (value,value/655.45,value))
   else:
     displaystring.append('<div class="progress"><div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="%s" aria-valuemin="0" aria-valuemax="65535" style="min-width: 3em;">%s</div></div>' % (value,value))
   reg = getNode('GEM_AMC.TTC.STATUS.BC0.LOCKED')
@@ -23,7 +23,7 @@ def getTTCmain():
     displaystring.append('<span class="label label-danger">NO</span>')
   reg = getNode('GEM_AMC.TTC.L1A_ID')
   value=int(readReg(reg),16)
-  displaystring.append('<span class="label label-info">%s Hz</span>' % (value))
+  displaystring.append('<span class="label label-info">%s</span>' % (value))
   reg = getNode('GEM_AMC.TTC.L1A_RATE')
   value=int(readReg(reg),16)
   displaystring.append('<span class="label label-info">%s Hz</span>' % (value))
@@ -35,18 +35,18 @@ def getTRIGGERmain():
   displaystring=[]
   reg = getNode('GEM_AMC.TRIGGER.STATUS.OR_TRIGGER_RATE')
   value=int(readReg(reg),16)
-  if value>1000000:
-    displaystring.append('<div class="progress"><div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="%s" aria-valuemin="0" aria-valuemax="4294967295" style="min-width: 3em;">%s</div></div>' % (value,value))
+  if value>100000:
+    displaystring.append('<div class="progress"><div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="%s" aria-valuemin="0" aria-valuemax="50000000" style="min-width: 3em; width:%s%%">%s</div></div>' % (value,value/500000,value))
   else:
-    displaystring.append('<div class="progress"><div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="%s" aria-valuemin="0" aria-valuemax="4294967295" style="min-width: 3em;">%s</div></div>' % (value,value))
+    displaystring.append('<div class="progress"><div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="%s" aria-valuemin="0" aria-valuemax="4294967295" style="width:%s%%">%s</div></div>' % (value,value/500000,value))
   for i in range(NOH):
     namelist.append('OH%s.TRIGGER_RATE' % (i))
     reg = getNode('GEM_AMC.TRIGGER.OH%s.TRIGGER_RATE' % (i))
     value=int(readReg(reg),16)
-    if value>1000000:
-      displaystring.append('<div class="progress"><div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="%s" aria-valuemin="0" aria-valuemax="4294967295" style="min-width: 3em;">%s</div></div>' % (value,value))
+    if value>100000:
+      displaystring.append('<div class="progress"><div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="%s" aria-valuemin="0" aria-valuemax="50000000" style="min-width: 3em; width:%s%%">%s</div></div>' % (value,value/500000,value))
     else:
-      displaystring.append('<div class="progress"><div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="%s" aria-valuemin="0" aria-valuemax="4294967295" style="min-width: 3em;">%s</div></div>' % (value,value))
+      displaystring.append('<div class="progress"><div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="%s" aria-valuemin="0" aria-valuemax="50000000" style="min-width: 3em; width:%s%%">%s</div></div>' % (value,value/500000,value))
 
   return zip(namelist,displaystring) 
  
@@ -103,15 +103,15 @@ def getDAQmain():
   namelist.append('L1A_FIFO_DATA_COUNT')
   reg = getNode('GEM_AMC.DAQ.EXT_STATUS.L1A_FIFO_DATA_CNT')
   value=int(readReg(reg),16)
-  displaystring.append('<td><div class="progress"><div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="%s" aria-valuemin="0" aria-valuemax="8192" style="min-width: 3em;">%s</div></div></td>' % (value,value))
+  displaystring.append('<td><div class="progress"><div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="%s" aria-valuemin="0" aria-valuemax="8192" style="min-width: 3em; width:%s%%">%s</div></div></td>' % (value,value/81.92,value))
   namelist.append('DAQ_FIFO_DATA_COUNT')
   reg = getNode('GEM_AMC.DAQ.EXT_STATUS.DAQ_FIFO_DATA_CNT')
   value=int(readReg(reg),16)
-  displaystring.append('<td><div class="progress"><div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="%s" aria-valuemin="0" aria-valuemax="8192" style="min-width: 3em;">%s</div></div></td>' % (value,value))
+  displaystring.append('<td><div class="progress"><div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="%s" aria-valuemin="0" aria-valuemax="8192" style="min-width: 3em; width:%s%%">%s</div></div></td>' % (value,value/81.92,value))
   namelist.append('EVENT_SENT')
   reg = getNode('GEM_AMC.DAQ.EXT_STATUS.EVT_SENT')
   value=int(readReg(reg),16)
-  displaystring.append('<td><div class="progress"><div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="%s" aria-valuemin="0" aria-valuemax="4294967295" style="min-width: 3em;">%s</div></div></td>' % (value,value))
+  displaystring.append('<td><div class="progress"><div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="%s" aria-valuemin="0" aria-valuemax="4294967295" style="min-width: 3em; width:%s%%">%s</div></div></td>' % (value,value/4294967295,value))
   namelist.append('TTS_STATE')
   reg = getNode('GEM_AMC.DAQ.STATUS.TTS_STATE')
   value=int(readReg(reg),16)
@@ -182,12 +182,14 @@ def getOHmain():
              'EVENT_RATE',
              'GTX.TRK_ERR',
              'GTX.TRG_ERR',
+             'GBT.TRK_ERR',
              'CORR_VFAT_BLK_CNT',]
   fullnamelist=['GEM_AMC.OH.OH%s.STATUS.FW',
                  'GEM_AMC.DAQ.OH%s.COUNTERS.EVN',
                  'GEM_AMC.DAQ.OH%s.COUNTERS.EVT_RATE',
-                 'GEM_AMC.OH.OH%s.COUNTERS.GTX.TRK_ERR',
-                 'GEM_AMC.OH.OH%s.COUNTERS.GTX.TRG_ERR',
+                 'GEM_AMC.OH.OH%s.COUNTERS.GTX_LINK.TRK_ERR',
+                 'GEM_AMC.OH.OH%s.COUNTERS.GTX_LINK.TRG_ERR',
+                 'GEM_AMC.OH.OH%s.COUNTERS.GBT_LINK.TRK_ERR',
                  'GEM_AMC.DAQ.OH%s.COUNTERS.CORRUPT_VFAT_BLK_CNT',]
 
   for regname in fullnamelist:
