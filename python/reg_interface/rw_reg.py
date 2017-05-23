@@ -16,6 +16,29 @@ rpc_connect.restype = c_uint
 rBlock = lib.getBlock
 rBlock.restype = c_uint
 rBlock.argtypes=[c_uint,POINTER(c_uint32)]
+getRPCTTCmain = lib.getmonTTCmain
+getRPCTTCmain.argtypes = [POINTER(c_uint32)]
+getRPCTTCmain.restype = c_uint
+
+getRPCTRIGGERmain = lib.getmonTRIGGERmain
+getRPCTRIGGERmain.argtypes = [POINTER(c_uint32), c_uint32]
+getRPCTRIGGERmain.restype = c_uint
+
+getRPCTRIGGEROHmain = lib.getmonTRIGGEROHmain
+getRPCTRIGGEROHmain.argtypes = [POINTER(c_uint32), c_uint32]
+getRPCTRIGGEROHmain.restype = c_uint
+
+getRPCDAQmain = lib.getmonDAQmain
+getRPCDAQmain.argtypes = [POINTER(c_uint32)]
+getRPCDAQmain.restype = c_uint
+
+getRPCDAQOHmain = lib.getmonDAQOHmain
+getRPCDAQOHmain.argtypes = [POINTER(c_uint32), c_uint32]
+getRPCDAQOHmain.restype = c_uint
+
+getRPCOHmain = lib.getmonOHmain
+getRPCOHmain.argtypes = [POINTER(c_uint32), c_uint32]
+getRPCOHmain.restype = c_uint
 
 rList = lib.getList
 rList.restype = c_uint
@@ -201,7 +224,8 @@ def readReg(reg):
         return 'No read permission!'
     value = rReg(parseInt(address))
     if parseInt(value) == 0xdeaddead:
-        return 'Bus Error'
+        #return 'Bus Error'
+        return '{0:#010x}'.format(0xdeaddead)
     if reg.mask is not None:
         shift_amount=0
         for bit in reversed('{0:b}'.format(reg.mask)):

@@ -28,6 +28,12 @@ confVT1.restype = c_uint
 confVFATs = lib.configureVFATs
 confVFATs.argtypes = [c_char_p, c_char_p, c_char_p, c_uint, c_uint]
 confVFATs.restype = c_uint
+getTTCmain = lib.getmonTTCmain
+getTTCmain.argtypes = [POINTER(c_uint32)]
+getTTCmain.restype = c_uint
+getTRIGGERmain = lib.getmonTRIGGERmain
+getTRIGGERmain.argtypes = [POINTER(c_uint32), c_uint]
+getTRIGGERmain.restype = c_uint
 rBlock = lib.getBlock
 rBlock.restype = c_uint
 rBlock.argtypes=[c_uint,POINTER(c_uint32)]
@@ -45,8 +51,23 @@ def main():
   elapsed_ = timeit.default_timer() - start_time
   print "Connect time %s" %(elapsed_)
   print "Connection to eagle34 successful"
-  #update_atdb("/mnt/persistent/texas/gem_amc_top.xml")
-  #print "Address table updated"
+  getRegInfo("GEM_AMC.GEM_SYSTEM.BOARD_ID")
+  res = (c_uint32 * 5)()
+  res_code = getTTCmain(res)
+  print "\ngetTTCmain result code: %s" %(res_code)
+  if res_code == 0:
+    print "getTTCmain result: %s" %(res)
+    for c in res:
+      print c
+  noh = 2
+  res2 = (c_uint32 * (noh+1))()
+  res_code = getTRIGGERmain(res2,noh)
+  if res_code == 0:
+    print "getTRIGGERmain result: %s" %(res2)
+    for c in res2:
+      print c
+  update_atdb("/mnt/persistent/texas/gem_amc_top.xml")
+  print "Address table updated"
   #getRegInfo("GEM_AMC.GEM_SYSTEM.BOARD_ID")
   #start_time_ = timeit.default_timer()
   #res = confTRIMDAC('2','/mnt/persistent/texas/test/chConfig_GEMINIm01L1.txt')
@@ -57,23 +78,23 @@ def main():
   #else:
   #  print "confTRIMDAC failed"
 
-  start_time_ = timeit.default_timer()
-  res = confVT1('2','',64)
-  elapsed_ = timeit.default_timer() - start_time_
-  print "Config time %s" %(elapsed_)
-  if res == 0:
-    print "confVT1 executed"
-  else:
-    print "confVT1 failed"
+  #start_time_ = timeit.default_timer()
+  #res = confVT1('2','',64)
+  #elapsed_ = timeit.default_timer() - start_time_
+  #print "Config time %s" %(elapsed_)
+  #if res == 0:
+  #  print "confVT1 executed"
+  #else:
+  #  print "confVT1 failed"
 
-  start_time_ = timeit.default_timer()
-  res = confVFATs('2','/mnt/persistent/texas/test/chConfig_GEMINIm01L1.txt','/mnt/persistent/texas/test/vfatConfig_GEMINIm27L1.txt',1,64)
-  elapsed_ = timeit.default_timer() - start_time_
-  print "Config time %s" %(elapsed_)
-  if res == 0:
-    print "confVFATs executed"
-  else:
-    print "confVFATs failed"
+  #start_time_ = timeit.default_timer()
+  #res = confVFATs('2','/mnt/persistent/texas/test/chConfig_GEMINIm01L1.txt','/mnt/persistent/texas/test/vfatConfig_GEMINIm27L1.txt',1,64)
+  #elapsed_ = timeit.default_timer() - start_time_
+  #print "Config time %s" %(elapsed_)
+  #if res == 0:
+  #  print "confVFATs executed"
+  #else:
+  #  print "confVFATs failed"
 
 
 if __name__ == '__main__':

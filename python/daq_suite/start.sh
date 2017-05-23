@@ -1,3 +1,3 @@
 #!/bin/sh
 
-python2 manage.py runserver 0.0.0.0:5555
+/usr/local/bin/python2.7 manage.py runserver 0.0.0.0:5555
