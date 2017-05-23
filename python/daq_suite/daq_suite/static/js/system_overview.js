@@ -10,6 +10,7 @@ function config_action(action_id) {
     // handle a successful response
     success : function(json) {
         console.log("config success"); // another sanity check
+        location.reload(true);
     },
     
     // handle a non-successful response

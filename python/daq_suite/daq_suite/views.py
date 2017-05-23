@@ -24,6 +24,7 @@ ohlist=[]
 
 event=threading.Event()
 lock = threading.Lock()
+monitoringOFF = False
 
 def updateMain():
   global ttclist
@@ -138,8 +139,13 @@ t1 = threading.Thread(target=updateMain)
 t2 = threading.Thread(target=updateModule)
 
 def expert_controls_main_imp(request):
+  global monitoringOFF
   if request.method=="POST":
-    if "daq_reset" in request.body:
+    if "monitoring_off" in request.body:
+      monitoringOFF=True
+    elif "monitoring_on" in request.body:
+      monitoringOFF=False
+    elif "daq_reset" in request.body:
       reg = getNode("GEM_AMC.DAQ.CONTROL.RESET")
       writeReg(reg,0x1)
     elif "daq_enable" in request.body:
@@ -185,14 +191,28 @@ def main(request):
   global ohlist
   global t1
   global lock
-  with lock:
-    t1=threading.Thread(target=updateMain)
-    t1.start()
-    t1.join()
+  global monitoringOFF
+  if monitoringOFF:
+    return render(request,'main.html',{'main':True,
+                                     'monitoringOFF':True,
+                                     'ttclist':ttclist,
+                                     'triggerlist':triggerlist,
+                                     'triggerohlist':triggerohlist,
+                                     'killmask':killmask,
+                                     'daqlist':daqlist,
+                                     'iemask':iemask,
+                                     'daqohlist':daqohlist,
+                                     'ohlist':ohlist})
+  else:
+    with lock:
+      t1=threading.Thread(target=updateMain)
+      t1.start()
+      t1.join()
 
-  elapsed = timeit.default_timer() - start_time
-  print "Update main page time %s" %(elapsed)
-  return render(request,'main.html',{'main':True,
+    elapsed = timeit.default_timer() - start_time
+    print "Update main page time %s" %(elapsed)
+    return render(request,'main.html',{'main':True,
+                                     'monitoringOFF':False,
                                      'ttclist':ttclist,
                                      'triggerlist':triggerlist,
                                      'triggerohlist':triggerohlist,

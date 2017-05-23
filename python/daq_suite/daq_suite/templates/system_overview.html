@@ -1,7 +1,22 @@
 {% block system_overview %}
+{% if monitoringOFF %}
+<span class="label label-danger full-width"> 
+<h4 align="center">
+  MONITORING OFF
+</h4>
+<button class="btn btn-success btn-lg" type="button" align="center" onclick="config_action(this.id)" id="monitoring_on" name="monitoring_on">ENABLE MONITORING</button>
+</span>
+{% else %}
+<span class="label label-success full-width"> 
+<h4 align="center">
+  MONITORING ON
+</h4>
+<button class="btn btn-danger btn-lg" type="button" align="center" onclick="config_action(this.id)" id="monitoring_off" name="monitoring_off">DISABLE MONITORING</button>
+</span>
+
 <div class="col-lg-6">
     <!-- Left column -->
-
+      
     <div class="panel panel-default">
         <div class="panel-heading">
             <h4 align="center">
@@ -126,4 +141,5 @@
     </div>
 </div>
 
+{%endif%}
 {% endblock %}

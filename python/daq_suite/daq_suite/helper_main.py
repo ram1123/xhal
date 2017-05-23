@@ -43,19 +43,27 @@ def getTRIGGERmain():
   #reg = getNode('GEM_AMC.TRIGGER.STATUS.OR_TRIGGER_RATE')
   #value=int(readReg(reg),16)
   value = values[0]
-  if value>100000:
-    displaystring.append('<div class="progress"><div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="%s" aria-valuemin="0" aria-valuemax="50000000" style="min-width: 3em; width:%s%%">%s</div></div>' % (value,value/500000,value))
+  if value>5000000:
+    width=100
   else:
-    displaystring.append('<div class="progress"><div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="%s" aria-valuemin="0" aria-valuemax="4294967295" style="width:%s%%">%s</div></div>' % (value,value/500000,value))
+    width=value/50000
+  if value>1000000:
+    displaystring.append('<div class="progress"><div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="%s" aria-valuemin="0" aria-valuemax="5000000" style="min-width: 3em; width:%s%%">%sHz</div></div>' % (value,width,value))
+  elif value>100000:
+    displaystring.append('<div class="progress"><div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="%s" aria-valuemin="0" aria-valuemax="5000000" style="min-width: 3em; width:%s%%">%sHz</div></div>' % (value,width,value))
+  else:
+    displaystring.append('<div class="progress"><div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="%s" aria-valuemin="0" aria-valuemax="5000000" style="width:%s%%">%sHz</div></div>' % (value,width,value))
   for i in range(NOH):
     namelist.append('OH%s.TRIGGER_RATE' % (i))
     #reg = getNode('GEM_AMC.TRIGGER.OH%s.TRIGGER_RATE' % (i))
     #value=int(readReg(reg),16)
     value = values[i+1]
-    if value>100000:
-      displaystring.append('<div class="progress"><div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="%s" aria-valuemin="0" aria-valuemax="50000000" style="min-width: 3em; width:%s%%">%s</div></div>' % (value,value/500000,value))
+    if value>1000000:
+      displaystring.append('<div class="progress"><div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="%s" aria-valuemin="0" aria-valuemax="5000000" style="min-width: 3em; width:%s%%">%sHz</div></div>' % (value,width,value))
+    elif value>100000:
+      displaystring.append('<div class="progress"><div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="%s" aria-valuemin="0" aria-valuemax="5000000" style="min-width: 3em; width:%s%%">%sHz</div></div>' % (value,width,value))
     else:
-      displaystring.append('<div class="progress"><div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="%s" aria-valuemin="0" aria-valuemax="50000000" style="min-width: 3em; width:%s%%">%s</div></div>' % (value,value/500000,value))
+      displaystring.append('<div class="progress"><div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="%s" aria-valuemin="0" aria-valuemax="5000000" style="min-width: 3em; width:%s%%">%sHz</div></div>' % (value,width,value))
 
   return zip(namelist,displaystring) 
  
