@@ -29,5 +29,4 @@ urlpatterns = [
     url(r'^monitoring/(\w.+)/', read_gem_system_module),
 ]
 parseXML()
-rpc_connect("eagle26")
-
+rpc_connect("eagle34")
