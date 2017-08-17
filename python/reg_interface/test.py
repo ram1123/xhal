@@ -4,7 +4,7 @@ from time import sleep
 from ctypes import *
 import timeit
 
-lib = CDLL(os.getenv("XHAL_ROOT")+"/lib/librwreg.so")
+lib = CDLL(os.getenv("XHAL_ROOT")+"/lib/x86_64/librwreg.so")
 rReg = lib.getReg
 rReg.restype = c_uint
 rReg.argtypes=[c_uint]
