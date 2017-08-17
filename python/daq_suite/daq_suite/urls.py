@@ -30,4 +30,3 @@ urlpatterns = [
 ]
 parseXML()
 rpc_connect("eagle34")
-
