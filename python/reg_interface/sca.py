@@ -68,7 +68,7 @@ def main():
         instructions = sys.argv[2]
 
     parseXML()
-    rpc_connect("eagle34")
+    rpc_connect("eagle26")
     initJtagRegAddrs()
 
     heading("Hola, I'm SCA controller tester :)")
