@@ -42,32 +42,59 @@ rList = lib.getList
 rList.restype = c_uint
 rList.argtypes=[POINTER(c_uint32),POINTER(c_uint32)]
 
+ttcGenConf = lib.ttcGenConf
+ttcGenConf.restype = c_uint
+ttcGenConf.argtypes = [c_uint, c_uint]
+
+tscan = lib.thresholdScan
+tscan.restype = c_uint
+tscan.argtypes = [c_uint, c_uint, c_uint, c_uint, c_uint, c_uint, c_uint]
+
 DEBUG = True
 
 def main():
   print "Start testing"
   start_time_ = timeit.default_timer()
-  rpc_connect("eagle34")
+  rpc_connect("eagle60")
   elapsed_ = timeit.default_timer() - start_time
   print "Connect time %s" %(elapsed_)
-  print "Connection to eagle34 successful"
-  getRegInfo("GEM_AMC.GEM_SYSTEM.BOARD_ID")
-  res = (c_uint32 * 5)()
-  res_code = getTTCmain(res)
-  print "\ngetTTCmain result code: %s" %(res_code)
-  if res_code == 0:
-    print "getTTCmain result: %s" %(res)
-    for c in res:
-      print c
-  noh = 2
-  res2 = (c_uint32 * (noh+1))()
-  res_code = getTRIGGERmain(res2,noh)
-  if res_code == 0:
-    print "getTRIGGERmain result: %s" %(res2)
-    for c in res2:
-      print c
-  update_atdb("/mnt/persistent/texas/gem_amc_top.xml")
-  print "Address table updated"
+  print "Connection to eagle60 successful"
+  print "Configure TTC"
+  L1Ainterval = 0x200
+  pulseDelay = 0
+  res=ttcGenConf(L1Ainterval, pulseDelay)
+  if res==0:
+    print "TTC configured successfully"
+  else: 
+    print "TTC configuration failed"
+    sys.exit()
+  print "Starting scan"
+  nevts = 1000
+  ohN = 0
+  dacMin = 0
+  dacMax = 255
+  dacStep = 1
+  ch = 128
+  mask = 0xFFFFEF
+  tscan(nevts, ohN, dacMin, dacMax, dacStep, ch, mask)
+  #getRegInfo("GEM_AMC.GEM_SYSTEM.BOARD_ID")
+  #res = (c_uint32 * 5)()
+  #res_code = getTTCmain(res)
+  #print "\ngetTTCmain result code: %s" %(res_code)
+  #if res_code == 0:
+  #  print "getTTCmain result: %s" %(res)
+  #  for c in res:
+  #    print c
+  #noh = 2
+  #res2 = (c_uint32 * (noh+1))()
+  #res_code = getTRIGGERmain(res2,noh)
+  #if res_code == 0:
+  #  print "getTRIGGERmain result: %s" %(res2)
+  #  for c in res2:
+  #    print c
+  #update_atdb("/mnt/persistent/gemdaq/xml/gem_amc_top.xml")
+  #update_atdb("/mnt/persistent/texas/gem_amc_top_v1_7_3_2oh.xml")
+  #print "Address table updated"
   #getRegInfo("GEM_AMC.GEM_SYSTEM.BOARD_ID")
   #start_time_ = timeit.default_timer()
   #res = confTRIMDAC('2','/mnt/persistent/texas/test/chConfig_GEMINIm01L1.txt')

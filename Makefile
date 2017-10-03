@@ -29,7 +29,9 @@ TARGET_LIB=${XHAL_ROOT}/lib/x86_64/libxhal.so
 TARGET_TEST=${XHAL_ROOT}/test/bin/test
 RPC_SA_LIB=${XHAL_ROOT}/lib/x86_64/librwreg.so
 
-all:${TARGET_LIB} ${TARGET_TEST} ${RPC_SA_LIB}
+all:${TARGET_LIB} ${RPC_SA_LIB}
+
+test:${TARGET_TEST}
 
 utils:${TARGET_LIB}
 
