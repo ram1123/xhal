@@ -69,7 +69,7 @@ DLLEXPORT uint32_t getRegInfoDB(char * regName)
     return 0;
 }
 
-DLLEXPORT unsigned long getReg(unsigned int address)
+DLLEXPORT uint32_t getReg(uint32_t address)
 {
     req = wisc::RPCMsg("memory.read");
     req.set_word("address", address);
@@ -93,7 +93,7 @@ DLLEXPORT unsigned long getReg(unsigned int address)
     return result;
 }
 
-DLLEXPORT unsigned long getBlock(unsigned int address, uint32_t* result, ssize_t size)
+DLLEXPORT uint32_t getBlock(uint32_t address, uint32_t* result, ssize_t size)
 {
     req = wisc::RPCMsg("extras.blockread");
     req.set_word("address", address);
@@ -115,7 +115,7 @@ DLLEXPORT unsigned long getBlock(unsigned int address, uint32_t* result, ssize_t
     return 0;
 }
 
-DLLEXPORT unsigned long getList(uint32_t* addresses, uint32_t* result, ssize_t size)
+DLLEXPORT uint32_t getList(uint32_t* addresses, uint32_t* result, ssize_t size)
 {
     req = wisc::RPCMsg("extras.listread");
     req.set_word_array("addresses", addresses,size);
@@ -137,7 +137,7 @@ DLLEXPORT unsigned long getList(uint32_t* addresses, uint32_t* result, ssize_t s
     return 0;
 }
 
-DLLEXPORT unsigned long putReg(unsigned int address, unsigned int value)
+DLLEXPORT uint32_t putReg(uint32_t address, uint32_t value)
 {
     req = wisc::RPCMsg("memory.write");
     req.set_word("address", address);
