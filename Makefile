@@ -25,11 +25,18 @@ OBJS_TEST = $(SRCS_TEST:.cpp=.o)
 SRCS_RPC_SA = $(shell echo src/common/rpc_standalone_client/*.cpp)
 OBJS_RPC_SA = $(SRCS_RPC_SA:.cpp=.o)
 
+SRCS_RPC_MAN = $(shell echo src/common/rpc_manager/*.cc)
+OBJS_RPC_MAN = $(SRCS_RPC_MAN:.cpp=.o)
+
+
 TARGET_LIB=${XHAL_ROOT}/lib/x86_64/libxhal.so
 TARGET_TEST=${XHAL_ROOT}/test/bin/test
 RPC_SA_LIB=${XHAL_ROOT}/lib/x86_64/librwreg.so
+RPC_MAN_LIB=${XHAL_ROOT}/lib/x86_64/librpcman.so
 
 all:${TARGET_LIB} ${RPC_SA_LIB}
+
+rpc:${RPC_MAN_LIB}
 
 test:${TARGET_TEST}
 
@@ -58,6 +65,13 @@ $(RPC_SA_LIB): $(OBJS_RPC_SA)
 
 $(OBJS_RPC_SA):$(SRCS_RPC_SA)
 	    $(CC) $(CCFLAGS) $(ADDFLAGS) $(INC) -L${XHAL_ROOT}/lib/x86_64 -lwiscrpcsvc -c -o $@ $<
+
+$(RPC_MAN_LIB): $(OBJS_RPC_MAN)
+	    $(CC) $(CCFLAGS) $(ADDFLAGS) ${LDFLAGS} $(INC) -L${XHAL_ROOT}/lib/x86_64/ -lwiscrpcsvc -o $@ $^
+
+$(OBJS_RPC_MAN):$(SRCS_RPC_MAN)
+	    $(CC) $(CCFLAGS) $(ADDFLAGS) $(INC) -L${XHAL_ROOT}/lib/x86_64 -lwiscrpcsvc -c -o $@ $<
+
 
 .PHONY: clean
 clean:
