@@ -72,7 +72,7 @@ DLLEXPORT uint32_t getmonTRIGGEROHmain(uint32_t* result, uint32_t noh)
         if (rsp.get_key_exists("error")) {
             printf("Error: %s",rsp.get_string("error").c_str());
             return 1;
-        else {
+        }else {
             std::string t;
             for (int i = 0; i < noh; i++) {
                 t = "OH"+std::to_string(i)+".LINK0_NOT_VALID_CNT";
@@ -133,7 +133,7 @@ DLLEXPORT uint32_t getmonDAQOHmain(uint32_t* result, uint32_t noh)
         if (rsp.get_key_exists("error")) {
             printf("Error: %s",rsp.get_string("error").c_str());
             return 1;
-        else {
+        }else {
             std::string t;
             for (int i = 0; i < noh; i++) {
                 t = "OH"+std::to_string(i)+".STATUS.EVT_SIZE_ERR";
