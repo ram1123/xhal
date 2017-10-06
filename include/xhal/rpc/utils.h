@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <memory>
 #include "xhal/rpc/wiscrpcsvc.h"
 
 #define DLLEXPORT extern "C"
@@ -36,6 +37,7 @@
 static wisc::RPCSvc rpc;
 static wisc::RPCMsg req, rsp;
 
+wisc::RPCSvc* getRPCptr();
 DLLEXPORT uint32_t init(char * hostname);
 DLLEXPORT uint32_t getReg(uint32_t address);
 DLLEXPORT uint32_t putReg(uint32_t address, uint32_t value);

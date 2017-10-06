@@ -5,11 +5,14 @@
  */
 DLLEXPORT uint32_t ttcGenConf(uint32_t L1Ainterval, uint32_t pulseDelay)
 {
+    wisc::RPCSvc* rpc_loc = getRPCptr();
+    //wisc::RPCMsg req_loc, rsp_loc;
+    //req_loc = wisc::RPCMsg("calibration_routines.ttcGenConf");
     req = wisc::RPCMsg("calibration_routines.ttcGenConf");
     req.set_word("L1Ainterval", L1Ainterval);
     req.set_word("pulseDelay", pulseDelay);
     try {
-        rsp = rpc.call_method(req);
+        rsp = rpc_loc->call_method(req);
     }
     STANDARD_CATCH;
 
@@ -36,8 +39,11 @@ DLLEXPORT uint32_t genScan(uint32_t nevts, uint32_t ohN, uint32_t dacMin, uint32
     req.set_word("mask", mask);
     req.set_string("scanReg", std::string(scanReg));
 
+    //std::shared_ptr<wisc::RPCSvc> rpc_loc = getRPCptr();
+    wisc::RPCSvc* rpc_loc = getRPCptr();
+
     try {
-        rsp = rpc.call_method(req);
+        rsp = rpc_loc->call_method(req);
     }
     STANDARD_CATCH;
 

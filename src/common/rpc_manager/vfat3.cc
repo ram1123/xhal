@@ -9,9 +9,10 @@ DLLEXPORT uint32_t configureVFAT3s(uint32_t ohN, uint32_t vfatMask)
 
     req.set_word("vfatMask",vfatMask);
     req.set_word("ohN",ohN);
+    wisc::RPCSvc* rpc_loc = getRPCptr();
 
     try {
-        rsp = rpc.call_method(req);
+        rsp = rpc_loc->call_method(req);
     }
     STANDARD_CATCH;
 

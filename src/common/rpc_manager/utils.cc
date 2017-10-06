@@ -1,5 +1,7 @@
 #include "xhal/rpc/utils.h"
 
+wisc::RPCSvc* getRPCptr(){return &rpc;}
+
 DLLEXPORT uint32_t init(char * hostname)
 {
     try {
