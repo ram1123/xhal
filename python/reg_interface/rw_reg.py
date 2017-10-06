@@ -4,7 +4,7 @@ from time import sleep
 #import uhal
 from ctypes import *
 
-lib = CDLL(os.getenv("XHAL_ROOT")+"/lib/librwreg.so")
+lib = CDLL(os.getenv("XHAL_ROOT")+"/lib/x86_64/librwreg.so")
 rReg = lib.getReg
 rReg.restype = c_uint
 rReg.argtypes=[c_uint]
@@ -260,6 +260,7 @@ def writeReg(reg, value):
     if 'w' not in reg.permission:
         return 'No write permission!'
     # Apply Mask if applicable
+    print "Initial value to write: %s, register %s"% (value,reg.name)
     if reg.mask is not None:
         shift_amount=0
         for bit in reversed('{0:b}'.format(reg.mask)):
