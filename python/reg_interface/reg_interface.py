@@ -8,6 +8,15 @@ MAX_OH_NUM = 11
 
 class Prompt(Cmd):
 
+    def cmdloop_with_keyboard_interrupt(self):
+        doQuit = False
+        while doQuit != True:
+            try:
+                self.cmdloop()
+                doQuit = True
+            except KeyboardInterrupt:
+                sys.stdout.write('\n')
+
     def do_connect(self, hostname):
         if (rpc_connect(hostname)):
             print '[Connection error] RPC connection failed'
@@ -440,8 +449,6 @@ if __name__ == '__main__':
     parser = OptionParser()
     parser.add_option("-e", "--execute", type="str", dest="exe",
                       help="Function to execute once", metavar="exe", default=None)
-    # parser.add_option("-g", "--gtx", type="int", dest="gtx",
-    #                   help="GTX on the GLIB", metavar="gtx", default=0)
     parser.add_option("-n", "--hostname", type="string", dest="hostname",
                       help="CTP7 hostname, default is the one used at p5", default="amc-s2e01-23-03")
 
@@ -457,12 +464,10 @@ if __name__ == '__main__':
     else:
         try:
             parseXML()
-            #if (rpc_connect(options.hostname)):
-            #  print '[Connection error] RPC connection failed'
-            #  sys.exit()
             prompt = Prompt()
             prompt.prompt = 'CTP7 > '
-            prompt.cmdloop('Starting CTP7 Register Command Line Interface. Please connect to CTP7 using connect <hostname> command')
+            print 'Starting CTP7 Register Command Line Interface. Please connect to CTP7 using connect <hostname> command'
+            prompt.cmdloop_with_keyboard_interrupt()
         except TypeError:
             print '[TypeError] Incorrect usage. See help'
         except KeyboardInterrupt:
