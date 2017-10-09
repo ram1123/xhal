@@ -305,16 +305,34 @@ class Prompt(Cmd):
 
 
     def do_kw(self, args):
-        """Read all registers containing KeyWord. USAGE: readKW <KeyWord>"""
-        if getNodesContaining(args) is not None and args!='':
-            for reg in getNodesContaining(args):
-                address = reg.real_address
-                if 'r' in str(reg.permission):
-                    print hex(address).rstrip('L'),reg.permission,'\t',tabPad(reg.name,7),readReg(reg)
-                elif reg.isModule: print hex(address).rstrip('L'),reg.permission,'\t',tabPad(reg.name,7) #,'Module!'
-                else: print hex(address).rstrip('L'),reg.permission,'\t',tabPad(reg.name,7) #,'No read permission!' 
-        else: print args,'not found!'
-
+        """Read all registers containing KeyWord. USAGE: readKW <KeyWord> or readKW <KeyWord> link"""
+        arglist = args.split()
+        if len(arglist)==1:
+            if getNodesContaining(args) is not None and args!='':
+                for reg in getNodesContaining(args):
+                    address = reg.real_address
+                    if 'r' in str(reg.permission):
+                        print hex(address).rstrip('L'),reg.permission,'\t',tabPad(reg.name,7),readReg(reg)
+                    elif reg.isModule: print hex(address).rstrip('L'),reg.permission,'\t',tabPad(reg.name,7) #,'Module!'
+                    else: print hex(address).rstrip('L'),reg.permission,'\t',tabPad(reg.name,7) #,'No read permission!' 
+            else: print args,'not found!'
+        elif len(arglist)==2:
+            found = False
+            if getNodesContaining(arglist[0]) is not None and arglist[0]!='':
+                for reg in getNodesContaining(arglist[0]):
+                    ohx = 'OH%s.'%(arglist[1])
+                    if ohx not in reg.name:
+                        continue
+                    found = True
+                    address = reg.real_address
+                    if 'r' in str(reg.permission):
+                        print hex(address).rstrip('L'),reg.permission,'\t',tabPad(reg.name,7),readReg(reg)
+                    elif reg.isModule: print hex(address).rstrip('L'),reg.permission,'\t',tabPad(reg.name,7) #,'Module!'
+                    else: print hex(address).rstrip('L'),reg.permission,'\t',tabPad(reg.name,7) #,'No read permission!' 
+                if not found: 
+                    print arglist[0],' for link %s not found!'%(arglist[1])
+            else: print arglist[0],'not found!'
+        else: print "Incorrect number of arguments!"
 
     def do_readAll(self, args):
         """Read all registers with read-permission"""
