@@ -25,7 +25,7 @@ DLLEXPORT uint32_t ttcGenConf(uint32_t L1Ainterval, uint32_t pulseDelay)
 /***
  * @brief run a generic scan routine
  */
-DLLEXPORT uint32_t genScan(uint32_t nevts, uint32_t ohN, uint32_t dacMin, uint32_t dacMax, uint32_t dacStep, uint32_t ch, uint32_t enCal, uint32_t mask, char * scanReg)
+DLLEXPORT uint32_t genScan(uint32_t nevts, uint32_t ohN, uint32_t dacMin, uint32_t dacMax, uint32_t dacStep, uint32_t ch, uint32_t enCal, uint32_t mask, char * scanReg, uint32_t * result)
 {
     req = wisc::RPCMsg("calibration_routines.genScan");
 
@@ -52,7 +52,7 @@ DLLEXPORT uint32_t genScan(uint32_t nevts, uint32_t ohN, uint32_t dacMin, uint32
         return 1;
     }
     const uint32_t size = (dacMax - dacMin+1)*24/dacStep;
-    uint32_t* result = new uint32_t[size];
+    //uint32_t* result = new uint32_t[size];
     if (rsp.get_key_exists("data")) {
         ASSERT(rsp.get_word_array_size("data") == size);
         rsp.get_word_array("data", result); 
@@ -60,6 +60,7 @@ DLLEXPORT uint32_t genScan(uint32_t nevts, uint32_t ohN, uint32_t dacMin, uint32
         printf("No data key found");
         return 1;
     } 
+    /*
     FILE *f = fopen("file.txt", "w");
     if (f == NULL)
     {
@@ -75,5 +76,6 @@ DLLEXPORT uint32_t genScan(uint32_t nevts, uint32_t ohN, uint32_t dacMin, uint32
             fprintf(f,"%d    %d    %d    %d\n",i,result[i*vfatSize+j]&0xFFFF,dacMin+j*dacStep,(result[i*vfatSize+j]>>16)&0xFFFF);
         } 
     }
+    */
     return 0;
 }

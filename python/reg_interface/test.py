@@ -49,7 +49,7 @@ ttcGenConf.argtypes = [c_uint, c_uint]
 
 genScan = lib.genScan
 genScan.restype = c_uint
-genScan.argtypes = [c_uint, c_uint, c_uint, c_uint, c_uint, c_uint, c_uint, c_uint, c_char_p]
+genScan.argtypes = [c_uint, c_uint, c_uint, c_uint, c_uint, c_uint, c_uint, c_uint, c_char_p, POINTER(c_uint32)]
 
 confVFAT = lib.configureVFAT3s
 confVFAT.restype = c_uint
@@ -89,6 +89,8 @@ def main():
   mask = 0xF65F7E
   scanReg = "LATENCY"
   confVFAT(ohN,mask)
+  res_size = (dacMax-dacMin+1)/dacStep
+  res = (c_uint * res_size)()
   genScan(nevts, ohN, dacMin, dacMax, dacStep, ch, enCal, mask, scanReg)
 
   #getRegInfo("GEM_AMC.GEM_SYSTEM.BOARD_ID")
