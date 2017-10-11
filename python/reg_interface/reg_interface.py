@@ -3,10 +3,26 @@ import sys, os, subprocess
 from rw_reg import *
 from vfat_config import *
 
+try:
+    import readline
+except ImportError:
+    readline = None
+
 MAX_OH_NUM = 11
 
+histfile = os.path.expanduser('~/.reg_interface_history')
+histfile_size = 1000
 
 class Prompt(Cmd):
+
+    def preloop(self):
+        if readline and os.path.exists(histfile):
+            readline.read_history_file(histfile)
+
+    def postloop(self):
+        if readline:
+            readline.set_history_length(histfile_size)
+            readline.write_history_file(histfile)
 
     def cmdloop_with_keyboard_interrupt(self):
         doQuit = False
