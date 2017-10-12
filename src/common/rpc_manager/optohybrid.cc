@@ -1,6 +1,6 @@
 #include "xhal/rpc/optohybrid.h"
 
-DLLEXPORT uint32_t broadcastRead(uint32_t ohN, char * regName, uint32_t vfatMask){
+DLLEXPORT uint32_t broadcastRead(uint32_t ohN, char * regName, uint32_t vfatMask, uint32_t * result){
     req = wisc::RPCMsg("optohybrid.broadcastRead");
 
     req.set_word("oh_number",ohN);
@@ -15,6 +15,13 @@ DLLEXPORT uint32_t broadcastRead(uint32_t ohN, char * regName, uint32_t vfatMask
 
     if (rsp.get_key_exists("error")) {
         printf("Caught an error: %s\n", (rsp.get_string("error")).c_str());
+        return 1;
+    }
+    else if (rsp.get_key_exists("data")) {
+        ASSERT(rsp.get_word_array_size("data") == size);
+        rsp.get_word_array("data", result);
+    } else {
+        printf("No data key found");
         return 1;
     }
     return 0;
