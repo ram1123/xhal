@@ -1,6 +1,14 @@
 #include "xhal/rpc/optohybrid.h"
 
 DLLEXPORT uint32_t broadcastRead(uint32_t ohN, char * regName, uint32_t vfatMask, uint32_t * result){
+    /* User supplies the VFAT node name as reg_name, examples:
+     *
+     *    v2b electronics: reg_name = "VThreshold1" to get VT1
+     *    v3 electronics: reg_name = "CFG_THR_ARM_DAC"
+     *
+     *    Supplying only a substr of VFAT Node name will crash
+     */
+
     req = wisc::RPCMsg("optohybrid.broadcastRead");
 
     req.set_string("reg_name",std::string(regName));
@@ -29,6 +37,14 @@ DLLEXPORT uint32_t broadcastRead(uint32_t ohN, char * regName, uint32_t vfatMask
 } //End broadcastRead
 
 DLLEXPORT uint32_t broadcastWrite(uint32_t ohN, char * regName, uint32_t value, uint32_t vfatMask){
+    /* User supplies the VFAT node name as reg_name, examples:
+     *
+     *    v2b electronics: reg_name = "VThreshold1" to get VT1
+     *    v3 electronics: reg_name = "CFG_THR_ARM_DAC"
+     *
+     *    Supplying only a substr of VFAT Node name will crash
+     */
+
     req = wisc::RPCMsg("optohybrid.broadcastWrite");
 
     req.set_string("reg_name",std::string(regName));
