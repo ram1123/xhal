@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 from cmd import Cmd
 import sys, os, subprocess
 from rw_reg import *
