@@ -177,3 +177,26 @@ DLLEXPORT uint32_t getUltraScanResults(uint32_t ohN, uint32_t nevts, uint32_t da
 
     return 0;
 } //End getUltraScanResults(...)
+
+DLLEXPORT uint32_t stopCalPulse2AllChannels(uint32_t ohN, uint32_t mask, uint32_t ch_min, uint32_t ch_max){
+    req = wisc::RPCMsg("optohybrid.stopCalPulse2AllChannels");
+
+    req.set_word("ohN",ohN);
+    req.set_word("mask",mask);
+    req.set_word("ch_min",ch_min);
+    req.set_word("ch_max",ch_max);
+
+    wisc::RPCSvc* rpc_loc = getRPCptr();
+
+    try {
+        rsp = rpc_loc->call_method(req);
+    }
+    STANDARD_CATCH;
+
+    if (rsp.get_key_exists("error")) {
+        printf("Caught an error: %s\n", (rsp.get_string("error")).c_str());
+        return 1;
+    }
+
+    return 0;
+}
