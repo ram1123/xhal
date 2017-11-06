@@ -367,6 +367,7 @@ class Prompt(Cmd):
             return
         if reg is not None: 
             address = reg.real_address
+            print hex(address),'\t node: ', reg.name
             print hex(address),'\t',readAddress(address)
         else:
             print args,'not found!' 
