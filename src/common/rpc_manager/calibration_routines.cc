@@ -1,10 +1,15 @@
 #include "xhal/rpc/calibration_routines.h"
 
-DLLEXPORT uint32_t ttcGenToggle(uint32_t ohN, bool bRun){
+DLLEXPORT uint32_t ttcGenToggle(uint32_t ohN, bool enable){
+    /*
+     * v3  electronics: enable = true (false) ignore (take) ttc commands from backplane for this AMC
+     * v2b electronics: enable = true (false) start (stop) the T1Controller for link ohN
+     */
+
     wisc::RPCSvc* rpc_loc = getRPCptr();
     req = wisc::RPCMsg("calibration_routines.ttcGenToggle");
     req.set_word("ohN", ohN);
-    req.set_word("bRun", bRun);
+    req.set_word("enable", enable);
     try {
         rsp = rpc_loc->call_method(req);
     }
@@ -19,11 +24,30 @@ DLLEXPORT uint32_t ttcGenToggle(uint32_t ohN, bool bRun){
 /***
  * @brief configure TTC generator
  */
-DLLEXPORT uint32_t ttcGenConf(uint32_t ohN, uint32_t mode, uint32_t type, uint32_t pulseDelay, uint32_t L1Ainterval, uint32_t nPulses, bool bRun)
+DLLEXPORT uint32_t ttcGenConf(uint32_t ohN, uint32_t mode, uint32_t type, uint32_t pulseDelay, uint32_t L1Ainterval, uint32_t nPulses, bool enable)
 {
+    /*
+     * v3  electronics Behavior:
+     *      pulseDelay (only for enable = true), delay between CalPulse and L1A
+     *      L1Ainterval (only for enable = true), how often to repeat signals
+     *      enable = true (false) ignore (take) ttc commands from backplane for this AMC (affects all links)
+     * v2b electronics behavior:
+     *      Configure the T1 controller
+     *      mode: 0 (Single T1 signal),
+     *            1 (CalPulse followed by L1A),
+     *            2 (pattern)
+     *      type (only for mode 0, type of T1 signal to send):
+     *            0 L1A
+     *            1 CalPulse
+     *            2 Resync
+     *            3 BC0
+     *      pulseDelay (only for mode 1), delay between CalPulse and L1A
+     *      L1Ainterval (only for mode 0,1), how often to repeat signals
+     *      nPulses how many signals to send (0 is continuous)
+     *      enable = true (false) start (stop) the T1Controller for link ohN
+     */
+
     wisc::RPCSvc* rpc_loc = getRPCptr();
-    //wisc::RPCMsg req_loc, rsp_loc;
-    //req_loc = wisc::RPCMsg("calibration_routines.ttcGenConf");
     req = wisc::RPCMsg("calibration_routines.ttcGenConf");
     req.set_word("ohN", ohN);
     req.set_word("mode", mode);
@@ -31,7 +55,7 @@ DLLEXPORT uint32_t ttcGenConf(uint32_t ohN, uint32_t mode, uint32_t type, uint32
     req.set_word("pulseDelay", pulseDelay);
     req.set_word("L1Ainterval", L1Ainterval);
     req.set_word("nPulses", nPulses);
-    req.set_word("bRun", bRun);
+    req.set_word("enable", enable);
     try {
         rsp = rpc_loc->call_method(req);
     }
