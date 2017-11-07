@@ -6,29 +6,37 @@ IncludeDirs += ${XHAL_ROOT}/xcompile/xerces-c-3.1.4/src
 IncludeDirs += ${XHAL_ROOT}/xcompile/log4cplus-1.1.2/include
 INC=$(IncludeDirs:%=-I%)
 
-Libraries+= -llog4cplus -lxerces-c 
+Libraries+= -llog4cplus -lxerces-c -lstdc++
 LibraryDirs+=-L${XHAL_ROOT}/lib/arm
 LIB=$(LibraryDirs)
 LIB+= $(Libraries)
 
 LDFLAGS= -shared
-SRCS = $(shell echo src/common/utils/*.cpp)
-OBJS = $(SRCS:.cpp=.o)
+SRCS_XHAL = $(shell echo src/common/utils/*.cpp)
+OBJS_XHAL = $(SRCS_XHAL:.cpp=.o)
+OBJS_RW = xcompile/lib_rw_ctp7/libmemsvc.o xcompile/lib_rw_ctp7/rwreg.o
 
-TARGET_LIB=${XHAL_ROOT}/lib/arm/libxhal_ctp7.so
+XHAL_LIB=${XHAL_ROOT}/lib/arm/libxhal.so
+RW_LIB=${XHAL_ROOT}/lib/arm/librwreg.so
 
-all:${TARGET_LIB}
+all:${XHAL_LIB} ${RW_LIB}
 
-utils:${TARGET_LIB}
+utils:${XHAL_LIB}
 
-$(TARGET_LIB): $(OBJS) 
-	    $(CC) $(CFLAGS) $(ADDFLAGS) ${LDFLAGS} $(INC) $(LIB)  -o $@ $^
+$(XHAL_LIB): $(OBJS_XHAL) 
+	    $(CC) $(CFLAGS) $(ADDFLAGS) ${LDFLAGS} $(INC) $(LIB) -o $@ $^
 
-$(OBJS):$(SRCS)
+$(OBJS_XHAL):$(SRCS_XHAL)
 	    $(CC) $(CFLAGS) $(ADDFLAGS) $(INC) $(LIB) -c -o $@ $<
+
+$(RW_LIB): $(OBJS_RW)
+	    $(CXX) -std=c++0x $(LDFLAGS) -fnon-call-exceptions -shared -o $@ $(OBJS_RW) 
+
+%.o: %.c
+	$(CC) -std=gnu99 -c $(CFLAGS) -o $@ $<
+%.o: %.cc
+	$(CXX) -std=c++0x -c $(CFLAGS) -o $@ $<
 
 .PHONY: clean
 clean:
-	    -${RM} ${TARGET_LIB} ${OBJS} 
-
-
+	    -${RM} ${XHAL_LIB} ${OBJS_XHAL} ${RW_LIB} ${OBJS_RW}
