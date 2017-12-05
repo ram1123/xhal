@@ -1,3 +1,4 @@
 export XHAL_ROOT=$PWD
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$XHAL_ROOT/lib
-echo $XHAL_ROOT
+export PATH=$PATH:$XHAL_ROOT/python/reg_interface
+# echo $XHAL_ROOT
