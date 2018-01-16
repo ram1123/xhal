@@ -111,17 +111,19 @@ DLLEXPORT uint32_t genScan(uint32_t nevts, uint32_t ohN, uint32_t dacMin, uint32
     return 0;
 }
 
-DLLEXPORT uint32_t sbitRateScan(uint32_t ohN, uint32_t dacMin, uint32_t dacMax, uint32_t dacStep, uint32_t ch, uint32_t maskOh, char * scanReg, uint32_t * resultDacVal, uint32_t * resultTrigRate){
+DLLEXPORT uint32_t sbitRateScan(uint32_t ohN, uint32_t vfatN, uint32_t dacMin, uint32_t dacMax, uint32_t dacStep, uint32_t ch, uint32_t maskOh, char * scanReg, uint32_t waitTime, uint32_t * resultDacVal, uint32_t * resultTrigRate){
     req = wisc::RPCMsg("calibration_routines.sbitRateScan");
 
 
     req.set_word("ohN", ohN);
     req.set_word("maskOh", maskOh);
+    req.set_word("vfatN", vfatN);
     req.set_word("dacMin", dacMin);
     req.set_word("dacMax", dacMax);
     req.set_word("dacStep", dacStep);
     req.set_word("ch", ch);
     req.set_string("scanReg", std::string(scanReg));
+    req.set_word("waitTime", waitTime);
 
     wisc::RPCSvc* rpc_loc = getRPCptr();
 
