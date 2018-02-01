@@ -1,4 +1,4 @@
-import xml.etree.ElementTree as xml
+import lxml.etree as xml
 import sys, os, subprocess, socket
 from time import sleep
 #import uhal
@@ -124,7 +124,8 @@ def main():
 def parseXML():
     print 'Parsing',ADDRESS_TABLE_TOP,'...'
     tree = xml.parse(ADDRESS_TABLE_TOP)
-    root = tree.getroot()[0]
+    tree.xinclude()
+    root = tree.getroot()
     vars = {}
     makeTree(root,'',0x0,nodes,None,vars,False)
 
@@ -141,7 +142,8 @@ def makeTree(node,baseName,baseAddress,nodes,parentNode,vars,isGenerated):
     newNode = Node()
     name = baseName
     if baseName != '': name += '.'
-    name += node.get('id')
+    if node.get('id') is not None and node.get("id") != "top":
+        name += node.get('id')
     name = substituteVars(name, vars)
     newNode.name = name
     if node.get('description') is not None:
