@@ -34,7 +34,7 @@ TARGET_TEST=${XHAL_ROOT}/test/bin/test
 RPC_SA_LIB=${XHAL_ROOT}/lib/x86_64/librwreg.so
 RPC_MAN_LIB=${XHAL_ROOT}/lib/x86_64/librpcman.so
 
-all:${TARGET_LIB} ${RPC_SA_LIB}
+all:${TARGET_LIB} ${RPC_SA_LIB} 
 
 rpc:${RPC_MAN_LIB}
 

@@ -60,16 +60,25 @@ void xhal::utils::XHALXMLParser::parseXML()
   //  Create our parser, then attach an error handler to the parser.
   //  The parser will call back to methods of the ErrorHandler if it
   //  discovers errors during the course of parsing the XML document.
-  //
-  xercesc::XercesDOMParser* parser = new xercesc::XercesDOMParser;
+
+  XMLCh tempStr[100];
+  xercesc::XMLString::transcode("LS", tempStr, 99);
+  xercesc::DOMImplementation *impl = xercesc::DOMImplementationRegistry::getDOMImplementation(tempStr);
+  xercesc::DOMLSParser       *parser = ((xercesc::DOMImplementationLS*)impl)->createLSParser(xercesc::DOMImplementationLS::MODE_SYNCHRONOUS, 0);
+  xercesc::DOMConfiguration  *config = parser->getDomConfig();
+  xercesc::DOMDocument *doc;
   DEBUG("Xerces parser created ");
-  parser->setValidationScheme(xercesc::XercesDOMParser::Val_Auto);
-  parser->setDoNamespaces(false);
-  parser->setCreateEntityReferenceNodes(false);
-  // parser->setCreateEntityReferenceNodes(true);
-  // parser->setExpandEntityReferences(true);
-  parser->setDoXInclude(true);
-  // parser->setToCreateXMLDeclTypeNode(true);
+
+  config->setParameter(xercesc::XMLUni::fgDOMNamespaces, true);
+  config->setParameter(xercesc::XMLUni::fgXercesSchema, false);
+  config->setParameter(xercesc::XMLUni::fgXercesHandleMultipleImports, true);
+  config->setParameter(xercesc::XMLUni::fgXercesSchemaFullChecking, false);
+
+  if(config->canSetParameter(xercesc::XMLUni::fgXercesDoXInclude, true)){
+    config->setParameter(xercesc::XMLUni::fgXercesDoXInclude, true);
+    DEBUG("Xerces parser set to do XInclude ");
+  }
+
   DEBUG("Xerces parser tuned up ");
 
   //  Parse the XML file, catching any XML exceptions that might propogate
@@ -77,7 +86,9 @@ void xhal::utils::XHALXMLParser::parseXML()
   //
   bool errorsOccured = false;
   try {
-    parser->parse(m_xmlFile.c_str());
+    parser->resetDocumentPool();
+    doc = parser->parseURI(m_xmlFile.c_str());
+
   } catch (const xercesc::XMLException& e) {
     ERROR("An error occured during parsing" << std::endl
           << "   Message: "
@@ -98,8 +109,8 @@ void xhal::utils::XHALXMLParser::parseXML()
 
   if (!errorsOccured) {
     DEBUG("DOM tree created succesfully");
-    if (parser->getDocument()->getDocumentElement()!=NULL){
-      m_root = parser->getDocument()->getDocumentElement();
+    if (doc->getDocumentElement()!=NULL){
+      m_root = doc->getDocumentElement();
     }
     DEBUG("Root node (getDocumentElement) obtained");
     makeTree(m_root,"",0x0,m_nodes,NULL,m_vars,false);
@@ -108,7 +119,8 @@ void xhal::utils::XHALXMLParser::parseXML()
     throw xhal::utils::Exception("XHALParser: an error occured during parsing"); 
   }
   DEBUG("Parsing done!");
-  if (parser) delete(parser);
+  if (parser) parser->release();
+  xercesc::XMLPlatformUtils::Terminate();
 }
 
 void xhal::utils::XHALXMLParser::makeTree(xercesc::DOMNode * node, std::string baseName, uint32_t baseAddress, std::unordered_map<std::string, Node> * nodes, Node * parentNode, std::unordered_map<std::string, int> vars, bool isGenerated)
@@ -120,9 +132,11 @@ void xhal::utils::XHALXMLParser::makeTree(xercesc::DOMNode * node, std::string b
   DEBUG("Declare some local variables");
   if (isGenerated == false)
   {
+    DEBUG("Node is not _generated_");
     if (auto tmp = getAttVal(node, "generate"))
     {
       if (*tmp == "true"){
+        DEBUG("Generate nodes");
         tmp = getAttVal(node, "generate_size");
         generateSize = parseInt(*tmp);
         tmp = getAttVal(node, "generate_address_step");
@@ -136,6 +150,8 @@ void xhal::utils::XHALXMLParser::makeTree(xercesc::DOMNode * node, std::string b
         return;
       }
     }
+  } else {
+    DEBUG("Node is _generated_");
   }
   Node newNode = Node();
   DEBUG("Create Node() object");
@@ -144,7 +160,13 @@ void xhal::utils::XHALXMLParser::makeTree(xercesc::DOMNode * node, std::string b
   name = baseName;
   address = baseAddress;
   if (baseName != "") {name += ".";}
-  name += *getAttVal(node, "id");
+  if (auto tmp = getAttVal(node, "id"))
+  { 
+    name.append(*tmp);
+  } else {
+    ERROR("getAttVal returned NONE, node has no id attribute");
+  }
+  //name += *getAttVal(node, "id");
   name = substituteVars(name, vars);
   DEBUG("Node name: " << name);
   newNode.name = name;
@@ -158,7 +180,7 @@ void xhal::utils::XHALXMLParser::makeTree(xercesc::DOMNode * node, std::string b
     newNode.address = address;
     newNode.real_address = (address<<2)+0x64000000;
   } else {
-    DEBUG("getAttVal returned NONE");
+    TRACE("getAttVal returned NONE");
   }
   if (auto tmp = getAttVal(node, "permission"))
   { 
@@ -205,7 +227,7 @@ void xhal::utils::XHALXMLParser::makeTree(xercesc::DOMNode * node, std::string b
 
 std::experimental::optional<std::string> xhal::utils::XHALXMLParser::getAttVal(xercesc::DOMNode * t_node_, const char * attname)
 {
-  DEBUG("Call getAttVal for attribute " << attname);
+  TRACE("Call getAttVal for attribute " << attname);
   XMLCh * tmp = xercesc::XMLString::transcode(attname);
   xercesc::DOMElement* t_node = static_cast<xercesc::DOMElement*>(t_node_);
   TRACE("tmp: " << tmp);
@@ -217,11 +239,11 @@ std::experimental::optional<std::string> xhal::utils::XHALXMLParser::getAttVal(x
     std::string value = tmp2;
     xercesc::XMLString::release(&tmp);
     xercesc::XMLString::release(&tmp2);
-    DEBUG("result " << value);
+    TRACE("result " << value);
     return value;
   } else 
   {
-    DEBUG("Attribute not found");
+    TRACE("Attribute not found");
     xercesc::XMLString::release(&tmp);
     xercesc::XMLString::release(&tmp2);
     return {};
@@ -230,19 +252,19 @@ std::experimental::optional<std::string> xhal::utils::XHALXMLParser::getAttVal(x
 
 unsigned int xhal::utils::XHALXMLParser::parseInt(std::string & s)
 {
-  DEBUG("Call parseInt for argument " << s);
+  TRACE("Call parseInt for argument " << s);
   std::stringstream converter(s);
   uint32_t value;
   if (s.find("0x") != std::string::npos) {
     converter >> std::hex >> value;
-    DEBUG("result " << value);
+    TRACE("result " << value);
     return value;
   } else if (s.find("0b") != std::string::npos) {
-    DEBUG("result " << std::stoi(s,nullptr,2));
+    TRACE("result " << std::stoi(s,nullptr,2));
     return std::stoi(s,nullptr,2);
   } else {
     converter >> std::dec >> value;
-    DEBUG("result " << value);
+    TRACE("result " << value);
     return value;
   }
 }

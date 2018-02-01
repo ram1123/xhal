@@ -504,7 +504,7 @@ if __name__ == '__main__':
             prompt.prompt = 'CTP7 > '
             print 'Starting CTP7 Register Command Line Interface. Please connect to CTP7 using connect <hostname> command unless you use it directly at the CTP7'
             prompt.cmdloop_with_keyboard_interrupt()
-        except TypeError:
-            print '[TypeError] Incorrect usage. See help'
+        except TypeError as te:
+            print '[TypeError] Incorrect usage. See help... ', te
         except KeyboardInterrupt:
             print '\n'

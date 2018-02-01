@@ -19,7 +19,7 @@ namespace xhal {
         {
           try 
           {
-            m_parser->setLogLevel(2);
+            m_parser->setLogLevel(3);
             m_parser->parseXML();
           } catch (...){
             std::cout << "Parsing failed" << std::endl;
