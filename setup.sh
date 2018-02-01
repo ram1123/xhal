@@ -1,4 +1,4 @@
-if [ "$0" != "-bash" ]
+if [[ ! "$0" =~ ("bash") ]]
 then
     # best for calling from zsh                                                                                                                                                                                                                                                   
     export XHAL_ROOT=$(dirname $(readlink -f "$0") )
