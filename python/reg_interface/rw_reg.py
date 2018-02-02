@@ -128,6 +128,7 @@ def parseXML():
     root = tree.getroot()
     vars = {}
     makeTree(root,'',0x0,nodes,None,vars,False)
+    return nodes
 
 def makeTree(node,baseName,baseAddress,nodes,parentNode,vars,isGenerated):
     
