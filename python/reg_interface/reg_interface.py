@@ -54,7 +54,17 @@ class Prompt(Cmd):
 
         else: print 'Incorrect number of arguments.' 
                 
+    def do_doc(self, args):
+        """Alias for do_outputnode. Output properies of node matching name. USAGE: outputnode <NAME>"""
+        arglist = args.split()
+        if len(arglist)==1:
+            node = getNode(args)
+            if node is not None:
+                print node.output()
+            else:
+                print 'Node not found:',args
 
+        else: print 'Incorrect number of arguments.' 
 
     def do_sbittranslate(self, args):
         """Decode SBit Cluster data. USAGE: sbittranslate <SBIT CLUSTER>"""

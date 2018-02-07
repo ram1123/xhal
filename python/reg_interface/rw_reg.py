@@ -89,7 +89,10 @@ class Node:
         print 'Description:',self.description
         print 'Address:','{0:#010x}'.format(self.address)
         print 'Permission:',self.permission
-        if self.mask is not None: print 'Mask:','{0:#010x}'.format(self.mask)
+        if self.mask is not None: 
+            print 'Mask:','{0:#010x}'.format(self.mask)
+        else:
+            print 'Mask: None'
         print 'Module:',self.isModule
         print 'Parent:',self.parent.name
 
@@ -128,6 +131,7 @@ def parseXML():
     root = tree.getroot()
     vars = {}
     makeTree(root,'',0x0,nodes,None,vars,False)
+    return nodes
 
 def makeTree(node,baseName,baseAddress,nodes,parentNode,vars,isGenerated):
     
@@ -142,7 +146,7 @@ def makeTree(node,baseName,baseAddress,nodes,parentNode,vars,isGenerated):
     newNode = Node()
     name = baseName
     if baseName != '': name += '.'
-    if node.get('id') is not None and node.get("id") != "top":
+    if node.get('id') is not None:
         name += node.get('id')
     name = substituteVars(name, vars)
     newNode.name = name
