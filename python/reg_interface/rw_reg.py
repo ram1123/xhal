@@ -1,4 +1,3 @@
-import lxml.etree as xml
 import sys, os, subprocess, socket
 from time import sleep
 from ctypes import *
@@ -108,7 +107,7 @@ def main():
     print len(kids), kids.name
 
 def parseXML():
-    print 'Open pickled address table if available ',ADDRESS_TABLE_TOP,'...'
+    print 'Open pickled address table if available ',ADDRESS_TABLE_TOP[:-3],'pickle...'
 
     fname =  ADDRESS_TABLE_TOP[:-3] + "pickle"
     try:
@@ -119,18 +118,23 @@ def parseXML():
         f.close()
         gc.enable()
     except IOError:
-        print 'Pickle file not found, parsing ',ADDRESS_TABLE_TOP,'...'
-        tree = xml.parse(ADDRESS_TABLE_TOP)
-        tree.xinclude()
-        root = tree.getroot()
-        vars = {}
-        makeTree(root,'',0x0,nodes,None,vars,False)
+        if 'eagle' in hostname:
+            print 'Pickle file not found, please create new pickle file at the host PC and upload it to the CTP7 card'
+            sys.exit()
+        else:
+            print 'Pickle file not found, parsing ',ADDRESS_TABLE_TOP,'...'
+            import lxml.etree as xml
+            tree = xml.parse(ADDRESS_TABLE_TOP)
+            tree.xinclude()
+            root = tree.getroot()
+            vars = {}
+            makeTree(root,'',0x0,nodes,None,vars,False)
 
-        # Save parsed nodes as pickle
-        name = ADDRESS_TABLE_TOP[:-3] + "pickle"
-        f = open(name, 'w')
-        pickle.dump(nodes, f, -1)
-        f.close()
+            # Save parsed nodes as pickle
+            name = ADDRESS_TABLE_TOP[:-3] + "pickle"
+            f = open(name, 'w')
+            pickle.dump(nodes, f, -1)
+            f.close()
 
     return nodes
 
