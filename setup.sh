@@ -9,3 +9,4 @@ fi
 
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$XHAL_ROOT/lib
 export PATH=$PATH:$XHAL_ROOT/python/reg_interface
+export PYTHONPATH=$PYTHONPATH:$XHAL_ROOT/python/reg_interface
