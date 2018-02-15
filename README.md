@@ -1,6 +1,9 @@
 # xhal
 XHAL interface library
 
+Please check the project wiki before usage:
+https://github.com/cms-gem-daq-project/xhal/wiki
+
 Developers documentation is generated with Doxygen and can be found under doc/
 
 # Compilation Instructions

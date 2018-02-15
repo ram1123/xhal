@@ -1,8 +1,8 @@
-import lxml.etree as xml
 import sys, os, subprocess, socket
 from time import sleep
-#import uhal
 from ctypes import *
+import cPickle as pickle
+import gc
 
 hostname = socket.gethostname()
 if 'eagle' in hostname:
@@ -59,7 +59,6 @@ else:
 
 DEBUG = True
 nodes = {}
-#nodes = []
 
 class Node:
     name = ''
@@ -89,7 +88,10 @@ class Node:
         print 'Description:',self.description
         print 'Address:','{0:#010x}'.format(self.address)
         print 'Permission:',self.permission
-        if self.mask is not None: print 'Mask:','{0:#010x}'.format(self.mask)
+        if self.mask is not None: 
+            print 'Mask:','{0:#010x}'.format(self.mask)
+        else:
+            print 'Mask: None'
         print 'Module:',self.isModule
         print 'Parent:',self.parent.name
 
@@ -104,30 +106,36 @@ def main():
     getAllChildren(random_node, kids)
     print len(kids), kids.name
 
-#def parseCTP7(uTCAslot=2):
-#    uTCA = uTCAslot+160
-#    ipaddr = '192.168.0.%d'%(uTCA)
-#    address_table = "file://${GEM_AMC}/scripts/address_table/uhal_gem_amc_ctp7.xml"
-#    uri = "ipbustcp-2.0://eagle45:60002"
-#    # uri = "chtcp-2.0://localhost:10203?target=%s:50001"%(ipaddr)
-#    ctp7 = uhal.getDevice( "glib" , uri, address_table )
-#    glib_address_table_path = os.getenv('GEM_AMC')+'/scripts/address_table/uhal_gem_amc_ctp7.xml'
-#    print 'Parsing',glib_address_table_path,'...'
-#    tree = xml.parse(glib_address_table_path)
-#    root = tree.getroot()[0]
-#    vars = {}
-#    makeTree(root,'',0x0,nodes,None,vars,False)
-#
-#    return ctp7
-
-
 def parseXML():
-    print 'Parsing',ADDRESS_TABLE_TOP,'...'
-    tree = xml.parse(ADDRESS_TABLE_TOP)
-    tree.xinclude()
-    root = tree.getroot()
-    vars = {}
-    makeTree(root,'',0x0,nodes,None,vars,False)
+    print 'Open pickled address table if available ',ADDRESS_TABLE_TOP[:-3],'pickle...'
+
+    fname =  ADDRESS_TABLE_TOP[:-3] + "pickle"
+    try:
+        gc.disable()
+        f = open(fname, 'r')
+        global nodes 
+        nodes = pickle.load(f) 
+        f.close()
+        gc.enable()
+    except IOError:
+        if 'eagle' in hostname:
+            print 'Pickle file not found, please create new pickle file at the host PC and upload it to the CTP7 card'
+            sys.exit()
+        else:
+            print 'Pickle file not found, parsing ',ADDRESS_TABLE_TOP,'...'
+            import lxml.etree as xml
+            tree = xml.parse(ADDRESS_TABLE_TOP)
+            tree.xinclude()
+            root = tree.getroot()
+            vars = {}
+            makeTree(root,'',0x0,nodes,None,vars,False)
+
+            # Save parsed nodes as pickle
+            name = ADDRESS_TABLE_TOP[:-3] + "pickle"
+            f = open(name, 'w')
+            pickle.dump(nodes, f, -1)
+            f.close()
+
     return nodes
 
 def makeTree(node,baseName,baseAddress,nodes,parentNode,vars,isGenerated):
@@ -143,7 +151,7 @@ def makeTree(node,baseName,baseAddress,nodes,parentNode,vars,isGenerated):
     newNode = Node()
     name = baseName
     if baseName != '': name += '.'
-    if node.get('id') is not None and node.get("id") != "top":
+    if node.get('id') is not None:
         name += node.get('id')
     name = substituteVars(name, vars)
     newNode.name = name
