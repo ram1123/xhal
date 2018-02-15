@@ -54,6 +54,10 @@ else:
   rList.restype = c_uint
   rList.argtypes=[POINTER(c_uint32),POINTER(c_uint32)]
 
+  update_atdb = lib.update_atdb
+  update_atdb.argtypes = [c_char_p]
+  update_atdb.restype = c_uint
+
   ADDRESS_TABLE_TOP = os.getenv("XHAL_ROOT")+'/etc/gem_amc_top.xml'
 
 
@@ -107,7 +111,7 @@ def main():
     print len(kids), kids.name
 
 def parseXML():
-    print 'Open pickled address table if available ',ADDRESS_TABLE_TOP[:-3],'pickle...'
+    print 'Open pickled address table if available ',ADDRESS_TABLE_TOP[:-3]+'pickle...'
 
     fname =  ADDRESS_TABLE_TOP[:-3] + "pickle"
     try:

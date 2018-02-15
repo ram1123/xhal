@@ -470,6 +470,14 @@ class Prompt(Cmd):
             print 'Incorrect usage.'
             return
 
+    def do_update_lmdb(self, args):
+        """Updates LMDB address table at the CTP7. USAGE: update_lmdb <absolute path name to the AMC xml address table at the CTP7>"""
+        if 'eagle' in hostname:
+            print 'This function can only be run from a host PC'
+        else:
+            update_atdb(args)
+            print 'LMDB address table updated'
+
     def execute(self, other_function, args):
         other_function = 'do_'+other_function
         call_func = getattr(Prompt,other_function)
