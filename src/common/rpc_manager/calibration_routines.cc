@@ -111,13 +111,14 @@ DLLEXPORT uint32_t genScan(uint32_t nevts, uint32_t ohN, uint32_t dacMin, uint32
     return 0;
 }
 
-DLLEXPORT uint32_t sbitRateScan(uint32_t ohN, uint32_t dacMin, uint32_t dacMax, uint32_t dacStep, uint32_t ch, uint32_t maskOh, bool invertVFATPos, char * scanReg, uint32_t waitTime, uint32_t * resultDacVal, uint32_t * resultTrigRate){
+DLLEXPORT uint32_t sbitRateScan(uint32_t ohN, uint32_t dacMin, uint32_t dacMax, uint32_t dacStep, uint32_t ch, uint32_t maskOh, bool invertVFATPos, char * scanReg, uint32_t waitTime, uint32_t * resultDacVal, uint32_t * resultTrigRate, uint32_t * resultTrigRatePerVFAT, bool isParallel){
     req = wisc::RPCMsg("calibration_routines.sbitRateScan");
 
 
     req.set_word("ohN", ohN);
     req.set_word("maskOh", maskOh);
     req.set_word("invertVFATPos", invertVFATPos);
+    req.set_word("isParallel", isParallel);
     req.set_word("dacMin", dacMin);
     req.set_word("dacMax", dacMax);
     req.set_word("dacStep", dacStep);
@@ -158,6 +159,17 @@ DLLEXPORT uint32_t sbitRateScan(uint32_t ohN, uint32_t dacMin, uint32_t dacMax, 
     } else {
         printf("No key found for data trigger rate values");
         return 1;
+    }
+
+    if(isParallel){
+        if (rsp.get_key_exists("data_trigRatePerVFAT")) {
+            ASSERT(rsp.get_word_array_size("data_trigRatePerVFAT") == (size*24));
+            rsp.get_word_array("data_trigRatePerVFAT", resultTrigRatePerVFAT);
+        }
+        else{
+            printf("No key found for data trigger rate per vfat values");
+            return 1;
+        }
     }
 
     return 0;
