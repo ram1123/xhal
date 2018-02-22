@@ -9,6 +9,7 @@ INC=$(IncludeDirs:%=-I%)
 
 Libraries+= -llog4cplus -lxerces-c 
 LibraryDirs+=-L/opt/xdaq/lib
+LibraryDirs+=-L/opt/wiscrpcsvc/lib
 LibraryDirs+=-L${XHAL_ROOT}/lib/x86_64
 LIB=$(LibraryDirs)
 LIB+= $(Libraries)
