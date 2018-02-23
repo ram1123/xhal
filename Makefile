@@ -62,16 +62,16 @@ $(OBJS_TEST):$(SRCS_TEST)
 
 rpc_standalone:${RPC_SA_LIB}
 $(RPC_SA_LIB): $(OBJS_RPC_SA)
-	    $(CC) $(CCFLAGS) $(ADDFLAGS) ${LDFLAGS} $(INC) -L${XHAL_ROOT}/lib/x86_64/ -lwiscrpcsvc -o $@ $^
+	    $(CC) $(CCFLAGS) $(ADDFLAGS) ${LDFLAGS} $(INC) $(LIB) -lwiscrpcsvc -o $@ $^
 
 $(OBJS_RPC_SA):$(SRCS_RPC_SA)
-	    $(CC) $(CCFLAGS) $(ADDFLAGS) $(INC) -L${XHAL_ROOT}/lib/x86_64 -lwiscrpcsvc -c -o $@ $<
+	    $(CC) $(CCFLAGS) $(ADDFLAGS) $(INC) $(LIB) -lwiscrpcsvc -c -o $@ $<
 
 $(RPC_MAN_LIB): $(OBJS_RPC_MAN)
-	    $(CC) $(CCFLAGS) $(ADDFLAGS) ${LDFLAGS} $(INC) -L${XHAL_ROOT}/lib/x86_64/ -lwiscrpcsvc -o $@ $^
+	    $(CC) $(CCFLAGS) $(ADDFLAGS) ${LDFLAGS} $(INC) $(LIB) -lwiscrpcsvc -o $@ $^
 
 $(OBJS_RPC_MAN):$(SRCS_RPC_MAN)
-	    $(CC) $(CCFLAGS) $(ADDFLAGS) $(INC) -L${XHAL_ROOT}/lib/x86_64 -lwiscrpcsvc -c $(@:%.o=%.cc) -o $@ 
+	    $(CC) $(CCFLAGS) $(ADDFLAGS) $(INC) $(LIB) -lwiscrpcsvc -c $(@:%.o=%.cc) -o $@ 
 
 
 .PHONY: clean
