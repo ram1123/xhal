@@ -20,5 +20,5 @@ To compile CTP7 RPC libraries first compile `$BUILD_HOME/ctp7_modules` then exec
 make clean -f Makefile_ctp7
 ```
 
-# reg_interface wiki page
-https://github.com/cms-gem-daq-project/xhal/wiki/reg_interface
+# Expert tools wiki page
+https://github.com/cms-gem-daq-project/xhal/wiki/Expert-tools
