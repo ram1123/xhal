@@ -70,7 +70,7 @@ DLLEXPORT uint32_t ttcGenConf(uint32_t ohN, uint32_t mode, uint32_t type, uint32
 /***
  * @brief run a generic scan routine
  */
-DLLEXPORT uint32_t genScan(uint32_t nevts, uint32_t ohN, uint32_t dacMin, uint32_t dacMax, uint32_t dacStep, uint32_t ch, bool useCalPulse, bool currentPulse, uint32_t calScaleFactor, uint32_t mask, char * scanReg, bool useUltra, bool useExtTrig, uint32_t * result)
+DLLEXPORT uint32_t genScan(uint32_t nevts, uint32_t ohN, uint32_t dacMin, uint32_t dacMax, uint32_t dacStep, uint32_t ch, bool useCalPulse, uint32_t mask, char * scanReg, bool useUltra, bool useExtTrig, uint32_t * result)
 {
     req = wisc::RPCMsg("calibration_routines.genScan");
 
@@ -81,8 +81,6 @@ DLLEXPORT uint32_t genScan(uint32_t nevts, uint32_t ohN, uint32_t dacMin, uint32
     req.set_word("dacStep", dacStep);
     req.set_word("ch", ch);
     req.set_word("useCalPulse", useCalPulse);
-    req.set_word("currentPulse", currentPulse);
-    req.set_word("calScaleFactor", calScaleFactor);
     req.set_word("mask", mask);
     if(useUltra){
         req.set_word("useUltra", useUltra);
