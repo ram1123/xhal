@@ -333,7 +333,7 @@ class Prompt(Cmd):
         if result is None: 
             print args,'not found!'
             return
-        for reg in result:
+        for reg in sorted(result):
             address = reg.real_address
             if 'r' in str(reg.permission):
                 print hex(address).rstrip('L'),reg.permission,'\t',tabPad(reg.name,7),readReg(reg)
