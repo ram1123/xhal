@@ -3,6 +3,7 @@ from time import sleep
 from ctypes import *
 import cPickle as pickle
 import gc
+from collections import OrderedDict
 
 hostname = socket.gethostname()
 if 'eagle' in hostname:
@@ -62,7 +63,7 @@ else:
 
 
 DEBUG = True
-nodes = {}
+nodes = OrderedDict()
 
 class Node:
     name = ''
@@ -207,7 +208,7 @@ def getNodesContaining(nodeString):
     #nodelist = [node for node in nodes if nodeString in node.name]
     nodelist = [nodes[key] for key in nodes if nodeString in key]
     if len(nodelist): 
-        nodelist.sort()
+        #nodelist.sort()
         return nodelist
     else: return None
 
@@ -215,7 +216,7 @@ def getNodesContaining(nodeString):
 def getRegsContaining(nodeString):
     nodelist = [node for node in nodes.values if nodeString in node.name and node.permission is not None and 'r' in node.permission]
     if len(nodelist):
-        nodelist.sort()
+        #nodelist.sort()
         return nodelist
     else: return None
 

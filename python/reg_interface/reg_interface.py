@@ -325,9 +325,14 @@ class Prompt(Cmd):
         """Read all registers containing keyword supporting wild card. USAGE: rwc <KeyWord>"""
         arglist = args.split('*')
         reg_superset = [getNodesContaining(arg) for arg in arglist if arg!='' ]
-        result = reduce(set.intersection, map(set, reg_superset))
+        try:
+            result = reduce(set.intersection, map(set, reg_superset))
+        except TypeError:
+            print args,'not found!'
+            return
         if result is None: 
             print args,'not found!'
+            return
         for reg in result:
             address = reg.real_address
             if 'r' in str(reg.permission):
