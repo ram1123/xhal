@@ -3,6 +3,8 @@ from cmd import Cmd
 import sys, os, subprocess
 from rw_reg import *
 from vfat_config import *
+import time
+usleep = lambda x: time.sleep(x/1000000.0)
 
 try:
     import readline
@@ -319,17 +321,27 @@ class Prompt(Cmd):
         else: print args,'not found!'
 
 
-    def do_readKW(self, args):
-        """Read all registers containing KeyWord. USAGE: readKW <KeyWord>"""
-        if getNodesContaining(args) is not None and args!='':
-            for reg in getNodesContaining(args):
-                address = reg.real_address
-                if 'r' in str(reg.permission):
-                    print hex(address).rstrip('L'),reg.permission,'\t',tabPad(reg.name,7),readReg(reg)
-                elif reg.isModule: print hex(address).rstrip('L'),reg.permission,'\t',tabPad(reg.name,7) #,'Module!'
-                else: print hex(address).rstrip('L'),reg.permission,'\t',tabPad(reg.name,7) #,'No read permission!' 
-        else: print args,'not found!'
+    def do_rwc(self, args):
+        """Read all registers containing keyword supporting wild card. USAGE: rwc <KeyWord>"""
+        arglist = args.split('*')
+        reg_superset = [getNodesContaining(arg) for arg in arglist if arg!='' ]
+        try:
+            result = reduce(set.intersection, map(set, reg_superset))
+        except TypeError:
+            print args,'not found!'
+            return
+        if result is None: 
+            print args,'not found!'
+            return
+        for reg in sorted(result):
+            address = reg.real_address
+            if 'r' in str(reg.permission):
+                print hex(address).rstrip('L'),reg.permission,'\t',tabPad(reg.name,7),readReg(reg)
+            elif reg.isModule: print hex(address).rstrip('L'),reg.permission,'\t',tabPad(reg.name,7) #,'Module!'
+            else: print hex(address).rstrip('L'),reg.permission,'\t',tabPad(reg.name,7) #,'No read permission!' 
 
+    def do_readKW(self, args):
+        self.do_kw(args)
 
     def do_kw(self, args):
         """Read all registers containing KeyWord. USAGE: readKW <KeyWord> or readKW <KeyWord> link"""
@@ -469,6 +481,34 @@ class Prompt(Cmd):
         else:
             print 'Incorrect usage.'
             return
+
+    def do_update_lmdb(self, args):
+        """Updates LMDB address table at the CTP7. USAGE: update_lmdb <absolute path name to the AMC xml address table at the CTP7>"""
+        if 'eagle' in hostname:
+            print 'This function can only be run from a host PC'
+        else:
+            update_atdb(args)
+            print 'LMDB address table updated'
+
+    def do_rtest(self, args):
+        """Read register certain number of times with a given interval in us. USAGE: rtest <regName> <number of times> <interval>"""
+        arglist = args.split()
+        if len(arglist)!=3:
+            print 'Incorrect usage'
+            return
+        for i in range(int(arglist[1])):
+            self.do_read(arglist[0])
+            usleep(int(arglist[2]))
+
+    def do_wtest(self, args):
+        """Writes 1 to a register certain number of times with a given interval in us. USAGE: rtest <regName> <number of times> <interval>"""
+        arglist = args.split()
+        if len(arglist)!=3:
+            print 'Incorrect usage'
+            return
+        for i in range(int(arglist[1])):
+            self.do_write(arglist[0],1)
+            usleep(int(arglist[2]))
 
     def execute(self, other_function, args):
         other_function = 'do_'+other_function
