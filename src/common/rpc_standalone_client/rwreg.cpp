@@ -164,11 +164,11 @@ DLLEXPORT uint32_t getRegInfoDB(char * regName)
 	return 0;
 }
 
-DLLEXPORT uint32_t configureVT1(char * ohN, char * config, unsigned int vt1 = 0x64)
+DLLEXPORT uint32_t configureVT1(uint32_t ohN, char * config, unsigned int vt1 = 0x64)
 {
 	req = wisc::RPCMsg("optohybrid.loadVT1");
-	req.set_string("oh_number", ohN);
-  req.set_word("vt1",vt1);
+	req.set_word("ohN", ohN);
+        req.set_word("vt1",vt1);
 	if (config && config[0]!='\0') req.set_string("thresh_config_filename", config);
 	try {
 		rsp = rpc.call_method(req);
@@ -182,10 +182,10 @@ DLLEXPORT uint32_t configureVT1(char * ohN, char * config, unsigned int vt1 = 0x
 	return 0;
 }
 
-DLLEXPORT uint32_t configureTRIMDAC(char * ohN, char * config)
+DLLEXPORT uint32_t configureTRIMDAC(uint32_t ohN, char * config)
 {
 	req = wisc::RPCMsg("optohybrid.loadTRIMDAC");
-	req.set_string("oh_number", ohN);
+	req.set_word("ohN", ohN);
 	req.set_string("trim_config_filename", config);
 	try {
 		rsp = rpc.call_method(req);
@@ -199,10 +199,10 @@ DLLEXPORT uint32_t configureTRIMDAC(char * ohN, char * config)
 	return 0;
 }
 
-DLLEXPORT uint32_t configureVFATs(char * ohN, char * trim_config, char * thresh_config, unsigned int set_run = 1, unsigned int vt1 = 0x64)
+DLLEXPORT uint32_t configureVFATs(uint32_t ohN, char * trim_config, char * thresh_config, unsigned int set_run = 1, unsigned int vt1 = 0x64)
 {
 	req = wisc::RPCMsg("optohybrid.configureVFATs");
-	req.set_string("oh_number", ohN);
+	req.set_word("ohN", ohN);
   req.set_word("vt1",vt1);
 	req.set_string("trim_config_filename", trim_config);
   if (set_run) req.set_word("set_run", set_run);

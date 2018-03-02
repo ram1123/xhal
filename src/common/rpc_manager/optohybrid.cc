@@ -12,7 +12,7 @@ DLLEXPORT uint32_t broadcastRead(uint32_t ohN, char * regName, uint32_t vfatMask
     req = wisc::RPCMsg("optohybrid.broadcastRead");
 
     req.set_string("reg_name",std::string(regName));
-    req.set_word("oh_number",ohN);
+    req.set_word("ohN",ohN);
     req.set_word("mask",vfatMask);
     wisc::RPCSvc* rpc_loc = getRPCptr();
 
@@ -48,7 +48,7 @@ DLLEXPORT uint32_t broadcastWrite(uint32_t ohN, char * regName, uint32_t value, 
     req = wisc::RPCMsg("optohybrid.broadcastWrite");
 
     req.set_string("reg_name",std::string(regName));
-    req.set_word("oh_number",ohN);
+    req.set_word("ohN",ohN);
     req.set_word("value",value);
     req.set_word("mask",vfatMask);
     wisc::RPCSvc* rpc_loc = getRPCptr();
