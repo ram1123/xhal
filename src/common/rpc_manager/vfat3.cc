@@ -38,15 +38,15 @@ DLLEXPORT uint32_t configureVFAT3s(uint32_t ohN, uint32_t vfatMask)
 DLLEXPORT uint32_t setChannelRegistersVFAT3(uint32_t ohN, uint32_t vfatMask, uint32_t *calEnable, uint32_t *masks, uint32_t *trimARM, uint32_t *trimARMPol, uint32_t *trimZCC, uint32_t *trimZCCPol){
     req = wisc::RPCMsg("vfat3.setChannelRegistersVFAT3");
 
-    req.set_word("vfatMask",vfatMask);
     req.set_word("ohN",ohN);
+    req.set_word("vfatMask",vfatMask);
 
     req.set_word_array("calEnable",calEnable,3072);
     req.set_word_array("masks",masks,3072);
-    req.set_word_array("trimARM",masks,3072);
-    req.set_word_array("trimARMPol",masks,3072);
-    req.set_word_array("trimZCC",masks,3072);
-    req.set_word_array("trimZCCPol",masks,3072);
+    req.set_word_array("trimARM",trimARM,3072);
+    req.set_word_array("trimARMPol",trimARMPol,3072);
+    req.set_word_array("trimZCC",trimZCC,3072);
+    req.set_word_array("trimZCCPol",trimZCCPol,3072);
 
     wisc::RPCSvc* rpc_loc = getRPCptr();
 
