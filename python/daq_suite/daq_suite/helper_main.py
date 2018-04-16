@@ -82,12 +82,12 @@ def getTRIGGEROHmain():
   displaystring=[]
   namelist=[]
   values = []
-  res = (c_uint32 * (2*NOH))()
+  res = (c_uint32 * (6*NOH))()
   res_code = getRPCTRIGGEROHmain(res, NOH)
   if res_code == 0:
     values = [c for c in res]
   else:
-    for i in range(2*NOH):
+    for i in range(6*NOH):
       values.append(0)
 
   nextstr = ''
@@ -96,8 +96,12 @@ def getTRIGGEROHmain():
   namelist.append('Register|OH')
   displaystring.append(nextstr)
   nextstr = ''
-  namelist+=['LINK0_NOT_VALID_CNT',
-             'LINK1_NOT_VALID_CNT',]
+  namelist+=['LINK0_MISSED_COMMA_CNT',
+             'LINK1_MISSED_COMMA_CNT',
+             'LINK0_OVERFLOW_CNT',
+             'LINK1_OVERFLOW_CNT',
+             'LINK0_SBIT_OVERFLOW_CNT',
+             'LINK1_SBIT_OVERFLOW_CNT',]
   for i,regname in enumerate(namelist[1:]):
     for j in range(NOH):
       #reg=getNode('GEM_AMC.TRIGGER.OH%s.%s' %(i,regname))
