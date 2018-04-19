@@ -82,12 +82,12 @@ def getTRIGGEROHmain():
   displaystring=[]
   namelist=[]
   values = []
-  res = (c_uint32 * (6*NOH))()
+  res = (c_uint32 * (8*NOH))()
   res_code = getRPCTRIGGEROHmain(res, NOH)
   if res_code == 0:
     values = [c for c in res]
   else:
-    for i in range(6*NOH):
+    for i in range(8*NOH):
       values.append(0)
 
   nextstr = ''
@@ -100,6 +100,8 @@ def getTRIGGEROHmain():
              'LINK1_MISSED_COMMA_CNT',
              'LINK0_OVERFLOW_CNT',
              'LINK1_OVERFLOW_CNT',
+             'LINK0_UNDERFLOW_CNT',
+             'LINK1_UNDERFLOW_CNT',
              'LINK0_SBIT_OVERFLOW_CNT',
              'LINK1_SBIT_OVERFLOW_CNT',]
   for i,regname in enumerate(namelist[1:]):

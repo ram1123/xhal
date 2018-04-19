@@ -86,10 +86,14 @@ DLLEXPORT uint32_t getmonTRIGGEROHmain(uint32_t* result, uint32_t noh)
                 result[i+2*noh] = rsp.get_word(t);
                 t = "OH"+std::to_string(i)+".LINK1_OVERFLOW_CNT";
                 result[i+3*noh] = rsp.get_word(t);
-                t = "OH"+std::to_string(i)+".LINK0_SBIT_OVERFLOW_CNT";
+                t = "OH"+std::to_string(i)+".LINK0_UNDERFLOW_CNT";
                 result[i+4*noh] = rsp.get_word(t);
-                t = "OH"+std::to_string(i)+".LINK1_SBIT_OVERFLOW_CNT";
+                t = "OH"+std::to_string(i)+".LINK1_UNDERFLOW_CNT";
                 result[i+5*noh] = rsp.get_word(t);
+                 t = "OH"+std::to_string(i)+".LINK0_SBIT_OVERFLOW_CNT";
+                result[i+6*noh] = rsp.get_word(t);
+                t = "OH"+std::to_string(i)+".LINK1_SBIT_OVERFLOW_CNT";
+                result[i+7*noh] = rsp.get_word(t);
             }
         }
     }
