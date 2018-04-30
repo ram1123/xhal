@@ -71,9 +71,9 @@ def main():
     parseXML()
     hostname = socket.gethostname()
     if 'eagle' in hostname:
-        rpc_connect(sys.argv[1])
-    else:
         pass
+    else:
+        rpc_connect(sys.argv[1])
     initJtagRegAddrs()
 
     heading("Hola, I'm SCA controller tester :)")
