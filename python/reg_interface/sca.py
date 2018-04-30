@@ -5,6 +5,7 @@ from mcs import *
 from time import *
 import array
 import struct
+import socket
 
 SLEEP_BETWEEN_COMMANDS=0.1
 DEBUG=False
@@ -51,7 +52,7 @@ def main():
     ohList = []
 
     if len(sys.argv) < 4:
-        print('Usage: sca.py <card_name> <oh_mask> <instructions>')
+        print('Usage: sca.py <card_name> <oh_mask> <instructions>. If running on the card, put `local` instead of hostname')
         print('instructions:')
         print('  r:        SCA reset will be done')
         print('  h:        FPGA hard reset will be done')
@@ -68,7 +69,11 @@ def main():
         instructions = sys.argv[3]
 
     parseXML()
-    rpc_connect(sys.argv[1])
+    hostname = socket.gethostname()
+    if 'eagle' in hostname:
+        rpc_connect(sys.argv[1])
+    else:
+        pass
     initJtagRegAddrs()
 
     heading("Hola, I'm SCA controller tester :)")
