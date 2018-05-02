@@ -86,6 +86,18 @@ class Prompt(Cmd):
             print mpoke(arglist[0],arglist[1])
         else: print "Incorrect number of arguments!"
 
+    def do_read(self, args):        
+        """Reads register. USAGE: read <register name>. OUTPUT <address> <mask> <permission> <name> <value>"""        
+        reg = getNode(args)        
+        if reg is not None:         
+            address = reg.real_address        
+            if 'r' in str(reg.permission):        
+                print displayReg(reg)        
+            elif reg.isModule: print 'This is a module!'        
+            else: print hex(address),'\t',reg.name,'\t','No read permission!'         
+        else:        
+            print args,'not found!'
+
     def do_readAddress(self, args):
         """ Directly read address. USAGE: readAddress <address> """
         try: reg = getNodeFromAddress(parseInt(args))
