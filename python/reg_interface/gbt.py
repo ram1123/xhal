@@ -32,34 +32,7 @@ V3B_GBT2_ELINK_TO_VFAT = {1: 9, 2: 20, 3: 21, 4: 11, 5: 10, 6: 18, 7: 19, 8: 17,
 V3B_GBT_ELINK_TO_VFAT = [V3B_GBT0_ELINK_TO_VFAT, V3B_GBT1_ELINK_TO_VFAT, V3B_GBT2_ELINK_TO_VFAT]
 GBT_ELINK_SAMPLE_PHASE_REGS = [[69, 73, 77], [67, 71, 75], [93, 97, 101], [91, 95, 99], [117, 121, 125], [115, 119, 123], [141, 145, 149], [139, 143, 147], [165, 169, 173], [163, 167, 171]]
 
-def main():
-
-    command = ""
-    ohSelect = 0
-    gbtSelect = 0
-
-    if len(sys.argv) < 4:
-        print('Usage: gbt.py <oh_num> <gbt_num> <command>')
-        print('available commands:')
-        print('  config <config_filename_txt>:   Configures the GBT with the given config file (must use the txt version of the config file, can be generated with the GBT programmer software)')
-        print('  v3b-phase-scan <base_config_filename_txt>:   Configures the GBT with the given config file, and performs an elink phase scan while checking the VFAT communication for each phase')
-        return
-    else:
-        ohSelect = int(sys.argv[1])
-        gbtSelect = int(sys.argv[2])
-        command = sys.argv[3]
-
-    if ohSelect > 11:
-        printRed("The given OH index (%d) is out of range (must be 0-11)" % ohSelect)
-        return
-    if gbtSelect > 2:
-        printRed("The given GBT index (%d) is out of range (must be 0-2)" % gbtSelect)
-        return
-
-#    if os.path.isfile(ADDRESS_TABLE_SLOW_CTRL_ONLY) and (command != 'v3b-phase-scan'):
-#        parseXML('/mnt/persistent/texas/gem_amc_top_SLOW_CTRL_ONLY.xml')
-#    else:
-#        parseXML()
+def programGBT(ohSelect, gbtSelect, command):
     parseXML()
 
     initGbtRegAddrs()
@@ -229,4 +202,30 @@ def binary(number, length):
         return "{0:#0{1}b}".format(number, length + 2)
 
 if __name__ == '__main__':
-    main()
+    import os
+    if len(sys.argv) < 4:
+        print('Usage: gbt.py <oh_num> <gbt_num> <command>')
+        print('available commands:')
+        print('  config <config_filename_txt>:   Configures the GBT with the given config file (must use the txt version of the config file, can be generated with the GBT programmer software)')
+        print('  v3b-phase-scan <base_config_filename_txt>:   Configures the GBT with the given config file, and performs an elink phase scan while checking the VFAT communication for each phase')
+        exit(os.EX_USAGE)
+    else:
+        ohSelect = int(sys.argv[1])
+        gbtSelect = int(sys.argv[2])
+        command = sys.argv[3]
+    
+    if ohSelect > 11:
+        printRed("The given OH index (%d) is out of range (must be 0-11)" % ohSelect)
+        exit(os.EX_USAGE)
+    if gbtSelect > 2:
+        printRed("The given GBT index (%d) is out of range (must be 0-2)" % gbtSelect)
+        exit(os.EX_USAGE)
+
+    if ohSelect > 11:
+        printRed("The given OH index (%d) is out of range (must be 0-11)" % ohSelect)
+        exit(os.EX_USAGE)
+    if gbtSelect > 2:
+        printRed("The given GBT index (%d) is out of range (must be 0-2)" % gbtSelect)
+        exit(os.EX_USAGE)
+
+    programGBT(ohSelect, gbtSelect, command)
