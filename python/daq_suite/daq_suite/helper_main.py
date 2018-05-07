@@ -1,5 +1,5 @@
 from rw_reg import *
-NOH=1
+NOH=12
 
 def getTTCmain():
   namelist=['MMCM_LOCKED','TTC_SINGLE_ERROR_CNT','BC0_LOCKED','L1A_ID','L1A_RATE']
@@ -83,7 +83,11 @@ def getTRIGGEROHmain():
   namelist=[]
   values = []
   res = (c_uint32 * (8*NOH))()
-  res_code = getRPCTRIGGEROHmain(res, NOH)
+  try:
+    res_code = getRPCTRIGGEROHmain(res, NOH)
+  except:
+    print "Houston, we have a problem!"
+    res_code = -1
   if res_code == 0:
     values = [c for c in res]
   else:

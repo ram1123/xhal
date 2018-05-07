@@ -13,6 +13,16 @@ def isValidVFAT(vfat):
     return True
 
 class Prompt(ri_prompt.Prompt):
+    # override base mehod here to provide acces to exended functions
+    def execute(self, other_function, args):
+        other_function = 'do_'+other_function
+        call_func = getattr(Prompt,other_function)
+        try:
+            call_func(self,*args)
+        except TypeError:
+            print 'Could not recognize command. See usage in tool.'
+
+
     def do_sbittranslate(self, args):
         """Decode SBit Cluster data. USAGE: sbittranslate <SBIT CLUSTER>"""
         arglist = args.split()
