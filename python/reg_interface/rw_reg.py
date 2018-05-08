@@ -214,7 +214,7 @@ def getNodesContaining(nodeString):
 
 #returns *readable* registers
 def getRegsContaining(nodeString):
-    nodelist = [node for node in nodes.values if nodeString in node.name and node.permission is not None and 'r' in node.permission]
+    nodelist = [nodes[key] for key in nodes if nodeString in key and nodes[key].permission is not None]
     if len(nodelist):
         #nodelist.sort()
         return nodelist
