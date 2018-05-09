@@ -45,7 +45,7 @@ class Prompt(Cmd):
         except TypeError:
             print 'Could not recognize command. See usage in tool.'
 
-    def complete_readGroup(self, text, line, begidx, endidx):
+    def complete_read(self, text, line, begidx, endidx):
         return completeReg(text)
 
     def complete_write(self, text, line, begidx, endidx):
