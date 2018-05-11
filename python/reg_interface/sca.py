@@ -138,12 +138,12 @@ def main():
 
     elif instructions == 'program-fpga':
         if len(sys.argv) < 5:
-            print('Usage: sca.py program-fpga <file-type> <filename>')
+            print('Usage: sca.py local program-fpga <file-type> <filename>')
             print('file-type can be "mcs" or "bit"')
             return
 
-        type = sys.argv[3]
-        filename = sys.argv[4]
+        type = sys.argv[4]
+        filename = sys.argv[5]
 
         if (type != "bit") and (type != "mcs"):
             print('Unrecognized type "' + type + '".. must be either "bit" or "mcs"')
