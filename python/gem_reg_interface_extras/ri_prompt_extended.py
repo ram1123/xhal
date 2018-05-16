@@ -3,6 +3,8 @@ from reg_interface.common.reg_xml_parser import *
 from reg_interface.common.reg_base_ops import *
 from vfat_config import *
 
+MAX_OH_NUM = 12
+
 def isValidOH(oh):
     if not oh.isdigit(): return False
     if int(oh)<0 or int(oh)>MAX_OH_NUM: return False
@@ -274,10 +276,10 @@ class Prompt(ri_prompt.Prompt):
 
     def do_readFW(self, args=None):
         """Quick read of all FW-related registers"""
-        for reg in getNodesContaining('STATUS.FW'):
+        for reg in getNodesContaining('RELEASE'):
             if 'r' in str(reg.permission): print hex(reg.real_address),reg.permission,'\t',tabPad(reg.name,4),readReg(reg)
 
     def do_fw(self, args=None):
         """Quick read of all FW-related registers"""
-        for reg in getNodesContaining('STATUS.FW'):
+        for reg in getNodesContaining('RELEASE'):
             if 'r' in str(reg.permission): print hex(reg.real_address),reg.permission,'\t',tabPad(reg.name,4),readReg(reg)
