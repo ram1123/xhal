@@ -1,6 +1,6 @@
-from reg_interface.common.print_utils import *
-from reg_interface.common.reg_xml_parser import getNode
-from reg_interface.common.reg_base_ops import writeReg, readReg, displayReg, parseInt
+from reg_utils.reg_interface.common.print_utils import *
+from reg_utils.reg_interface.common.reg_xml_parser import getNode
+from reg_utils.reg_interface.common.reg_base_ops import writeReg, readReg, displayReg, parseInt
 
 #VFAT DEFAULTS
 CONTREG0=55
