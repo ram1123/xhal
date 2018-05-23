@@ -4,6 +4,7 @@ from rw_reg import *
 from time import *
 import array
 import struct
+import os
 
 DEBUG=False
 
@@ -23,8 +24,6 @@ ADDR_IC_EXEC_WRITE = None
 ADDR_IC_EXEC_READ = None
 
 ADDR_LINK_RESET = None
-
-ADDRESS_TABLE_SLOW_CTRL_ONLY = '/mnt/persistent/texas/gem_amc_top_SLOW_CTRL_ONLY.xml'
 
 V3B_GBT0_ELINK_TO_VFAT = {0: 15, 1: 14, 2: 13, 3: 12, 6: 7, 8: 23}
 V3B_GBT1_ELINK_TO_VFAT = {1: 4, 2: 2, 3: 3, 4: 8, 5: 0, 6: 6, 7: 16, 8: 5, 9: 1}
