@@ -24,7 +24,7 @@ ohlist=[]
 
 event=threading.Event()
 lock = threading.Lock()
-monitoringOFF = False
+monitoringOFF = True
 
 def updateMain():
   global ttclist

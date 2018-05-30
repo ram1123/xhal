@@ -1,54 +1,69 @@
-import xml.etree.ElementTree as xml
-import sys, os, subprocess
+import sys, os, subprocess, socket
 from time import sleep
-#import uhal
 from ctypes import *
+import cPickle as pickle
+import gc
+from collections import OrderedDict
 
-lib = CDLL(os.getenv("XHAL_ROOT")+"/lib/x86_64/librwreg.so")
-rReg = lib.getReg
-rReg.restype = c_uint
-rReg.argtypes=[c_uint]
-wReg = lib.putReg
-wReg.argtypes=[c_uint,c_uint]
-rpc_connect = lib.init
-rpc_connect.argtypes = [c_char_p]
-rpc_connect.restype = c_uint
-rBlock = lib.getBlock
-rBlock.restype = c_uint
-rBlock.argtypes=[c_uint,POINTER(c_uint32)]
-getRPCTTCmain = lib.getmonTTCmain
-getRPCTTCmain.argtypes = [POINTER(c_uint32)]
-getRPCTTCmain.restype = c_uint
+hostname = socket.gethostname()
+if 'eagle' in hostname:
+  lib = CDLL(os.getenv("GEM_PATH")+"/lib/librwreg.so")
+  rReg = lib.getReg
+  rReg.restype = c_uint
+  rReg.argtypes=[c_uint]
+  wReg = lib.putReg
+  wReg.argtypes=[c_uint,c_uint]
+  ADDRESS_TABLE_TOP = os.getenv("GEM_PATH")+'/xml/gem_amc_top.xml'
+else:
+  lib = CDLL(os.getenv("XHAL_ROOT")+"/lib/x86_64/librpcman.so")
+  rReg = lib.getReg
+  rReg.restype = c_uint
+  rReg.argtypes=[c_uint]
+  wReg = lib.putReg
+  wReg.argtypes=[c_uint,c_uint]
+  rpc_connect = lib.init
+  rpc_connect.argtypes = [c_char_p]
+  rpc_connect.restype = c_uint
+  rBlock = lib.getBlock
+  rBlock.restype = c_uint
+  rBlock.argtypes=[c_uint,POINTER(c_uint32)]
+  getRPCTTCmain = lib.getmonTTCmain
+  getRPCTTCmain.argtypes = [POINTER(c_uint32)]
+  getRPCTTCmain.restype = c_uint
+  
+  getRPCTRIGGERmain = lib.getmonTRIGGERmain
+  getRPCTRIGGERmain.argtypes = [POINTER(c_uint32), c_uint32]
+  getRPCTRIGGERmain.restype = c_uint
+  
+  getRPCTRIGGEROHmain = lib.getmonTRIGGEROHmain
+  getRPCTRIGGEROHmain.argtypes = [POINTER(c_uint32), c_uint32]
+  getRPCTRIGGEROHmain.restype = c_uint
+  
+  getRPCDAQmain = lib.getmonDAQmain
+  getRPCDAQmain.argtypes = [POINTER(c_uint32)]
+  getRPCDAQmain.restype = c_uint
+  
+  getRPCDAQOHmain = lib.getmonDAQOHmain
+  getRPCDAQOHmain.argtypes = [POINTER(c_uint32), c_uint32]
+  getRPCDAQOHmain.restype = c_uint
+  
+  getRPCOHmain = lib.getmonOHmain
+  getRPCOHmain.argtypes = [POINTER(c_uint32), c_uint32]
+  getRPCOHmain.restype = c_uint
+  
+  rList = lib.getList
+  rList.restype = c_uint
+  rList.argtypes=[POINTER(c_uint32),POINTER(c_uint32)]
 
-getRPCTRIGGERmain = lib.getmonTRIGGERmain
-getRPCTRIGGERmain.argtypes = [POINTER(c_uint32), c_uint32]
-getRPCTRIGGERmain.restype = c_uint
+  update_atdb = lib.update_atdb
+  update_atdb.argtypes = [c_char_p]
+  update_atdb.restype = c_uint
 
-getRPCTRIGGEROHmain = lib.getmonTRIGGEROHmain
-getRPCTRIGGEROHmain.argtypes = [POINTER(c_uint32), c_uint32]
-getRPCTRIGGEROHmain.restype = c_uint
-
-getRPCDAQmain = lib.getmonDAQmain
-getRPCDAQmain.argtypes = [POINTER(c_uint32)]
-getRPCDAQmain.restype = c_uint
-
-getRPCDAQOHmain = lib.getmonDAQOHmain
-getRPCDAQOHmain.argtypes = [POINTER(c_uint32), c_uint32]
-getRPCDAQOHmain.restype = c_uint
-
-getRPCOHmain = lib.getmonOHmain
-getRPCOHmain.argtypes = [POINTER(c_uint32), c_uint32]
-getRPCOHmain.restype = c_uint
-
-rList = lib.getList
-rList.restype = c_uint
-rList.argtypes=[POINTER(c_uint32),POINTER(c_uint32)]
+  ADDRESS_TABLE_TOP = os.getenv("XHAL_ROOT")+'/etc/gem_amc_top.xml'
 
 
 DEBUG = True
-ADDRESS_TABLE_TOP = os.getenv("XHAL_ROOT")+'/etc/gem_amc_top.xml'
-nodes = {}
-#nodes = []
+nodes = OrderedDict()
 
 class Node:
     name = ''
@@ -78,7 +93,10 @@ class Node:
         print 'Description:',self.description
         print 'Address:','{0:#010x}'.format(self.address)
         print 'Permission:',self.permission
-        if self.mask is not None: print 'Mask:','{0:#010x}'.format(self.mask)
+        if self.mask is not None: 
+            print 'Mask:','{0:#010x}'.format(self.mask)
+        else:
+            print 'Mask: None'
         print 'Module:',self.isModule
         print 'Parent:',self.parent.name
 
@@ -93,29 +111,37 @@ def main():
     getAllChildren(random_node, kids)
     print len(kids), kids.name
 
-#def parseCTP7(uTCAslot=2):
-#    uTCA = uTCAslot+160
-#    ipaddr = '192.168.0.%d'%(uTCA)
-#    address_table = "file://${GEM_AMC}/scripts/address_table/uhal_gem_amc_ctp7.xml"
-#    uri = "ipbustcp-2.0://eagle45:60002"
-#    # uri = "chtcp-2.0://localhost:10203?target=%s:50001"%(ipaddr)
-#    ctp7 = uhal.getDevice( "glib" , uri, address_table )
-#    glib_address_table_path = os.getenv('GEM_AMC')+'/scripts/address_table/uhal_gem_amc_ctp7.xml'
-#    print 'Parsing',glib_address_table_path,'...'
-#    tree = xml.parse(glib_address_table_path)
-#    root = tree.getroot()[0]
-#    vars = {}
-#    makeTree(root,'',0x0,nodes,None,vars,False)
-#
-#    return ctp7
-
-
 def parseXML():
-    print 'Parsing',ADDRESS_TABLE_TOP,'...'
-    tree = xml.parse(ADDRESS_TABLE_TOP)
-    root = tree.getroot()[0]
-    vars = {}
-    makeTree(root,'',0x0,nodes,None,vars,False)
+    print 'Open pickled address table if available ',ADDRESS_TABLE_TOP[:-3]+'pickle...'
+
+    fname =  ADDRESS_TABLE_TOP[:-3] + "pickle"
+    try:
+        gc.disable()
+        f = open(fname, 'r')
+        global nodes 
+        nodes = pickle.load(f) 
+        f.close()
+        gc.enable()
+    except IOError:
+        if 'eagle' in hostname:
+            print 'Pickle file not found, please create new pickle file at the host PC and upload it to the CTP7 card'
+            sys.exit()
+        else:
+            print 'Pickle file not found, parsing ',ADDRESS_TABLE_TOP,'...'
+            import lxml.etree as xml
+            tree = xml.parse(ADDRESS_TABLE_TOP)
+            tree.xinclude()
+            root = tree.getroot()
+            vars = {}
+            makeTree(root,'',0x0,nodes,None,vars,False)
+
+            # Save parsed nodes as pickle
+            name = ADDRESS_TABLE_TOP[:-3] + "pickle"
+            f = open(name, 'w')
+            pickle.dump(nodes, f, -1)
+            f.close()
+
+    return nodes
 
 def makeTree(node,baseName,baseAddress,nodes,parentNode,vars,isGenerated):
     
@@ -130,7 +156,8 @@ def makeTree(node,baseName,baseAddress,nodes,parentNode,vars,isGenerated):
     newNode = Node()
     name = baseName
     if baseName != '': name += '.'
-    name += node.get('id')
+    if node.get('id') is not None:
+        name += node.get('id')
     name = substituteVars(name, vars)
     newNode.name = name
     if node.get('description') is not None:
@@ -181,15 +208,15 @@ def getNodesContaining(nodeString):
     #nodelist = [node for node in nodes if nodeString in node.name]
     nodelist = [nodes[key] for key in nodes if nodeString in key]
     if len(nodelist): 
-        nodelist.sort()
+        #nodelist.sort()
         return nodelist
     else: return None
 
 #returns *readable* registers
 def getRegsContaining(nodeString):
-    nodelist = [node for node in nodes.values if nodeString in node.name and node.permission is not None and 'r' in node.permission]
+    nodelist = [nodes[key] for key in nodes if nodeString in key and nodes[key].permission is not None]
     if len(nodelist):
-        nodelist.sort()
+        #nodelist.sort()
         return nodelist
     else: return None
 

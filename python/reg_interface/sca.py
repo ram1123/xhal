@@ -5,6 +5,7 @@ from mcs import *
 from time import *
 import array
 import struct
+import socket
 
 SLEEP_BETWEEN_COMMANDS=0.1
 DEBUG=False
@@ -51,7 +52,7 @@ def main():
     ohList = []
 
     if len(sys.argv) < 4:
-        print('Usage: sca.py <card_name> <oh_mask> <instructions>')
+        print('Usage: sca.py <card_name> <oh_mask> <instructions>. If running on the card, put `local` instead of hostname')
         print('instructions:')
         print('  r:        SCA reset will be done')
         print('  h:        FPGA hard reset will be done')
@@ -68,7 +69,11 @@ def main():
         instructions = sys.argv[3]
 
     parseXML()
-    rpc_connect(sys.argv[1])
+    hostname = socket.gethostname()
+    if 'eagle' in hostname:
+        pass
+    else:
+        rpc_connect(sys.argv[1])
     initJtagRegAddrs()
 
     heading("Hola, I'm SCA controller tester :)")
@@ -82,6 +87,7 @@ def main():
     if instructions == 'r':
         subheading('Reseting the SCA')
         writeReg(getNode('GEM_AMC.SLOW_CONTROL.SCA.CTRL.MODULE_RESET'), 0x1)
+        checkStatus(ohList)
     elif instructions == 'hh':
         subheading('Disabling monitoring')
         writeReg(getNode('GEM_AMC.SLOW_CONTROL.SCA.ADC_MONITORING.MONITORING_OFF'), 0xffffffff)
@@ -132,12 +138,12 @@ def main():
 
     elif instructions == 'program-fpga':
         if len(sys.argv) < 5:
-            print('Usage: sca.py program-fpga <file-type> <filename>')
+            print('Usage: sca.py local program-fpga <file-type> <filename>')
             print('file-type can be "mcs" or "bit"')
             return
 
-        type = sys.argv[3]
-        filename = sys.argv[4]
+        type = sys.argv[4]
+        filename = sys.argv[5]
 
         if (type != "bit") and (type != "mcs"):
             print('Unrecognized type "' + type + '".. must be either "bit" or "mcs"')
@@ -346,12 +352,12 @@ def main():
             writeReg(getNode('GEM_AMC.SLOW_CONTROL.SCA.MANUAL_CONTROL.FPGA_HARD_RESET'), 0x1)
 
     elif instructions == 'compare-mcs-bit':
-        if len(sys.argv) < 4:
-            print("Usage: sca.py compare-mcs-bit <mcs_filename> <bit_filename>")
+        if len(sys.argv) < 5:
+            print("Usage: sca.py local compare-mcs-bit <mcs_filename> <bit_filename>")
             return
 
-        mcsFilename = sys.argv[2]
-        bitFilename = sys.argv[3]
+        mcsFilename = sys.argv[3]
+        bitFilename = sys.argv[4]
         mcsBytes = readMcs(mcsFilename)
 
         bitBytes = array.array('L')
@@ -404,7 +410,40 @@ def main():
                sleep(0.5)
 
         print("Num errors: " + str(errors))
+    elif instructions == 'gpio-set-direction':
+        if len(sys.argv) < 4:
+            print('Usage: sca.py local gpio-set-direction <direction-mask>')
+            print('direction-mask is a 32 bit number where each bit represents a GPIO channel -- if a given bit is high it means that this GPIO channel will be set to OUTPUT mode, and otherwise it will be set to INPUT mode')
+            return
+        directionMask = parseInt(sys.argv[3])
 
+        subheading('Disabling monitoring')
+        writeReg(getNode('GEM_AMC.SLOW_CONTROL.SCA.ADC_MONITORING.MONITORING_OFF'), 0xffffffff)
+        sleep(0.01)
+        subheading('Setting the GPIO direction mask to ' + hex(directionMask))
+        sendScaCommand(ohList, 0x2, 0x20, 0x4, directionMask, False)
+    elif instructions == 'gpio-set-output':
+        if len(sys.argv) < 4:
+            print('Usage: sca.py local gpio-set-output <output-data>')
+            print('output-data is a 32 bit number representing the 32 GPIO channels state')
+            return
+        outputData = parseInt(sys.argv[3])
+
+        subheading('Disabling monitoring')
+        writeReg(getNode('GEM_AMC.SLOW_CONTROL.SCA.ADC_MONITORING.MONITORING_OFF'), 0xffffffff)
+        sleep(0.01)
+        subheading('Setting the GPIO output to ' + hex(outputData))
+        sendScaCommand(ohList, 0x2, 0x10, 0x4, outputData, False)
+    elif instructions == 'gpio-read-input':
+        subheading('Disabling monitoring')
+        writeReg(getNode('GEM_AMC.SLOW_CONTROL.SCA.ADC_MONITORING.MONITORING_OFF'), 0xffffffff)
+        sleep(0.01)
+        subheading('Reading the GPIO input')
+        readData = sendScaCommand(ohList, 0x2, 0x1, 0x1, 0x0, True)
+        idx = 0
+        for oh in ohList:
+            print('OH %d  GPIO Input = ' %(oh) + hex(readData[idx]))
+            idx += 1
 
 def initJtagRegAddrs():
     global ADDR_JTAG_LENGTH
