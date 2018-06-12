@@ -3,4 +3,4 @@ include README.md
 include MANIFEST.in
 include LICENSE
 include requirements.txt
-recursive-include reg_utils/scripts *
+recursive-include xhal/scripts *
