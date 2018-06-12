@@ -11,7 +11,7 @@ if __name__ == '__main__':
 
     (options, args) = parser.parse_args()
 
-    from gem_reg_interface_extras.ri_prompt_extended import *
+    from xhal.gem_reg_interface_extras.core.ri_prompt_extended import *
 
     if options.exe:
         parseXML()

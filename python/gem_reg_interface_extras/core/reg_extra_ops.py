@@ -1,7 +1,7 @@
 import os
 from ctypes import *
 
-lib = CDLL(os.getenv("XHAL_ROOT")+"/lib/x86_64/librpcman.so")
+lib = CDLL("librpcman.so")
 rBlock = lib.getBlock
 rBlock.restype = c_uint
 rBlock.argtypes=[c_uint,POINTER(c_uint32)]
