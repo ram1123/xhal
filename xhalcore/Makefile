@@ -7,6 +7,7 @@ PackageName  := $(ShortPackage)
 PackagePath  := $(shell pwd)
 PackageDir   := pkg/$(ShortPackage)
 Packager     := Mykhailo Dalchenko
+Arch         := x86_64
 
 XHALCORE_VER_MAJOR=1
 XHALCORE_VER_MINOR=0
