@@ -1,5 +1,6 @@
 SUBPACKAGES := \
-        python 
+        python \
+        xhalcore
 
 SUBPACKAGES.DEBUG    := $(patsubst %,%.debug,    ${SUBPACKAGES})
 SUBPACKAGES.RPM      := $(patsubst %,%.rpm,      ${SUBPACKAGES})
