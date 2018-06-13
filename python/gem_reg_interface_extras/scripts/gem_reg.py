@@ -5,24 +5,20 @@ if __name__ == '__main__':
     from optparse import OptionParser
     parser = OptionParser()
     parser.add_option("-e", "--execute", type="str", dest="exe",
-                      help="Function to execute once", metavar="exe", default=None)
+                      help="Function to execute once, should be used as reg_interface -e <method> \"<method arguments>\" - note the quotes", metavar="exe", default=None)
     parser.add_option("-n", "--hostname", type="string", dest="hostname",
-                      help="CTP7 hostname, default is the one used at p5", default="amc-s2e01-23-03")
+                      help="CTP7 hostname, default is the one used at p5", default="")
 
     (options, args) = parser.parse_args()
 
-    try:
-       from ri_prompt_extended import *
-       print "Extended prompt module found"
-    except ImportError:
-       from ri_prompt import *
-       print "Extended prompt module not found, importing basic one"
+    from xhal.gem_reg_interface_extras.core.ri_prompt_extended import *
 
     if options.exe:
         parseXML()
-        if (rpc_connect(options.hostname)):
-          print '[Connection error] RPC connection failed'
-          exit
+        if (options.hostname):
+            if (rpc_connect(options.hostname)):
+                print '[Connection error] RPC connection failed'
+                exit
         prompt=Prompt()
         prompt.execute(options.exe,args)
         sys.exit()
