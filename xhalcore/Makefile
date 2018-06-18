@@ -1,7 +1,7 @@
 BUILD_HOME   := $(shell dirname `cd ../; pwd`)
 Project      := xhal
-Package      := xhalcore
-ShortPackage := xhalcore
+Package      := xhal
+ShortPackage := xhal
 LongPackage  := xhalcore
 PackageName  := $(ShortPackage)
 PackagePath  := $(shell pwd)
@@ -9,9 +9,9 @@ PackageDir   := pkg/$(ShortPackage)
 Packager     := Mykhailo Dalchenko
 Arch         := x86_64
 
-XHALCORE_VER_MAJOR=1
-XHALCORE_VER_MINOR=0
-XHALCORE_VER_PATCH=0
+XHAL_VER_MAJOR=1
+XHAL_VER_MINOR=0
+XHAL_VER_PATCH=0
 
 include $(BUILD_HOME)/$(Project)/config/mfCommonDefs.mk
 include $(BUILD_HOME)/$(Project)/config/mfRPMRules.mk
@@ -22,7 +22,7 @@ ADDFLAGS=-std=gnu++14
 
 IncludeDirs= /opt/xdaq/include
 IncludeDirs+= /opt/rh/devtoolset-6/root/usr/include
-IncludeDirs+= ${BUILD_HOME}/${Project}/${Package}/include
+IncludeDirs+= ${BUILD_HOME}/${Project}/${LongPackage}/include
 INC=$(IncludeDirs:%=-I%)
 
 Libraries+= -llog4cplus -lxerces-c -lwiscrpcsvc
@@ -39,8 +39,8 @@ OBJS_XHAL = $(SRCS_XHAL:.cpp=.o)
 SRCS_RPC_MAN = $(shell echo src/common/rpc_manager/*.cc)
 OBJS_RPC_MAN = $(SRCS_RPC_MAN:.cc=.o)
 
-XHALCORE_LIB=${BUILD_HOME}/${Project}/${Package}/lib/libxhal.so
-RPC_MAN_LIB=${BUILD_HOME}/${Project}/${Package}/lib/librpcman.so
+XHALCORE_LIB=${BUILD_HOME}/${Project}/${LongPackage}/lib/libxhal.so
+RPC_MAN_LIB=${BUILD_HOME}/${Project}/${LongPackage}/lib/librpcman.so
 
 .PHONY: clean xhalcore rpc prerpm
 
@@ -63,7 +63,7 @@ rpc:${RPC_MAN_LIB}
 xhalcore:${XHALCORE_LIB}
 
 $(XHALCORE_LIB): $(OBJS_UTILS) $(OBJS_XHAL)
-	@mkdir -p ${BUILD_HOME}/${Project}/${Package}/lib/
+	@mkdir -p ${BUILD_HOME}/${Project}/${LongPackage}/lib/
 	$(CC) $(CCFLAGS) $(ADDFLAGS) ${LDFLAGS} $(INC) $(LIB) -o $@ $^
 
 $(OBJS_UTILS):$(SRCS_UTILS)
