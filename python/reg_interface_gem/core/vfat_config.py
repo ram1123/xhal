@@ -1,4 +1,6 @@
-from rw_reg import *
+from reg_utils.reg_interface.common.print_utils import *
+from reg_utils.reg_interface.common.reg_xml_parser import getNode
+from reg_utils.reg_interface.common.reg_base_ops import writeReg, readReg, displayReg, parseInt
 
 #VFAT DEFAULTS
 CONTREG0=55
@@ -14,19 +16,6 @@ ICOMP=75
 
 VTHRESHOLD1=50
 VCAL=190
-
-
-class Colors:
-    WHITE   = '\033[97m'
-    CYAN    = '\033[96m'
-    MAGENTA = '\033[95m'
-    BLUE    = '\033[94m'
-    YELLOW  = '\033[93m'
-    GREEN   = '\033[92m'
-    RED     = '\033[91m'
-    ENDC    = '\033[0m'
-
-
 
 # Set default VFAT values & RunMode
 # Returns True if regs written and False if not
@@ -73,7 +62,6 @@ def setAllVFATsRunMode(OH_NUM,Silent=True):
         return True
     except:
         return False
-
 
 def getVFATID(OH_NUM,vfat_slot):
 #    try:
@@ -145,8 +133,6 @@ def clearAllVFATChannels(OH_NUM):
 def activateChannel(OH_NUM,vfat_slot,channel):
     print writeReg(getNode('GEM_AMC.OH.OH'+str(OH_NUM)+'.GEB.VFATS.VFAT'+str(vfat_slot)+'.VFATChannels.ChanReg'+str(channel)),64)
 
-
-
 #Toggle T1 Controller to ON/OFF
 def T1Off(OH_NUM):
     prevent_infiteloop = 0
@@ -169,8 +155,6 @@ def T1On(OH_NUM):
             printRed('T1Controller Error - Will not toggle T1Controller Monitor')
             return False
     return True
-
-
 
 def cluster_to_vfat (cluster): 
     vfat_mapping =  [ 0, 8, 16, 1, 9, 17, 2, 10, 18, 3, 11, 19, 4, 12, 20, 5, 13, 21, 6, 14, 22, 7, 15, 23]
@@ -198,4 +182,3 @@ def cluster_to_size (cluster):
     else: 
         size = (cluster>>11)&0x7; 
     return size
-

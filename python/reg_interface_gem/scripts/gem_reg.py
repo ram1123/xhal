@@ -11,16 +11,11 @@ if __name__ == '__main__':
 
     (options, args) = parser.parse_args()
 
-    try:
-       from ri_prompt_extended import *
-       print "Extended prompt module found"
-    except ImportError:
-       from ri_prompt import *
-       print "Extended prompt module not found, importing basic one"
+    from xhal.reg_interface_gem.core.ri_prompt_extended import *
 
     if options.exe:
         parseXML()
-        if options.hostname:
+        if (options.hostname):
             if (rpc_connect(options.hostname)):
                 print '[Connection error] RPC connection failed'
                 exit
