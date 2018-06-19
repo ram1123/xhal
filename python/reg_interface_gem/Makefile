@@ -7,9 +7,9 @@ BUILD_HOME := $(shell dirname `cd ../../; pwd`)
 Project      := xhal
 ShortProject := xhal
 Namespace    := xhal
-Package      := gem_reg_interface_extras
-ShortPackage := gem_reg_interface_extras
-LongPackage  := gem_reg_interface_extras
+Package      := reg_interface_gem
+ShortPackage := reg_interface_gem
+LongPackage  := reg_interface_gem
 PackageName  := $(ShortPackage)
 PackagePath  := $(shell pwd)
 PackageDir   := pkg/$(Namespace)/$(ShortPackage)
@@ -20,9 +20,9 @@ ScriptDir    := pkg/$(Namespace)/scripts
 PythonModules = ["$(Namespace).$(ShortPackage)"]
 $(info PythonModules=${PythonModules})
 
-GEM_REG_INTERFACE_EXTRAS_VER_MAJOR=1
-GEM_REG_INTERFACE_EXTRAS_VER_MINOR=0
-GEM_REG_INTERFACE_EXTRAS_VER_PATCH=0
+REG_INTERFACE_GEM_VER_MAJOR=1
+REG_INTERFACE_GEM_VER_MINOR=0
+REG_INTERFACE_GEM_VER_PATCH=0
 
 include $(BUILD_HOME)/$(Project)/config/mfCommonDefs.mk
 include $(BUILD_HOME)/$(Project)/config/mfPythonDefs.mk

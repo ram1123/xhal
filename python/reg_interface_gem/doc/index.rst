@@ -3,13 +3,13 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-reg_utils package
+reg_interrface_gem package
 =====================================
 
 Introduction
 ------------
 
-This doc is about ``gem_reg_interface_extras`` package
+This doc is about ``reg_interface_gem`` package
 TODO
 
 Table of contents:
