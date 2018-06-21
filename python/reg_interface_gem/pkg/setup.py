@@ -28,7 +28,7 @@ def getVersion():
     __builddate__='___builddate___'
     with open("xhal/_version.py","w") as verfile:
         verfile.write("""
-## This file is generated automatically from cmsgemos_gempython setup.py
+## This file is generated automatically from reg_interface_gem setup.py
 __version__='{0:s}'
 __release__='{1:s}'
 __buildtag__='{2:s}'
