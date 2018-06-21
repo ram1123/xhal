@@ -61,7 +61,10 @@ clean:
 	-rm -f  pkg/CHANGELOG.md
 	-rm -f  pkg/requirements.txt
 
-rpm: _rpmall _rpmarm 
+rpm: _rpmall _rpmarm _harvest
+	@echo "Running xhal reg_interface_gem rpm target"
+	find $(RPMBUILD_DIR)/dist -iname "*.rpm" -print0 -exec mv -t $(RPMBUILD_DIR) {} \+
+	find $(RPMBUILD_DIR)/arm -iname "*.rpm" -print0 -exec mv -t $(RPMBUILD_DIR) {} \+
 
 print-env:
 	@echo BUILD_HOME     $(BUILD_HOME)
