@@ -1,6 +1,7 @@
 SUBPACKAGES := \
         python \
-        xhalcore
+        xhalcore \
+	xhalarm
 
 SUBPACKAGES.DEBUG    := $(patsubst %,%.debug,    ${SUBPACKAGES})
 SUBPACKAGES.RPM      := $(patsubst %,%.rpm,      ${SUBPACKAGES})
@@ -19,7 +20,7 @@ cleanrpm: $(SUBPACKAGES.CLEANRPM)
 
 cleandoc: $(SUBPACKAGES.CLEANDOC)
 
-clean: $(SUBPACKAGES.CLEAN) $(SUBPACKAGES.CLEANDOC)
+clean: $(SUBPACKAGES.CLEAN) $(SUBPACKAGES.CLEANRPM) $(SUBPACKAGES.CLEANDOC) 
 
 $(SUBPACKAGES):
 	$(MAKE) -C $@
