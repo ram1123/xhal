@@ -2,6 +2,7 @@ import reg_utils.reg_interface.common.ri_prompt as ri_prompt
 from reg_utils.reg_interface.common.reg_xml_parser import *
 from reg_utils.reg_interface.common.reg_base_ops import *
 from vfat_config import *
+from reg_extra_ops import *
 
 MAX_OH_NUM = 12
 
