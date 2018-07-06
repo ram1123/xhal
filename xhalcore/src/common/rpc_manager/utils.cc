@@ -4,7 +4,6 @@ wisc::RPCSvc* getRPCptr(){return &rpc;}
 
 DLLEXPORT uint32_t init(char * hostname)
 {
-    printf("Running utils.init");
     try {
         rpc.connect(hostname);
     }
