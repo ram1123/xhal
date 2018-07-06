@@ -1,7 +1,7 @@
 import reg_utils.reg_interface.common.ri_prompt as ri_prompt
 from reg_utils.reg_interface.common.reg_xml_parser import *
 from reg_utils.reg_interface.common.reg_base_ops import *
-from xhal.reg_interface_gem.core.reg_extra_ops import update_atdb
+from xhal.reg_interface_gem.core.reg_extra_ops import *
 from xhal.reg_interface_gem.core.vfat_config import *
 
 MAX_OH_NUM = 12

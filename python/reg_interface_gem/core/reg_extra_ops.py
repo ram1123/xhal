@@ -2,6 +2,15 @@ import os
 from ctypes import *
 
 lib = CDLL("librpcman.so")
+rReg = lib.getReg
+rReg.restype = c_uint
+rReg.argtypes=[c_uint]
+wReg = lib.putReg
+wReg.argtypes=[c_uint,c_uint]
+rpc_connect = lib.init
+rpc_connect.argtypes = [c_char_p]
+rpc_connect.restype = c_uint
+
 rBlock = lib.getBlock
 rBlock.restype = c_uint
 rBlock.argtypes=[c_uint,POINTER(c_uint32)]
