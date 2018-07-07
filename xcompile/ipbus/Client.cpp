@@ -4,6 +4,7 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <stdio.h>
+#include <unistd.h>
 #include <libmemsvc.h>
 #include <iostream>
 #include <sstream>
@@ -13,9 +14,32 @@
 static bool memsvc_inited = false;
 static memsvc_handle_t memsvc;
 
+uint32_t stat_data[1024];
+
+bool getLock(){
+    return ( access("/tmp/ipbus.lock", F_OK ) != -1 );
+}
+
+int gem_memsvc_read(memsvc_handle_t handle, uint32_t addr, uint32_t words, uint32_t *data){
+    if (getLock()) {
+        data = stat_data;
+        return 0;
+    }
+    else {
+        return memsvc_read(handle, addr, words, data);
+    }
+}
+int gem_memsvc_write(memsvc_handle_t handle, uint32_t addr, uint32_t words, const uint32_t *data){
+    int i = 0;
+    while (getLock() && (i < 3000)){
+        usleep(1000);
+        i++;
+    }
+    return memsvc_write(handle, addr, words, data);
+}
+
 bool Client::write_ready()
-{
-	return obuf.size();
+{	return obuf.size();
 }
 
 bool Client::read_ready()
@@ -200,7 +224,7 @@ void Client::process_read_txn(IPBusTxnHdr transaction_header, std::deque<uint32_
         base_addr = modified_addr;
 
 	uint32_t data[transaction_header.words];
-	if (memsvc_read(memsvc, base_addr, transaction_header.words, data) == 0) {
+	if (gem_memsvc_read(memsvc, base_addr, transaction_header.words, data) == 0) {
 		transaction_header.info_code = IPBusTxnHdr::SUCCESS;
 		response.push_back(transaction_header.serialize());
 		for (int i = 0; i < transaction_header.words; ++i)
@@ -233,7 +257,7 @@ void Client::process_write_txn(IPBusTxnHdr transaction_header, std::deque<uint32
 		}
 		data[i] = request.front(); request.pop_front();
 	}
-	if (memsvc_write(memsvc, base_addr, transaction_header.words, data) == 0) {
+	if (gem_memsvc_write(memsvc, base_addr, transaction_header.words, data) == 0) {
 		transaction_header.info_code = IPBusTxnHdr::SUCCESS;
 		response.push_back(transaction_header.serialize());
 	}
@@ -258,7 +282,7 @@ void Client::process_niread_txn(IPBusTxnHdr transaction_header, std::deque<uint3
 	std::deque<uint32_t> rspdata;
 	for (int i = 0; i < transaction_header.words; ++i) {
 		uint32_t data;
-		if (memsvc_read(memsvc, base_addr, 1, &data) == 0) {
+		if (gem_memsvc_read(memsvc, base_addr, 1, &data) == 0) {
 			rspdata.push_back(data);
 		}
 		else {
@@ -287,7 +311,7 @@ void Client::process_niwrite_txn(IPBusTxnHdr transaction_header, std::deque<uint
 
 	for (int i = 0; i < transaction_header.words; ++i) {
 		uint32_t data = request.front(); request.pop_front();
-		if (memsvc_write(memsvc, base_addr, 1, &data) != 0) {
+		if (gem_memsvc_write(memsvc, base_addr, 1, &data) != 0) {
 			// Failed!
 			transaction_header.info_code = IPBusTxnHdr::BUSERR_WRITE;
 			response.push_back(transaction_header.serialize());
@@ -314,14 +338,14 @@ void Client::process_rmwbits_txn(IPBusTxnHdr transaction_header, std::deque<uint
 	uint32_t or_term = request.front(); request.pop_front();
 
 	uint32_t predata;
-	if (memsvc_read(memsvc, base_addr, 1, &predata) != 0) {
+	if (gem_memsvc_read(memsvc, base_addr, 1, &predata) != 0) {
 		// Failed!
 		transaction_header.info_code = IPBusTxnHdr::BUSERR_READ;
 		response.push_back(transaction_header.serialize());
 		return;
 	}
 	uint32_t data = (predata & and_term) | or_term;
-	if (memsvc_write(memsvc, base_addr, 1, &data) != 0) {
+	if (gem_memsvc_write(memsvc, base_addr, 1, &data) != 0) {
 		// Failed!
 		transaction_header.info_code = IPBusTxnHdr::BUSERR_WRITE;
 		response.push_back(transaction_header.serialize());
@@ -346,14 +370,14 @@ void Client::process_rmwsum_txn(IPBusTxnHdr transaction_header, std::deque<uint3
 	uint32_t addend = request.front(); request.pop_front();
 
 	uint32_t predata;
-	if (memsvc_read(memsvc, base_addr, 1, &predata) != 0) {
+	if (gem_memsvc_read(memsvc, base_addr, 1, &predata) != 0) {
 		// Failed!
 		transaction_header.info_code = IPBusTxnHdr::BUSERR_READ;
 		response.push_back(transaction_header.serialize());
 		return;
 	}
 	uint32_t data = predata + addend;
-	if (memsvc_write(memsvc, base_addr, 1, &data) != 0) {
+	if (gem_memsvc_write(memsvc, base_addr, 1, &data) != 0) {
 		// Failed!
 		transaction_header.info_code = IPBusTxnHdr::BUSERR_WRITE;
 		response.push_back(transaction_header.serialize());
