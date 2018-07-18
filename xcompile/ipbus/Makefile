@@ -13,14 +13,14 @@ all: build
 build: $(APP)
 
 $(APP): $(APP_OBJS)
-	$(CXX) -std=c++11 $(CFLAGS) $(LDFLAGS) -o $@ $(APP_OBJS) $(LDLIBS) -lmemsvc
+	$(CXX) -std=c++11 $(CFLAGS) $(LDFLAGS) -o $@ $(APP_OBJS) $(LDLIBS) -lmemsvc -L../memhub -lmemhub
 
 clean:
 	-rm -f $(APP) *.elf *.gdb *.o
 
 
 %.o: %.cpp
-	$(CXX) -std=c++0x -c $(CFLAGS) -o $@ $<
+	$(CXX) -std=c++0x -c $(CFLAGS) -I../memhub -o $@ $<
 
 .PHONY: build
 help:
@@ -28,5 +28,5 @@ help:
 	@echo "Quick reference for various supported build targets for $(INSTANCE)."
 	@echo "----------------------------------------------------"
 	@echo "  clean                  clean out build objects"
-	@echo "  all                    build $(INSTANCE)
+	@echo "  all                    build $(INSTANCE)"
 	@echo "  build                  build subsystem"
