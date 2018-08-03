@@ -13,9 +13,9 @@ XHAL_VER_MAJOR=1
 XHAL_VER_MINOR=0
 XHAL_VER_PATCH=0
 
-include $(BUILD_HOME)/$(Project)/config/mfZynq.mk
 include $(BUILD_HOME)/$(Project)/config/mfCommonDefs.mk
 include $(BUILD_HOME)/$(Project)/config/mfRPMRules.mk
+include $(BUILD_HOME)/$(Project)/config/mfZynq.mk
 
 ADDFLAGS=-std=gnu++14
 
