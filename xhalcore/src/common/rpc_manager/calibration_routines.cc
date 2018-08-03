@@ -1,7 +1,37 @@
 #include "xhal/rpc/calibration_routines.h"
 
 DLLEXPORT uint32_t checkSbitMappingWithCalPulse(uint32_t ohN, uint32_t mask, uint32_t currentPulse, uint32_t calScaleFactor, uint32_t nevts, uint32_t L1Ainterval, uint32_t pulseDelay, uint32_t *data){
+    req = wisc::RPCMsg("calibration_routines.checkSbitMappingWithCalPulse");
 
+    req.set_word("ohN", ohN);
+    req.set_word("mask", mask);
+    req.set_word("currentPulse", currentPulse);
+    req.set_word("calScaleFactor", calScaleFactor);
+    req.set_word("nevts", nevts);
+    req.set_word("L1Ainterval", L1Ainterval);
+    req.set_word("pulseDelay", pulseDelay);
+
+    try {
+        rsp = rpc_loc->call_method(req);
+    }
+    STANDARD_CATCH;
+
+    if (rsp.get_key_exists("error")) {
+        printf("Caught an error: %s\n", (rsp.get_string("error")).c_str());
+        return 1;
+    }
+
+    const uint32_t size = 24*128*8*nevts;
+    if (rsp.get_key_exists("data")){
+        ASSERT(rsp.get_word_array_size("data") == size);
+        rsp.get_word_array("data",data);
+    }
+    else{
+        printf("No key found for data");
+        return 1;
+    }
+
+    return 0;
 } //End checkSbitMappingWithCalPulse()
 
 DLLEXPORT uint32_t checkSbitRateWithCalPulse(uint32_t ohN, uint32_t mask, uint32_t currentPulse, uint32_t calScaleFactor, uint32_t waitTime, uint32_t pulseRate, uint32_t pulseDelay, uint32_t *outDataCTP7Rate, uint32_t *outDataFPGAClusterCntRate, uint32_t *outDataVFATSBits){
