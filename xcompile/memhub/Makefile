@@ -18,7 +18,7 @@ $(LIB): $(LIB_OBJS)
 	$(CXX) -std=c++11 $(CFLAGS) $(LDFLAGS) -shared -o lib$@.so $(LIB_OBJS) $(LDLIBS) -lmemsvc -pthread
 
 $(APP): $(LIB) $(APP_OBJS)
-	$(CXX) -std=c++11 $(CFLAGS) $(LDFLAGS) -o $@ $(APP_OBJS) $(LDLIBS) -lmemsvc -L./ -l$(LIB)
+	$(CXX) -std=c++11 $(CFLAGS) $(LDFLAGS) -o $@ $(APP_OBJS) $(LDLIBS) -lmemsvc -l$(LIB)
 
 clean:
 	-rm -f $(APP) *.elf *.gdb *.o *.so

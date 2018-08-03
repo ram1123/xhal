@@ -13,14 +13,14 @@ all: build
 build: $(APP)
 
 $(APP): $(APP_OBJS)
-	$(CXX) -std=c++11 $(CFLAGS) $(LDFLAGS) -o $@ $(APP_OBJS) $(LDLIBS) -lmemsvc -L../memhub -lmemhub
+	$(CXX) -std=c++11 $(CFLAGS) $(LDFLAGS) -o $@ $(APP_OBJS) $(LDLIBS) -lmemsvc -lmemhub
 
 clean:
 	-rm -f $(APP) *.elf *.gdb *.o
 
 
 %.o: %.cpp
-	$(CXX) -std=c++0x -c $(CFLAGS) -I../memhub -o $@ $<
+	$(CXX) -std=c++0x -c $(CFLAGS) -o $@ $<
 
 .PHONY: build
 help:

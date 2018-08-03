@@ -5,10 +5,9 @@
 #include <sys/socket.h>
 #include <stdio.h>
 #include <unistd.h>
-#include <libmemsvc.h>
-#include "memhub.h"
 #include <iostream>
 #include <sstream>
+#include "memhub.h"
 
 #define MAX_OBUF (512*1024)
 
