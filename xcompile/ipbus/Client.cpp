@@ -10,13 +10,14 @@
 #include <iostream>
 #include <sstream>
 
-#define MAX_OBUF (512*1024) 
+#define MAX_OBUF (512*1024)
 
 static bool memsvc_inited = false;
 static memsvc_handle_t memhub;
 
 bool Client::write_ready()
-{	return obuf.size();
+{
+	return obuf.size();
 }
 
 bool Client::read_ready()
@@ -78,7 +79,7 @@ bool Client::run_io()
 	if (this->obuf.size()) {
 		ssize_t writecount = send(this->fd, this->obuf.data(), this->obuf.size(), MSG_DONTWAIT|MSG_NOSIGNAL);
 		if (readcount < 0 && errno != EAGAIN)
-			return false; // Error. 
+			return false; // Error.
 		this->obuf = this->obuf.erase(0, writecount);
 	}
 	return true;
@@ -157,7 +158,7 @@ void Client::process_control_packet(std::deque<uint32_t> &request, std::deque<ui
 	if (request.size() < 1) {
 		return; // Missing Header.
 	}
-	
+
 	while (request.size()) {
 		IPBusTxnHdr transaction_header(request.front());
 		request.pop_front();
