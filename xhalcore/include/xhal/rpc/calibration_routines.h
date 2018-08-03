@@ -8,7 +8,7 @@ DLLEXPORT uint32_t checkSbitRateWithCalPulse(uint32_t ohN, uint32_t mask, uint32
 DLLEXPORT uint32_t genScan(uint32_t nevts, uint32_t ohN, uint32_t dacMin, uint32_t dacMax, uint32_t dacStep,
         uint32_t ch, bool useCalPulse, bool currentPulse, uint32_t calScaleFactor, uint32_t mask, char * scanReg, bool useUltra, bool useExtTrig,
         uint32_t * result);
-DLLEXPORT uint32_t genChannelScan(uint32_t nevts, uint32_t ohN, uint32_t mask, uint32_t dacMin, uint32_t dacMax, uint32_t dacStep, uint32_t useCalPulse, uint32_t currentPulse, uint32_t calScaleFactor, uint32_t useExtTrig, char * scanReg, bool useUltra, bool useExtTrig, uint32_t * result);
+DLLEXPORT uint32_t genChannelScan(uint32_t nevts, uint32_t ohN, uint32_t mask, uint32_t dacMin, uint32_t dacMax, uint32_t dacStep, uint32_t useCalPulse, uint32_t currentPulse, uint32_t calScaleFactor, bool useExtTrig, char * scanReg, bool useUltra, uint32_t * result);
 DLLEXPORT uint32_t sbitRateScan(uint32_t ohN, uint32_t dacMin, uint32_t dacMax, uint32_t dacStep, uint32_t ch, uint32_t maskOh,
         bool invertVFATPos, char * scanReg, uint32_t waitTime, uint32_t * resultDacVal, uint32_t * resultTrigRate,
         uint32_t * resultTrigRatePerVFAT, bool isParallel);

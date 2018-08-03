@@ -11,6 +11,8 @@ DLLEXPORT uint32_t checkSbitMappingWithCalPulse(uint32_t ohN, uint32_t mask, uin
     req.set_word("L1Ainterval", L1Ainterval);
     req.set_word("pulseDelay", pulseDelay);
 
+    wisc::RPCSvc* rpc_loc = getRPCptr();
+
     try {
         rsp = rpc_loc->call_method(req);
     }
@@ -44,6 +46,8 @@ DLLEXPORT uint32_t checkSbitRateWithCalPulse(uint32_t ohN, uint32_t mask, uint32
     req.set_word("waitTime", waitTime);
     req.set_word("pulseRate", pulseRate);
     req.set_word("pulseDelay", pulseDelay);
+
+    wisc::RPCSvc* rpc_loc = getRPCptr();
 
     try {
         rsp = rpc_loc->call_method(req);
@@ -135,7 +139,7 @@ DLLEXPORT uint32_t genScan(uint32_t nevts, uint32_t ohN, uint32_t dacMin, uint32
 /***
  * @brief run a generic scan routine on all channels
  */
-DLLEXPORT uint32_t genChannelScan(uint32_t nevts, uint32_t ohN, uint32_t mask, uint32_t dacMin, uint32_t dacMax, uint32_t dacStep, uint32_t useCalPulse, uint32_t currentPulse, uint32_t calScaleFactor, uint32_t useExtTrig, char * scanReg, bool useUltra, bool useExtTrig, uint32_t * result){
+DLLEXPORT uint32_t genChannelScan(uint32_t nevts, uint32_t ohN, uint32_t mask, uint32_t dacMin, uint32_t dacMax, uint32_t dacStep, uint32_t useCalPulse, uint32_t currentPulse, uint32_t calScaleFactor, bool useExtTrig, char * scanReg, bool useUltra, uint32_t * result){
     req = wisc::RPCMsg("calibration_routines.genChannelScan");
 
     req.set_word("nevts", nevts);
