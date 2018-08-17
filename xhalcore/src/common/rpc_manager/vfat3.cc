@@ -80,3 +80,27 @@ DLLEXPORT uint32_t setChannelRegistersVFAT3(uint32_t ohN, uint32_t vfatMask, uin
     }
     return 0;
 }
+
+
+DLLEXPORT uint32_t setChannelRegistersVFAT3Simple(uint32_t ohN, uint32_t vfatMask, uint32_t *chanRegData){
+    req = wisc::RPCMsg("vfat3.setChannelRegistersVFAT3");
+
+    req.set_word("ohN",ohN);
+    req.set_word("vfatMask",vfatMask);
+    req.set_word("simple",true);
+
+    req.set_word_array("chanRegData",chanRegData,3072);
+
+    wisc::RPCSvc* rpc_loc = getRPCptr();
+
+    try {
+        rsp = rpc_loc->call_method(req);
+    }
+    STANDARD_CATCH;
+
+    if (rsp.get_key_exists("error")) {
+        printf("Caught an error: %s\n", (rsp.get_string("error")).c_str());
+        return 1;
+    }
+    return 0;
+}
