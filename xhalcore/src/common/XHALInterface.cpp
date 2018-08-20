@@ -4,21 +4,24 @@ xhal::XHALInterface::XHALInterface(const std::string& board_domain_name, const s
   m_board_domain_name(board_domain_name),
   m_address_table_filename(address_table_filename)
 {
-}
-
-void xhal::XHALInterface::init()
-{
   log4cplus::SharedAppenderPtr myAppender(new log4cplus::ConsoleAppender());
   std::auto_ptr<log4cplus::Layout> myLayout = std::auto_ptr<log4cplus::Layout>(new log4cplus::TTCCLayout());
   myAppender->setLayout( myLayout );
+  // Following strange construction is required because it looks like log4cplus was compiled withot c++11 support...
   auto t_logger = log4cplus::Logger::getInstance(LOG4CPLUS_TEXT("XHALInterface"));
   m_logger = t_logger;
   m_logger.addAppender(myAppender);
   m_logger.setLogLevel(log4cplus::INFO_LOG_LEVEL);
   INFO("XHAL Logger tuned up");
-
-  m_parser = new xhal::utils::XHALXMLParser(m_address_table_filename);
   DEBUG("Address table name " << m_address_table_filename);
+
+}
+
+void xhal::XHALInterface::init()
+{
+  TRACE("Init method called");
+  m_parser = new xhal::utils::XHALXMLParser(m_address_table_filename);
+  DEBUG("XHALXML parser created");
   m_parser->setLogLevel(2);
   m_parser->parseXML();
 
@@ -74,8 +77,8 @@ uint32_t xhal::XHALInterface::readReg(std::string regName)
 {
   if (auto t_node = m_parser->getNode(regName.c_str()))
   {
-    m_node = t_node.value();
-	  req = wisc::RPCMsg("memory.read");
+    m_node = t_node.get();
+    req = wisc::RPCMsg("memory.read");
     req.set_word("address", m_node.real_address);
     req.set_word("count", 1);
     try {
@@ -116,6 +119,7 @@ uint32_t xhal::XHALInterface::readReg(std::string regName)
   }
 }
 
+// In current shape implements raw address reading... Should the signature be update? FIXME
 uint32_t xhal::XHALInterface::readReg(uint32_t address)
 {
   req = wisc::RPCMsg("memory.read");
@@ -155,7 +159,7 @@ void xhal::XHALInterface::writeReg(std::string regName, uint32_t value)
 {
   if (auto t_node = m_parser->getNode(regName.c_str()))
   {
-    m_node = t_node.value();
+    m_node = t_node.get();
     if (m_node.mask == 0xFFFFFFFF)
     {
       req = wisc::RPCMsg("memory.write");

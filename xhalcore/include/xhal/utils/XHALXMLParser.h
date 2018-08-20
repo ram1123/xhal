@@ -14,7 +14,7 @@
 #include <string>
 #include <iostream>
 #include <unordered_map>
-#include <experimental/optional>
+#include <boost/optional.hpp>
 
 //#include <boost/algorithm/string.hpp>
 //#include <boost/lexical_cast.hpp>
@@ -85,11 +85,11 @@ namespace xhal {
         /**
          * @brief returns node object by its name or nothing if name is not found
          */
-        std::experimental::optional<xhal::utils::Node> getNode(const char* nodeName);
+        boost::optional<xhal::utils::Node> getNode(const char* nodeName);
         /**
          * @brief not implemented
          */
-        std::experimental::optional<xhal::utils::Node> getNodeFromAddress(const uint32_t nodeAddress);
+        boost::optional<xhal::utils::Node> getNodeFromAddress(const uint32_t nodeAddress);
         /**
          * @brief return all nodes
          */
@@ -111,7 +111,7 @@ namespace xhal {
         /**
          * @brief returns node attribute value by its name if found
          */
-        std::experimental::optional<std::string> getAttVal(xercesc::DOMNode * t_node, const char * attname);
+        boost::optional<std::string> getAttVal(xercesc::DOMNode * t_node, const char * attname);
         /**
          * @brief converts string representation of hex, binary or decimal number to an integer
          */
