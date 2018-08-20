@@ -61,6 +61,9 @@ rpc:${RPC_MAN_LIB}
 
 xhalcore:${XHALCORE_LIB}
 
+doc:
+	@echo "TO DO"
+
 $(XHALCORE_LIB): $(OBJS_UTILS) $(OBJS_XHAL)
 	@mkdir -p ${BUILD_HOME}/${Project}/${LongPackage}/lib/
 	$(CC) $(CCFLAGS) $(ADDFLAGS) ${LDFLAGS} $(INC) $(LIB) -o $@ $^
