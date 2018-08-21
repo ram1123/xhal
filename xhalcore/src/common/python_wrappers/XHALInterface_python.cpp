@@ -1,18 +1,18 @@
 #include <boost/python.hpp>
-#include "xhal/XHALInterface.h"
+#include "xhal/XHALDevice.h"
 
 using namespace boost::python;
 
 // https://stackoverflow.com/questions/7577410/boost-python-select-between-overloaded-methods
-uint32_t (xhal::XHALInterface::*readReg_byname)(std::string regName) = &xhal::XHALInterface::readReg;
-uint32_t (xhal::XHALInterface::*readReg_byaddress)(uint32_t address) = &xhal::XHALInterface::readReg;
+uint32_t (xhal::XHALDevice::*readReg_byname)(std::string regName) = &xhal::XHALDevice::readReg;
+uint32_t (xhal::XHALDevice::*readReg_byaddress)(uint32_t address) = &xhal::XHALDevice::readReg;
 
 BOOST_PYTHON_MODULE(xhalpy){
-  class_<xhal::XHALInterface>("XHALInterface", init<const std::string&, const std::string&>())
-    .def("init",&xhal::XHALInterface::init)
-    .def("loadModule",&xhal::XHALInterface::loadModule)
-    .def("setLogLevel",&xhal::XHALInterface::setLogLevel)
+  class_<xhal::XHALDevice>("XHALDevice", init<const std::string&, const std::string&>())
+    .def("connect",&xhal::XHALDevice::connect)
+    .def("loadModule",&xhal::XHALDevice::loadModule)
+    .def("setLogLevel",&xhal::XHALDevice::setLogLevel)
     .def("readReg",readReg_byname)
     .def("readReg",readReg_byaddress)
-    .def("writeReg",&xhal::XHALInterface::writeReg);
+    .def("writeReg",&xhal::XHALDevice::writeReg);
 }
