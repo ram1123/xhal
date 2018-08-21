@@ -78,7 +78,7 @@ $(OBJS_UTILS):$(SRCS_UTILS)
 	$(CC) $(CCFLAGS) $(ADDFLAGS) $(INC) $(LIB) -c -o $@ $<
 
 $(OBJS_XHAL):$(SRCS_XHAL)
-	$(CC) $(CCFLAGS) $(ADDFLAGS) $(INC) $(LIB) -c -o $@ $<
+	$(CC) $(CCFLAGS) $(ADDFLAGS) $(INC) $(LIB) -c $(@:%.o=%.cpp) -o $@ 
 
 $(RPC_MAN_LIB): $(OBJS_RPC_MAN)
 	$(CC) $(CCFLAGS) $(ADDFLAGS) ${LDFLAGS} $(INC) $(LIB) -o $@ $^

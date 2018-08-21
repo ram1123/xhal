@@ -11,17 +11,29 @@
 
 #include <string>
 #include "xhal/rpc/wiscrpcsvc.h"
-#include "xhal/utils/XHALXMLParser.h"
 #include "xhal/utils/Exception.h"
+#include "xhal/utils/XHALXMLParser.h"
+//#include "log4cplus/logger.h"
+//#include "log4cplus/loglevel.h"
+//#include "log4cplus/loggingmacros.h"
+//#include "log4cplus/consoleappender.h"
+//
+//#define TRACE(MSG) LOG4CPLUS_TRACE(m_logger, MSG)
+//#define DEBUG(MSG) LOG4CPLUS_DEBUG(m_logger, MSG)
+//#define INFO( MSG) LOG4CPLUS_INFO( m_logger, MSG)
+//#define WARN( MSG) LOG4CPLUS_WARN( m_logger, MSG)
+//#define ERROR(MSG) LOG4CPLUS_ERROR(m_logger, MSG)
+//#define FATAL(MSG) LOG4CPLUS_FATAL(m_logger, MSG)
+
 
 #define STANDARD_CATCH \
 	catch (wisc::RPCSvc::NotConnectedException &e) { \
 		ERROR("Caught NotConnectedException: " << e.message.c_str()); \
-    throw xhal::utils::Exception(strcat("RPC exception: ", e.message.c_str()));\
+    throw xhal::utils::Exception(strcat("RPC NotConnectedException: ", e.message.c_str()));\
 	} \
 	catch (wisc::RPCSvc::RPCErrorException &e) { \
 		ERROR("Caught RPCErrorException: " << e.message.c_str()); \
-    throw xhal::utils::Exception(strcat("RPC exception: ", e.message.c_str()));\
+    throw xhal::utils::Exception(strcat("RPC ErrorException: ", e.message.c_str()));\
 	} \
 	catch (wisc::RPCSvc::RPCException &e) { \
 		ERROR("Caught exception: " << e.message.c_str()); \
@@ -29,7 +41,7 @@
 	} \
   catch (wisc::RPCMsg::BadKeyException &e) { \
     ERROR("Caught exception: " << e.key.c_str()); \
-    throw xhal::utils::Exception(strcat("RPC exception (most probably remote register not accessible): ", e.key.c_str()));\
+    throw xhal::utils::Exception(strcat("RPC BadKeyException (most probably remote register not accessible): ", e.key.c_str()));\
 	} 
 
 #define ASSERT(x) do { \
@@ -42,7 +54,7 @@
 namespace xhal {
   /**
    * @class XHALInterface
-   * @brief provide interface to call remote procedures at Zynq CPU and basic FW registers manipulation
+   * @brief provide interface to call remote procedures at Zynq CPU 
    */
   class XHALInterface
   {
@@ -52,15 +64,13 @@ namespace xhal {
        * @param board_domain_name domain name of CTP7
        * @param address_table_filename XML address table file name
        */
-      XHALInterface(const std::string& board_domain_name, const std::string& address_table_filename);
-      ~XHALInterface(){m_logger.shutdown();}
+      XHALInterface(const std::string& board_domain_name);
+      ~XHALInterface();
 
       /**
        * @brief Initialize interface and establish RPC service connection with CTP7
-       *
-       * Parses XML file and starts the RPCSvc connection
        */
-      void init();
+      void connect();
       /**
        * @brief load remote module
        */
@@ -77,27 +87,8 @@ namespace xhal {
        */
       void setLogLevel(int loglevel);
 
-      /**
-       * @brief read FW register by its name
-       * applies reading mask if any
-       */
-      uint32_t readReg(std::string regName);
-      /**
-       * @brief read FW register by its address
-       * reg mask is ignored!!
-       */
-      uint32_t readReg(uint32_t address);
-      /**
-       * @brief write FW register by its name
-       * applies read/write mask if any
-       */
-      void writeReg(std::string regName, uint32_t value);
-      //void writeReg(uint32_t address, uint32_t value);
-    private:
+    protected:
       std::string m_board_domain_name;
-      std::string m_address_table_filename;
-      xhal::utils::XHALXMLParser * m_parser;
-      xhal::utils::Node m_node;
       log4cplus::Logger m_logger;
       wisc::RPCSvc rpc;
       wisc::RPCMsg req, rsp;
