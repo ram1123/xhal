@@ -9,21 +9,22 @@
 #ifndef XHALINTERFACE_H
 #define XHALINTERFACE_H
 
+#include <cstring>
 #include <string>
 #include "xhal/rpc/wiscrpcsvc.h"
 #include "xhal/utils/Exception.h"
-#include "xhal/utils/XHALXMLParser.h"
-//#include "log4cplus/logger.h"
-//#include "log4cplus/loglevel.h"
-//#include "log4cplus/loggingmacros.h"
-//#include "log4cplus/consoleappender.h"
-//
-//#define TRACE(MSG) LOG4CPLUS_TRACE(m_logger, MSG)
-//#define DEBUG(MSG) LOG4CPLUS_DEBUG(m_logger, MSG)
-//#define INFO( MSG) LOG4CPLUS_INFO( m_logger, MSG)
-//#define WARN( MSG) LOG4CPLUS_WARN( m_logger, MSG)
-//#define ERROR(MSG) LOG4CPLUS_ERROR(m_logger, MSG)
-//#define FATAL(MSG) LOG4CPLUS_FATAL(m_logger, MSG)
+
+#include "log4cplus/logger.h"
+#include "log4cplus/loglevel.h"
+#include "log4cplus/loggingmacros.h"
+#include "log4cplus/consoleappender.h"
+
+#define TRACE(MSG) LOG4CPLUS_TRACE(m_logger, MSG)
+#define DEBUG(MSG) LOG4CPLUS_DEBUG(m_logger, MSG)
+#define INFO( MSG) LOG4CPLUS_INFO( m_logger, MSG)
+#define WARN( MSG) LOG4CPLUS_WARN( m_logger, MSG)
+#define ERROR(MSG) LOG4CPLUS_ERROR(m_logger, MSG)
+#define FATAL(MSG) LOG4CPLUS_FATAL(m_logger, MSG)
 
 
 #define STANDARD_CATCH \
