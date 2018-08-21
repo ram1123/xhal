@@ -55,7 +55,7 @@
 namespace xhal {
   /**
    * @class XHALInterface
-   * @brief provide interface to call remote procedures at Zynq CPU 
+   * @brief Provides interface to call remote procedures at Zynq CPU 
    */
   class XHALInterface
   {
@@ -63,7 +63,6 @@ namespace xhal {
       /**
        * @brief Default constructor
        * @param board_domain_name domain name of CTP7
-       * @param address_table_filename XML address table file name
        */
       XHALInterface(const std::string& board_domain_name);
       ~XHALInterface();

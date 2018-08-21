@@ -38,8 +38,8 @@ SRCS_XHALPY = $(shell echo src/common/python_wrappers/*.cpp)
 OBJS_UTILS = $(SRCS_UTILS:.cpp=.o)
 OBJS_XHAL = $(SRCS_XHAL:.cpp=.o)
 OBJS_XHALPY = $(SRCS_XHALPY:.cpp=.o)
-SRCS_RPC_MAN = $(shell echo src/common/rpc_manager/*.cc)
-OBJS_RPC_MAN = $(SRCS_RPC_MAN:.cc=.o)
+SRCS_RPC_MAN = $(shell echo src/common/rpc_manager/*.cpp)
+OBJS_RPC_MAN = $(SRCS_RPC_MAN:.cpp=.o)
 
 XHALCORE_LIB=${BUILD_HOME}/${Project}/${LongPackage}/lib/libxhal.so
 RPC_MAN_LIB=${BUILD_HOME}/${Project}/${LongPackage}/lib/librpcman.so
@@ -84,7 +84,7 @@ $(RPC_MAN_LIB): $(OBJS_RPC_MAN)
 	$(CC) $(CCFLAGS) $(ADDFLAGS) ${LDFLAGS} $(INC) $(LIB) -o $@ $^
 
 $(OBJS_RPC_MAN):$(SRCS_RPC_MAN)
-	$(CC) $(CCFLAGS) $(ADDFLAGS) $(INC) $(LIB) -c $(@:%.o=%.cc) -o $@ 
+	$(CC) $(CCFLAGS) $(ADDFLAGS) $(INC) $(LIB) -c $(@:%.o=%.cpp) -o $@ 
 
 $(XHALPY_LIB):$(OBJS_XHALPY)
 	$(CC) $(CCFLAGS) ${LDFLAGS} $(ADDFLAGS) $(INC) $(LIB) -lboost_python -L$(PYTHON_LIB_PREFIX) -l$(PYTHON_LIB) -Llib/ -lxhal -o $@ $<

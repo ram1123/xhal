@@ -10,6 +10,8 @@ xhal::XHALDevice::XHALDevice(const std::string& board_domain_name, const std::st
   DEBUG("XHALXML parser created");
   m_parser->setLogLevel(2);
   m_parser->parseXML();
+  this->loadModule("memory","memory v1.0.1");
+  this->loadModule("extras","extras v1.0.1");
 }
 
 uint32_t xhal::XHALDevice::readReg(std::string regName)
@@ -147,4 +149,48 @@ void xhal::XHALDevice::writeReg(std::string regName, uint32_t value)
     ERROR("Register not found in address table!");
     throw xhal::utils::Exception(strcat("XHAL XML exception: can't find node", regName.c_str()));
   }
+}
+
+uint32_t xhal::XHALDevice::getList(uint32_t* addresses, uint32_t* result, ssize_t size)
+{
+    req = wisc::RPCMsg("extras.listread");
+    req.set_word_array("addresses", addresses,size);
+    req.set_word("count", size);
+    try {
+        rsp = rpc.call_method(req);
+    }
+    STANDARD_CATCH;
+
+    try{
+        if (rsp.get_key_exists("error")) {
+            return 1;
+        } else {
+            ASSERT(rsp.get_word_array_size("data") == size);
+            rsp.get_word_array("data", result);
+        }
+    }
+    STANDARD_CATCH;
+    return 0;
+}
+
+uint32_t xhal::XHALDevice::getBlock(uint32_t address, uint32_t* result, ssize_t size)
+{
+    req = wisc::RPCMsg("extras.blockread");
+    req.set_word("address", address);
+    req.set_word("count", size);
+    try {
+        rsp = rpc.call_method(req);
+    }
+    STANDARD_CATCH;
+
+    try{
+        if (rsp.get_key_exists("error")) {
+            return 1;//FIXME throw an exception
+        } else {
+            ASSERT(rsp.get_word_array_size("data") == size);
+            rsp.get_word_array("data", result);
+        }
+    }
+    STANDARD_CATCH;
+    return 0;
 }

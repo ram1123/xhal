@@ -12,6 +12,8 @@ xhal::XHALInterface::XHALInterface(const std::string& board_domain_name):
   m_logger.addAppender(myAppender);
   m_logger.setLogLevel(log4cplus::INFO_LOG_LEVEL);
   INFO("XHAL Logger tuned up");
+  this->connect();
+  INFO("XHAL Interface connected");
 }
 
 xhal::XHALInterface::~XHALInterface()
