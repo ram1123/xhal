@@ -5,7 +5,7 @@
 
 DLLEXPORT uint32_t configureVFAT3s(uint32_t ohN, uint32_t vfatMask);
 
-/*! \gn DLLEXPORT uint32_t configureVFAT3s(uint32_t ohN, uint32_t vfatMask)
+/*! \fn DLLEXPORT uint32_t getChannelRegistersVFAT3(uint32_t ohN, uint32_t vfatMask, uint32_t *chanRegData);
  *  \brief reads channel registers of all unmasked vfats on ohN
  *  \param ohN Optohybrid optical link number
  *  \param vfatMask Bitmask of chip positions determining which chips to use
