@@ -1,6 +1,13 @@
 #include "xhal/rpc/optohybrid.h"
 
-DLLEXPORT uint32_t broadcastRead(uint32_t ohN, char * regName, uint32_t vfatMask, uint32_t * result){
+xhal::rpc::Optohybrid::Optohybrid(const std::string& board_domain_name, const std::string& address_table_filename):
+  xhal::XHALDevice(board_domain_name, address_table_filename)
+{
+  this->loadModule("optohybrid","optohybrid v1.0.1");
+}
+
+uint32_t xhal::rpc::Optohybrid::broadcastRead(uint32_t ohN, char * regName, uint32_t vfatMask, uint32_t * result)
+{
     /* User supplies the VFAT node name as reg_name, examples:
      *
      *    v2b electronics: reg_name = "VThreshold1" to get VT1
@@ -14,10 +21,9 @@ DLLEXPORT uint32_t broadcastRead(uint32_t ohN, char * regName, uint32_t vfatMask
     req.set_string("reg_name",std::string(regName));
     req.set_word("ohN",ohN);
     req.set_word("mask",vfatMask);
-    wisc::RPCSvc* rpc_loc = getRPCptr();
 
     try {
-        rsp = rpc_loc->call_method(req);
+        rsp = rpc.call_method(req);
     }
     STANDARD_CATCH;
 
@@ -36,7 +42,8 @@ DLLEXPORT uint32_t broadcastRead(uint32_t ohN, char * regName, uint32_t vfatMask
     return 0;
 } //End broadcastRead
 
-DLLEXPORT uint32_t broadcastWrite(uint32_t ohN, char * regName, uint32_t value, uint32_t vfatMask){
+uint32_t xhal::rpc::Optohybrid::broadcastWrite(uint32_t ohN, char * regName, uint32_t value, uint32_t vfatMask)
+{
     /* User supplies the VFAT node name as reg_name, examples:
      *
      *    v2b electronics: reg_name = "VThreshold1" to get VT1
@@ -51,10 +58,9 @@ DLLEXPORT uint32_t broadcastWrite(uint32_t ohN, char * regName, uint32_t value, 
     req.set_word("ohN",ohN);
     req.set_word("value",value);
     req.set_word("mask",vfatMask);
-    wisc::RPCSvc* rpc_loc = getRPCptr();
 
     try {
-        rsp = rpc_loc->call_method(req);
+        rsp = rpc.call_method(req);
     }
     STANDARD_CATCH;
 
@@ -65,9 +71,8 @@ DLLEXPORT uint32_t broadcastWrite(uint32_t ohN, char * regName, uint32_t value, 
     return 0;
 }
 
-
-DLLEXPORT uint32_t configureScanModule(uint32_t ohN, uint32_t vfatN, uint32_t scanmode, bool useUltra,
-        uint32_t vfatMask, uint32_t ch, uint32_t nevts, uint32_t dacMin, uint32_t dacMax, uint32_t dacStep){
+uint32_t xhal::rpc::Optohybrid::configureScanModule(uint32_t ohN, uint32_t vfatN, uint32_t scanmode, bool useUltra, uint32_t vfatMask, uint32_t ch, uint32_t nevts, uint32_t dacMin, uint32_t dacMax, uint32_t dacStep)
+{
     req = wisc::RPCMsg("optohybrid.configureScanModule");
 
     req.set_word("ohN",ohN);
@@ -85,10 +90,8 @@ DLLEXPORT uint32_t configureScanModule(uint32_t ohN, uint32_t vfatN, uint32_t sc
     req.set_word("dacMax",dacMax);
     req.set_word("dacStep",dacStep);
 
-    wisc::RPCSvc* rpc_loc = getRPCptr();
-
     try {
-        rsp = rpc_loc->call_method(req);
+        rsp = rpc.call_method(req);
     }
     STANDARD_CATCH;
 
@@ -100,7 +103,8 @@ DLLEXPORT uint32_t configureScanModule(uint32_t ohN, uint32_t vfatN, uint32_t sc
     return 0;
 } //End configureScanModule(...)
 
-DLLEXPORT uint32_t printScanConfiguration(uint32_t ohN, bool useUltra){
+uint32_t xhal::rpc::Optohybrid::printScanConfiguration(uint32_t ohN, bool useUltra)
+{
     req = wisc::RPCMsg("optohybrid.printScanConfiguration");
 
     req.set_word("ohN",ohN);
@@ -108,10 +112,8 @@ DLLEXPORT uint32_t printScanConfiguration(uint32_t ohN, bool useUltra){
         req.set_word("useUltra",useUltra);
     }
 
-    wisc::RPCSvc* rpc_loc = getRPCptr();
-
     try {
-        rsp = rpc_loc->call_method(req);
+        rsp = rpc.call_method(req);
     }
     STANDARD_CATCH;
 
@@ -123,7 +125,8 @@ DLLEXPORT uint32_t printScanConfiguration(uint32_t ohN, bool useUltra){
     return 0;
 } //End printScanConfiguration(...)
 
-DLLEXPORT uint32_t startScanModule(uint32_t ohN, bool useUltra){
+uint32_t xhal::rpc::Optohybrid::startScanModule(uint32_t ohN, bool useUltra)
+{
     req = wisc::RPCMsg("optohybrid.startScanModule");
 
     req.set_word("ohN",ohN);
@@ -131,10 +134,8 @@ DLLEXPORT uint32_t startScanModule(uint32_t ohN, bool useUltra){
         req.set_word("useUltra",useUltra);
     }
 
-    wisc::RPCSvc* rpc_loc = getRPCptr();
-
     try {
-        rsp = rpc_loc->call_method(req);
+        rsp = rpc.call_method(req);
     }
     STANDARD_CATCH;
 
@@ -146,7 +147,8 @@ DLLEXPORT uint32_t startScanModule(uint32_t ohN, bool useUltra){
     return 0;
 } //End startScanModule(...)
 
-DLLEXPORT uint32_t getUltraScanResults(uint32_t ohN, uint32_t nevts, uint32_t dacMin, uint32_t dacMax, uint32_t dacStep, uint32_t * result){
+uint32_t xhal::rpc::Optohybrid::getUltraScanResults(uint32_t ohN, uint32_t nevts, uint32_t dacMin, uint32_t dacMax, uint32_t dacStep, uint32_t * result)
+{
     req = wisc::RPCMsg("optohybrid.getUltraScanResults");
 
     req.set_word("ohN",ohN);
@@ -155,10 +157,8 @@ DLLEXPORT uint32_t getUltraScanResults(uint32_t ohN, uint32_t nevts, uint32_t da
     req.set_word("dacMax",dacMax);
     req.set_word("dacStep",dacStep);
 
-    wisc::RPCSvc* rpc_loc = getRPCptr();
-
     try {
-        rsp = rpc_loc->call_method(req);
+        rsp = rpc.call_method(req);
     }
     STANDARD_CATCH;
 
@@ -178,7 +178,8 @@ DLLEXPORT uint32_t getUltraScanResults(uint32_t ohN, uint32_t nevts, uint32_t da
     return 0;
 } //End getUltraScanResults(...)
 
-DLLEXPORT uint32_t stopCalPulse2AllChannels(uint32_t ohN, uint32_t mask, uint32_t ch_min, uint32_t ch_max){
+uint32_t xhal::rpc::Optohybrid::stopCalPulse2AllChannels(uint32_t ohN, uint32_t mask, uint32_t ch_min, uint32_t ch_max)
+{
     req = wisc::RPCMsg("optohybrid.stopCalPulse2AllChannels");
 
     req.set_word("ohN",ohN);
@@ -186,10 +187,8 @@ DLLEXPORT uint32_t stopCalPulse2AllChannels(uint32_t ohN, uint32_t mask, uint32_
     req.set_word("ch_min",ch_min);
     req.set_word("ch_max",ch_max);
 
-    wisc::RPCSvc* rpc_loc = getRPCptr();
-
     try {
-        rsp = rpc_loc->call_method(req);
+        rsp = rpc.call_method(req);
     }
     STANDARD_CATCH;
 
