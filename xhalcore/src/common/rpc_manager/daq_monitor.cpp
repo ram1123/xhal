@@ -1,14 +1,10 @@
 #include "xhal/rpc/daq_monitor.h"
 
-/***
- * @brief get an array of values for TTC main monitoring table
- */
-DLLEXPORT uint32_t getmonTTCmain(uint32_t* result)
+uint32_t xhal::rpc::DaqMonitor::getmonTTCmain(uint32_t* result)
 {
     req = wisc::RPCMsg("amc.getmonTTCmain");
-    wisc::RPCSvc* rpc_loc = getRPCptr();
     try {
-    	rsp = rpc_loc->call_method(req);
+    	rsp = rpc.call_method(req);
     }
     STANDARD_CATCH;
     
@@ -28,16 +24,12 @@ DLLEXPORT uint32_t getmonTTCmain(uint32_t* result)
     return 0;
 }
 
-/***
- * @brief get an array of values for TRIGGER main monitoring table
- */
-DLLEXPORT uint32_t getmonTRIGGERmain(uint32_t* result, uint32_t noh)
+uint32_t xhal::rpc::DaqMonitor::getmonTRIGGERmain(uint32_t* result, uint32_t noh)
 {
     req = wisc::RPCMsg("amc.getmonTRIGGERmain");
     req.set_word("NOH",noh);
-    wisc::RPCSvc* rpc_loc = getRPCptr();
     try {
-        rsp = rpc_loc->call_method(req);
+        rsp = rpc.call_method(req);
     }
     STANDARD_CATCH;
 
@@ -58,16 +50,12 @@ DLLEXPORT uint32_t getmonTRIGGERmain(uint32_t* result, uint32_t noh)
     return 0;
 }
 
-/***
- * @brief get an array of values for TRIGGER OH main monitoring table
- */
-DLLEXPORT uint32_t getmonTRIGGEROHmain(uint32_t* result, uint32_t noh)
+uint32_t xhal::rpc::DaqMonitor::getmonTRIGGEROHmain(uint32_t* result, uint32_t noh)
 {
     req = wisc::RPCMsg("amc.getmonTRIGGEROHmain");
     req.set_word("NOH",noh);
-    wisc::RPCSvc* rpc_loc = getRPCptr();
     try {
-        rsp = rpc_loc->call_method(req);
+        rsp = rpc.call_method(req);
     }
     STANDARD_CATCH;
 
@@ -101,15 +89,11 @@ DLLEXPORT uint32_t getmonTRIGGEROHmain(uint32_t* result, uint32_t noh)
     return 0;
 }
 
-/***
- * @brief get an array of values for DAQ main monitoring table
- */
-DLLEXPORT uint32_t getmonDAQmain(uint32_t* result)
+uint32_t xhal::rpc::DaqMonitor::getmonDAQmain(uint32_t* result)
 {
     req = wisc::RPCMsg("amc.getmonDAQmain");
-    wisc::RPCSvc* rpc_loc = getRPCptr();
     try {
-        rsp = rpc_loc->call_method(req);
+        rsp = rpc.call_method(req);
     }
     STANDARD_CATCH;
 
@@ -133,16 +117,12 @@ DLLEXPORT uint32_t getmonDAQmain(uint32_t* result)
     return 0;
 }
 
-/***
- * @brief get an array of values for DAQ OH main monitoring table
- */
-DLLEXPORT uint32_t getmonDAQOHmain(uint32_t* result, uint32_t noh)
+uint32_t xhal::rpc::DaqMonitor::getmonDAQOHmain(uint32_t* result, uint32_t noh)
 {
     req = wisc::RPCMsg("amc.getmonDAQOHmain");
     req.set_word("NOH",noh);
-    wisc::RPCSvc* rpc_loc = getRPCptr();
     try {
-        rsp = rpc_loc->call_method(req);
+        rsp = rpc.call_method(req);
     }
     STANDARD_CATCH;
 
@@ -172,16 +152,12 @@ DLLEXPORT uint32_t getmonDAQOHmain(uint32_t* result, uint32_t noh)
     return 0;
 }
 
-/***
- * @brief get an array of values for OH main monitoring table
- */
-DLLEXPORT uint32_t getmonOHmain(uint32_t* result, uint32_t noh)
+uint32_t xhal::rpc::DaqMonitor::getmonOHmain(uint32_t* result, uint32_t noh)
 {
     req = wisc::RPCMsg("amc.getmonOHmain");
     req.set_word("NOH",noh);
-    wisc::RPCSvc* rpc_loc = getRPCptr();
     try {
-        rsp = rpc_loc->call_method(req);
+        rsp = rpc.call_method(req);
     }
     STANDARD_CATCH;
 

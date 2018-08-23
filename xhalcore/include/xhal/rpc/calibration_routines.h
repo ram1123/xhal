@@ -6,7 +6,7 @@
 namespace xhal {
   namespace rpc {
     /**
-    * @class Utils
+    * @class CalRoutines
     * @brief Provides interface to call remote utility methods 
     */
     class CalRoutines : public XHALInterface
