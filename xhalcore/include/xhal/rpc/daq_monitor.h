@@ -2,6 +2,7 @@
 #define DAQ_MONITOR_H
 
 #include "xhal/XHALInterface.h"
+#include "xhal/utils/PyTypes.h"
 
 namespace xhal {
   namespace rpc {
@@ -25,48 +26,49 @@ namespace xhal {
         /**
          * @brief get an array of values for TTC main monitoring table
          *
-         * @param result An array of monitoring values
+         * @return an array of monitoring values
          */
-        uint32_t getmonTTCmain(uint32_t* result);
+        //uint32_t getmonTTCmain(uint32_t* result);
+        PyListUint32 getmonTTCmain();
 
         /**
          * @brief get an array of values for TRIGGER main monitoring table
          *
-         * @param result An array of monitoring values
          * @param noh Number of expected optical links, default value 12
+         * @return an array of monitoring values
          */
-        uint32_t getmonTRIGGERmain(uint32_t* result, uint32_t noh = 12);
+        PyListUint32 getmonTRIGGERmain(uint32_t noh = 12);
 
         /**
          * @brief get an array of values for TRIGGER OH main monitoring table
          *
-         * @param result An array of monitoring values
          * @param noh Number of expected optical links, default value 12
+         * @return an array of monitoring values
          */
-        uint32_t getmonTRIGGEROHmain(uint32_t* result, uint32_t noh = 12);
+        PyListUint32 getmonTRIGGEROHmain(uint32_t noh = 12);
 
         /**
          * @brief get an array of values for DAQ main monitoring table
          *
-         * @param result An array of monitoring values
+         * @return an array of monitoring values
          */
-        uint32_t getmonDAQmain(uint32_t* result);
+        PyListUint32 getmonDAQmain();
 
         /**
          * @brief get an array of values for DAQ OH main monitoring table
          *
-         * @param result An array of monitoring values
          * @param noh Number of expected optical links, default value 12
+         * @return an array of monitoring values
          */
-        uint32_t getmonDAQOHmain(uint32_t* result, uint32_t noh = 12);
+        PyListUint32 getmonDAQOHmain(uint32_t noh = 12);
 
         /**
          * @brief get an array of values for OH main monitoring table
          *
-         * @param result An array of monitoring values
          * @param noh Number of expected optical links, default value 12
+         * @return an array of monitoring values
          */
-        uint32_t getmonOHmain(uint32_t* result, uint32_t noh = 12);
+        PyListUint32 getmonOHmain(uint32_t noh = 12);
     };
   }
 }
