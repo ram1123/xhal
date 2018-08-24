@@ -48,6 +48,9 @@ build:${XHAL_LIB}
 
 _all: clean ${XHAL_LIB} 
 
+doc:
+	@echo "TO DO"
+
 $(XHAL_LIB): $(OBJS_XHAL) 
 	@mkdir -p ${BUILD_HOME}/${Project}/${LongPackage}/lib
 	$(CC) $(CFLAGS) $(ADDFLAGS) ${LDFLAGS} $(INC) $(LIB) -o $@ $^

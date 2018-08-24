@@ -11,7 +11,6 @@ xhal::utils::XHALXMLParser::XHALXMLParser(const std::string& xmlFile)
   m_logger.addAppender(myAppender);
   m_logger.setLogLevel(log4cplus::INFO_LOG_LEVEL);
   m_nodes = new std::unordered_map<std::string,Node>();
-  //m_root = new xercesc::DOMNode();
 }
 
 xhal::utils::XHALXMLParser::~XHALXMLParser()
@@ -61,11 +60,17 @@ void xhal::utils::XHALXMLParser::parseXML()
   //  The parser will call back to methods of the ErrorHandler if it
   //  discovers errors during the course of parsing the XML document.
 
+  TRACE("Call XMLCh");
   XMLCh tempStr[100];
+  TRACE("XMLCh created");
   xercesc::XMLString::transcode("LS", tempStr, 99);
+  TRACE("XMLString transcode called");
   xercesc::DOMImplementation *impl = xercesc::DOMImplementationRegistry::getDOMImplementation(tempStr);
+  TRACE("DOM implementation created");
   xercesc::DOMLSParser       *parser = ((xercesc::DOMImplementationLS*)impl)->createLSParser(xercesc::DOMImplementationLS::MODE_SYNCHRONOUS, 0);
+  TRACE("DOMLSParser created");
   xercesc::DOMConfiguration  *config = parser->getDomConfig();
+  TRACE("DOM configuration created");
   xercesc::DOMDocument *doc;
   DEBUG("Xerces parser created ");
 
@@ -200,9 +205,7 @@ void xhal::utils::XHALXMLParser::makeTree(xercesc::DOMNode * node, std::string b
     newNode.warn_min_value = parseInt(*tmp);
   }
 
-  //nodes->push_back(newNode);
   nodes->insert(std::make_pair(newNode.name,newNode));
-  //TRACE("Node vector size after push_back: " << nodes->size());
   TRACE("Node map size after insert " << nodes->size());
   if (parentNode)
   {
@@ -225,7 +228,7 @@ void xhal::utils::XHALXMLParser::makeTree(xercesc::DOMNode * node, std::string b
   }
 }
 
-std::experimental::optional<std::string> xhal::utils::XHALXMLParser::getAttVal(xercesc::DOMNode * t_node_, const char * attname)
+boost::optional<std::string> xhal::utils::XHALXMLParser::getAttVal(xercesc::DOMNode * t_node_, const char * attname)
 {
   TRACE("Call getAttVal for attribute " << attname);
   XMLCh * tmp = xercesc::XMLString::transcode(attname);
@@ -297,7 +300,8 @@ std::string xhal::utils::XHALXMLParser::replaceAll( std::string const& original,
     return results;
 }
 
-std::experimental::optional<xhal::utils::Node> xhal::utils::XHALXMLParser::getNode(const char* nodeName)
+//std::experimental::optional<xhal::utils::Node> xhal::utils::XHALXMLParser::getNode(const char* nodeName)
+boost::optional<xhal::utils::Node> xhal::utils::XHALXMLParser::getNode(const char* nodeName)
 {
   DEBUG("Call getNode for argument " << nodeName);
   //Node * res = NULL;
@@ -309,25 +313,10 @@ std::experimental::optional<xhal::utils::Node> xhal::utils::XHALXMLParser::getNo
   } else {
     return {};
   }
-  //TRACE("Looping over nodes");
-  //for (auto & n: *m_nodes)
-  //{
-  //  TRACE("Node name: " << n.name);
-  //  if (nodeName == n.name) 
-  //  {
-  //    res = &n;
-  //    break;
-  //  }
-  //}
-  //if (res) 
-  //{
-  //  return *res;
-  //} else {
-  //  return {};
-  //}
 }
 
-std::experimental::optional<xhal::utils::Node> xhal::utils::XHALXMLParser::getNodeFromAddress(const uint32_t nodeAddress)
+// Not used a.t.m. Do we need it? FIXME
+boost::optional<xhal::utils::Node> xhal::utils::XHALXMLParser::getNodeFromAddress(const uint32_t nodeAddress)
 {
   //Node * res = NULL;
   //for (auto & n: *m_nodes)

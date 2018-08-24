@@ -1,80 +1,72 @@
 #include "xhal/rpc/daq_monitor.h"
 
-/***
- * @brief get an array of values for TTC main monitoring table
- */
-DLLEXPORT uint32_t getmonTTCmain(uint32_t* result)
+PyListUint32 xhal::rpc::DaqMonitor::getmonTTCmain()
 {
+    PyListUint32 result;
     req = wisc::RPCMsg("amc.getmonTTCmain");
-    wisc::RPCSvc* rpc_loc = getRPCptr();
     try {
-    	rsp = rpc_loc->call_method(req);
+    	rsp = rpc.call_method(req);
     }
     STANDARD_CATCH;
     
     try{
         if (rsp.get_key_exists("error")) {
             printf("Error: %s",rsp.get_string("error").c_str());
-            return 1;
+            //FIXME raise an exception
         } else {
-            result[0] = rsp.get_word("MMCM_LOCKED");
-            result[1] = rsp.get_word("TTC_SINGLE_ERROR_CNT");
-            result[2] = rsp.get_word("BC0_LOCKED");
-            result[3] = rsp.get_word("L1A_ID");
-            result[4] = rsp.get_word("L1A_RATE");
+            result.clear();
+            result.push_back(rsp.get_word("MMCM_LOCKED"));
+            result.push_back(rsp.get_word("TTC_SINGLE_ERROR_CNT"));
+            result.push_back(rsp.get_word("BC0_LOCKED"));
+            result.push_back(rsp.get_word("L1A_ID"));
+            result.push_back(rsp.get_word("L1A_RATE"));
         }
     }
     STANDARD_CATCH;
-    return 0;
+    return result;
 }
 
-/***
- * @brief get an array of values for TRIGGER main monitoring table
- */
-DLLEXPORT uint32_t getmonTRIGGERmain(uint32_t* result, uint32_t noh)
+PyListUint32 xhal::rpc::DaqMonitor::getmonTRIGGERmain(uint32_t noh)
 {
+    PyListUint32 result;
     req = wisc::RPCMsg("amc.getmonTRIGGERmain");
     req.set_word("NOH",noh);
-    wisc::RPCSvc* rpc_loc = getRPCptr();
     try {
-        rsp = rpc_loc->call_method(req);
+        rsp = rpc.call_method(req);
     }
     STANDARD_CATCH;
 
     try{
         if (rsp.get_key_exists("error")) {
             printf("Error: %s",rsp.get_string("error").c_str());
-            return 1;
+            // FIXME raise an exception
         } else {
             std::string t;
-            result[0] = rsp.get_word("OR_TRIGGER_RATE");
+            result.push_back(rsp.get_word("OR_TRIGGER_RATE"));
             for (int i = 0; i < noh; i++) {
                 t = "OH"+std::to_string(i)+".TRIGGER_RATE";
-                result[i+1] = rsp.get_word(t);
+                result.push_back(rsp.get_word(t));
             }
         }
     }
     STANDARD_CATCH;
-    return 0;
+    return result;
 }
 
-/***
- * @brief get an array of values for TRIGGER OH main monitoring table
- */
-DLLEXPORT uint32_t getmonTRIGGEROHmain(uint32_t* result, uint32_t noh)
+PyListUint32 xhal::rpc::DaqMonitor::getmonTRIGGEROHmain(uint32_t noh)
 {
+    PyListUint32 result(8*noh,0);
     req = wisc::RPCMsg("amc.getmonTRIGGEROHmain");
     req.set_word("NOH",noh);
-    wisc::RPCSvc* rpc_loc = getRPCptr();
     try {
-        rsp = rpc_loc->call_method(req);
+        rsp = rpc.call_method(req);
     }
     STANDARD_CATCH;
 
     try{
         if (rsp.get_key_exists("error")) {
             printf("Error: %s",rsp.get_string("error").c_str());
-            return 1;
+            // FIXME raise an exception
         }else {
             std::string t;
             for (int i = 0; i < noh; i++) {
@@ -98,58 +90,52 @@ DLLEXPORT uint32_t getmonTRIGGEROHmain(uint32_t* result, uint32_t noh)
         }
     }
     STANDARD_CATCH;
-    return 0;
+    return result;
 }
 
-/***
- * @brief get an array of values for DAQ main monitoring table
- */
-DLLEXPORT uint32_t getmonDAQmain(uint32_t* result)
+PyListUint32 xhal::rpc::DaqMonitor::getmonDAQmain()
 {
+    PyListUint32 result;
     req = wisc::RPCMsg("amc.getmonDAQmain");
-    wisc::RPCSvc* rpc_loc = getRPCptr();
     try {
-        rsp = rpc_loc->call_method(req);
+        rsp = rpc.call_method(req);
     }
     STANDARD_CATCH;
 
     try{
         if (rsp.get_key_exists("error")) {
             printf("Error: %s",rsp.get_string("error").c_str());
-            return 1;
+            // FIXME raise an exception
         } else {
-            result[0] = rsp.get_word("DAQ_ENABLE");
-            result[1] = rsp.get_word("DAQ_LINK_READY");
-            result[2] = rsp.get_word("DAQ_LINK_AFULL");
-            result[3] = rsp.get_word("DAQ_OFIFO_HAD_OFLOW");
-            result[4] = rsp.get_word("L1A_FIFO_HAD_OFLOW");
-            result[5] = rsp.get_word("L1A_FIFO_DATA_COUNT");
-            result[6] = rsp.get_word("DAQ_FIFO_DATA_COUNT");
-            result[7] = rsp.get_word("EVENT_SENT");
-            result[8] = rsp.get_word("TTS_STATE");
+            result.push_back(rsp.get_word("DAQ_ENABLE"));
+            result.push_back(rsp.get_word("DAQ_LINK_READY"));
+            result.push_back(rsp.get_word("DAQ_LINK_AFULL"));
+            result.push_back(rsp.get_word("DAQ_OFIFO_HAD_OFLOW"));
+            result.push_back(rsp.get_word("L1A_FIFO_HAD_OFLOW"));
+            result.push_back(rsp.get_word("L1A_FIFO_DATA_COUNT"));
+            result.push_back(rsp.get_word("DAQ_FIFO_DATA_COUNT"));
+            result.push_back(rsp.get_word("EVENT_SENT"));
+            result.push_back(rsp.get_word("TTS_STATE"));
         }
     }
     STANDARD_CATCH;
-    return 0;
+    return result;
 }
 
-/***
- * @brief get an array of values for DAQ OH main monitoring table
- */
-DLLEXPORT uint32_t getmonDAQOHmain(uint32_t* result, uint32_t noh)
+PyListUint32 xhal::rpc::DaqMonitor::getmonDAQOHmain(uint32_t noh)
 {
+    PyListUint32 result(6*noh,0);
     req = wisc::RPCMsg("amc.getmonDAQOHmain");
     req.set_word("NOH",noh);
-    wisc::RPCSvc* rpc_loc = getRPCptr();
     try {
-        rsp = rpc_loc->call_method(req);
+        rsp = rpc.call_method(req);
     }
     STANDARD_CATCH;
 
     try{
         if (rsp.get_key_exists("error")) {
             printf("Error: %s",rsp.get_string("error").c_str());
-            return 1;
+            // FIXME raise an exception
         }else {
             std::string t;
             for (int i = 0; i < noh; i++) {
@@ -169,26 +155,23 @@ DLLEXPORT uint32_t getmonDAQOHmain(uint32_t* result, uint32_t noh)
         }
     }
     STANDARD_CATCH;
-    return 0;
+    return result;
 }
 
-/***
- * @brief get an array of values for OH main monitoring table
- */
-DLLEXPORT uint32_t getmonOHmain(uint32_t* result, uint32_t noh)
+PyListUint32 xhal::rpc::DaqMonitor::getmonOHmain(uint32_t noh)
 {
+    PyListUint32 result(7*noh,0);
     req = wisc::RPCMsg("amc.getmonOHmain");
     req.set_word("NOH",noh);
-    wisc::RPCSvc* rpc_loc = getRPCptr();
     try {
-        rsp = rpc_loc->call_method(req);
+        rsp = rpc.call_method(req);
     }
     STANDARD_CATCH;
 
     try{
         if (rsp.get_key_exists("error")) {
             printf("Error: %s",rsp.get_string("error").c_str());
-            return 1;
+            // FIXME raise an exception
         } else {
             std::string t;
             for (int i = 0; i < noh; i++) {
@@ -210,5 +193,5 @@ DLLEXPORT uint32_t getmonOHmain(uint32_t* result, uint32_t noh)
         }
     }
     STANDARD_CATCH;
-    return 0;
+    return result;
 }
