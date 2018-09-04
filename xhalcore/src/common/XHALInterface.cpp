@@ -31,7 +31,7 @@ void xhal::XHALInterface::connect()
   try {
     rpc.connect(m_board_domain_name);
     isConnected = true;
-    INFO("RPC disconnected");
+    INFO("RPC connected");
   }
   catch (wisc::RPCSvc::ConnectionFailedException &e) {
     ERROR("Caught RPCErrorException: " << e.message.c_str());
@@ -47,6 +47,7 @@ void xhal::XHALInterface::disconnect()
 {
   try {
     rpc.disconnect();
+    INFO("RPC disconnected");
     isConnected = false;
   }
   catch (wisc::RPCSvc::NotConnectedException &e) {
