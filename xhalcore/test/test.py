@@ -8,6 +8,9 @@ def w1(str):
 
 print os.getpid()
 #w1('starting main..press a key')
+def test_log_dups():
+  eagle64_1=xi.XHALDevice("eagle64","/opt/cmsgemos/etc/maps/amc_address_table_top.xml")
+  eagle64_2=xi.XHALDevice("eagle64","/opt/cmsgemos/etc/maps/amc_address_table_top.xml")
 def test_xhaldevice():
   print "TEST OF XHALDEVICE WRAPPER"
   eagle64=xi.XHALDevice("eagle64","/opt/cmsgemos/etc/maps/amc_address_table_top.xml")
@@ -60,6 +63,33 @@ def test_xhalDaqMon():
   print "\n"
   return
 
+def test_xhalrpc_exception():
+  print "TEST OF XHAL RPC EXCEPTIONS HANDLING"
+  eagle64=xi.XHALDevice("eagle64","/opt/cmsgemos/etc/maps/amc_address_table_top.xml")
+  print "read reg by name: eagle64.readReg(GEM_AMC.GEM_SYSTEM.BOARD_ID)=%08x"%(eagle64.readReg("GEM_AMC.GEM_SYSTEM.BOARD_ID"))
+  print "Now disconnect"
+  eagle64.disconnect()
+  print "RPC service disconnected. Now try to read register by name again"
+  try:
+    print "read reg by name: eagle64.readReg(GEM_AMC.GEM_SYSTEM.BOARD_ID)=%08x"%(eagle64.readReg("GEM_AMC.GEM_SYSTEM.BOARD_ID"))
+  except xi.XHALRPCNotConnectedException as e:
+    print "Caught exception: %s" %(e)
+  print "Now reconnect"
+  eagle64.reconnect()
+  print "RPC service reconnected. Now try to read register by name again"
+  try:
+    print "read reg by name: eagle64.readReg(GEM_AMC.GEM_SYSTEM.BOARD_ID)=%08x"%(eagle64.readReg("GEM_AMC.GEM_SYSTEM.BOARD_ID"))
+  except xi.XHALRPCNotConnectedException as e:
+    print "Caught exception: %s" %(e)
+  print "Test reconnection attempt on connected service"
+  try:
+    eagle64.reconnect()
+  except xi.XHALRPCException as e:
+    print "Caught exception: %s" %(e)
+    
+
 test_xhaldevice()
 test_xhalDaqMon()
+test_xhalrpc_exception()
+test_log_dups()
 print "All tests are completed"

@@ -20,7 +20,7 @@ include $(BUILD_HOME)/$(Project)/config/mfRPMRules.mk
 CCFLAGS=-O0 -g3 -fno-inline -Wall -fPIC -pthread -m64
 ADDFLAGS=-std=c++11
 
-IncludeDirs= /opt/xdaq/include
+IncludeDirs+= /opt/xdaq/include
 IncludeDirs+= /opt/rh/devtoolset-6/root/usr/include
 IncludeDirs+= ${BUILD_HOME}/${Project}/${LongPackage}/include
 INC=$(IncludeDirs:%=-I%)

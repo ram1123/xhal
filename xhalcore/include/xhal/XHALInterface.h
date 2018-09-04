@@ -30,25 +30,25 @@
 #define STANDARD_CATCH \
 	catch (wisc::RPCSvc::NotConnectedException &e) { \
 		ERROR("Caught NotConnectedException: " << e.message.c_str()); \
-    throw xhal::utils::Exception(strcat("RPC NotConnectedException: ", e.message.c_str()));\
+    throw xhal::utils::XHALRPCNotConnectedException("RPC NotConnectedException: " + e.message);\
 	} \
 	catch (wisc::RPCSvc::RPCErrorException &e) { \
 		ERROR("Caught RPCErrorException: " << e.message.c_str()); \
-    throw xhal::utils::Exception(strcat("RPC ErrorException: ", e.message.c_str()));\
+    throw xhal::utils::XHALRPCException("RPC ErrorException: " + e.message);\
 	} \
 	catch (wisc::RPCSvc::RPCException &e) { \
 		ERROR("Caught exception: " << e.message.c_str()); \
-    throw xhal::utils::Exception(strcat("RPC exception: ", e.message.c_str()));\
+    throw xhal::utils::XHALRPCException("RPC exception: " + e.message);\
 	} \
   catch (wisc::RPCMsg::BadKeyException &e) { \
     ERROR("Caught exception: " << e.key.c_str()); \
-    throw xhal::utils::Exception(strcat("RPC BadKeyException (most probably remote register not accessible): ", e.key.c_str()));\
+    throw xhal::utils::XHALRPCException("RPC BadKeyException (most probably remote register not accessible): " + e.key);\
 	} 
 
 #define ASSERT(x) do { \
 		if (!(x)) { \
 			printf("Assertion Failed on line %u: %s\n", __LINE__, #x); \
-      throw xhal::utils::Exception("ASSERT failure");\
+      throw xhal::utils::XHALException("ASSERT failure");\
 		} \
 	} while (0)
 
@@ -65,12 +65,23 @@ namespace xhal {
        * @param board_domain_name domain name of CTP7
        */
       XHALInterface(const std::string& board_domain_name);
-      ~XHALInterface();
+      virtual ~XHALInterface();
 
       /**
        * @brief Initialize interface and establish RPC service connection with CTP7
        */
       void connect();
+
+      /**
+       * @brief Reconnect to RPC service and reload required modules
+       */
+      inline virtual void reconnect(){this->connect();}
+
+      /**
+       * @brief Initialize interface and establish RPC service connection with CTP7
+       */
+      void disconnect();
+
       /**
        * @brief load remote module
        */
@@ -92,6 +103,8 @@ namespace xhal {
       log4cplus::Logger m_logger;
       wisc::RPCSvc rpc;
       wisc::RPCMsg req, rsp;
+      bool isConnected;
+      static int index;
   };
 }
 #endif  // XHALINTERFACE_H

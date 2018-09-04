@@ -30,6 +30,12 @@ namespace xhal {
        * @param address_table_filename XML address table file name
        */
       XHALDevice(const std::string& board_domain_name, const std::string& address_table_filename);
+      virtual ~XHALDevice(){}
+
+      /**
+       * @brief Reconnect to RPC service and reload required modules
+       */
+      virtual void reconnect();
 
       /**
        * @brief read FW register by its name
