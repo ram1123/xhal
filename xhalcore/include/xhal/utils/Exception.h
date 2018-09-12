@@ -11,26 +11,26 @@
 
 #include <string>
 #include <exception>
+#include <assert.h>
 
 #define XHAL_UTILS_DEFINE_EXCEPTION(EXCEPTION_NAME)                      \
 namespace xhal {                                                         \
   namespace utils {                                                      \
     class EXCEPTION_NAME : public std::exception {                       \
       public:                                                            \
-        EXCEPTION_NAME(const char* message) : m(message) {               \
+        EXCEPTION_NAME(std::string message) : msg(message) {             \
                                                                          \
         }                                                                \
                                                                          \
-        virtual ~EXCEPTION_NAME() throw() {                              \
+        virtual ~EXCEPTION_NAME() {                                      \
                                                                          \
         }                                                                \
                                                                          \
-        virtual const char* what() const throw() {                       \
-            return m.c_str();                                            \
+        virtual const char* what() {                                     \
+            return msg.c_str();                                          \
         }                                                                \
                                                                          \
-      protected:                                                         \
-        std::string m;                                                   \
+        std::string msg;                                                 \
                                                                          \
       private:                                                           \
         EXCEPTION_NAME();                                                \
@@ -38,6 +38,11 @@ namespace xhal {                                                         \
   } /* namespace xhal::utils */                                          \
 } /* namespace xhal */                                                   
 
-XHAL_UTILS_DEFINE_EXCEPTION(Exception)
+
+
+XHAL_UTILS_DEFINE_EXCEPTION(XHALException)
+XHAL_UTILS_DEFINE_EXCEPTION(XHALXMLParserException)
+XHAL_UTILS_DEFINE_EXCEPTION(XHALRPCException)
+XHAL_UTILS_DEFINE_EXCEPTION(XHALRPCNotConnectedException)
 
 #endif //XHAL_UTILS_EXCEPTION_H

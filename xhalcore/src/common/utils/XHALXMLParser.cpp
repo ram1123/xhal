@@ -1,12 +1,15 @@
 #include "xhal/utils/XHALXMLParser.h"
 
+int xhal::utils::XHALXMLParser::index = 0;
+
 xhal::utils::XHALXMLParser::XHALXMLParser(const std::string& xmlFile)
 {
   m_xmlFile = xmlFile;
   log4cplus::SharedAppenderPtr myAppender(new log4cplus::ConsoleAppender());
   std::auto_ptr<log4cplus::Layout> myLayout = std::auto_ptr<log4cplus::Layout>(new log4cplus::TTCCLayout());
   myAppender->setLayout( myLayout );
-  auto t_logger = log4cplus::Logger::getInstance(LOG4CPLUS_TEXT("XHALXMLParser"));
+  auto t_logger = log4cplus::Logger::getInstance(LOG4CPLUS_TEXT("XHALXMLParser_" + std::to_string(index)));
+  ++index;
   m_logger = t_logger;
   m_logger.addAppender(myAppender);
   m_logger.setLogLevel(log4cplus::INFO_LOG_LEVEL);
@@ -52,7 +55,7 @@ void xhal::utils::XHALXMLParser::parseXML()
     ERROR("Error during Xerces-c Initialization." << std::endl
           << "  Exception message:"
           << xercesc::XMLString::transcode(toCatch.getMessage()));
-    throw xhal::utils::Exception("XHALParser: initialization failed"); 
+    throw xhal::utils::XHALXMLParserException("XHALParser: initialization failed"); 
     return;
   }
 
@@ -121,7 +124,7 @@ void xhal::utils::XHALXMLParser::parseXML()
     makeTree(m_root,"",0x0,m_nodes,NULL,m_vars,false);
     DEBUG("Number of nodes: " << m_nodes->size());
   } else{
-    throw xhal::utils::Exception("XHALParser: an error occured during parsing"); 
+    throw xhal::utils::XHALXMLParserException("XHALParser: an error occured during parsing"); 
   }
   DEBUG("Parsing done!");
   if (parser) parser->release();

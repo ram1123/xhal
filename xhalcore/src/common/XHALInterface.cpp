@@ -1,13 +1,17 @@
 #include "xhal/XHALInterface.h"
 
+int xhal::XHALInterface::index = 0;
+
 xhal::XHALInterface::XHALInterface(const std::string& board_domain_name):
-  m_board_domain_name(board_domain_name)
+  m_board_domain_name(board_domain_name),
+  isConnected(false)
 {
   log4cplus::SharedAppenderPtr myAppender(new log4cplus::ConsoleAppender());
   std::auto_ptr<log4cplus::Layout> myLayout = std::auto_ptr<log4cplus::Layout>(new log4cplus::TTCCLayout());
   myAppender->setLayout( myLayout );
   // Following strange construction is required because it looks like log4cplus was compiled withot c++11 support...
-  auto t_logger = log4cplus::Logger::getInstance(LOG4CPLUS_TEXT("XHALInterface"));
+  auto t_logger = log4cplus::Logger::getInstance(LOG4CPLUS_TEXT("XHALInterface_"+m_board_domain_name + "_" + std::to_string(index)));
+  ++index;
   m_logger = t_logger;
   m_logger.addAppender(myAppender);
   m_logger.setLogLevel(log4cplus::INFO_LOG_LEVEL);
@@ -18,6 +22,7 @@ xhal::XHALInterface::XHALInterface(const std::string& board_domain_name):
 
 xhal::XHALInterface::~XHALInterface()
 {
+  this->disconnect();
   m_logger.shutdown();
 }
 
@@ -25,14 +30,32 @@ void xhal::XHALInterface::connect()
 {
   try {
     rpc.connect(m_board_domain_name);
+    isConnected = true;
+    INFO("RPC connected");
   }
   catch (wisc::RPCSvc::ConnectionFailedException &e) {
     ERROR("Caught RPCErrorException: " << e.message.c_str());
-    throw xhal::utils::Exception(strcat("RPC ConnectionFailedException: ",e.message.c_str()));
+    throw xhal::utils::XHALRPCException("RPC ConnectionFailedException: " + e.message);
   }
   catch (wisc::RPCSvc::RPCException &e) {
     ERROR("Caught exception: " << e.message.c_str());
-    throw xhal::utils::Exception(strcat("RPC exception: ",e.message.c_str()));
+    throw xhal::utils::XHALRPCException("RPC exception: " + e.message);
+  }
+}
+
+void xhal::XHALInterface::disconnect()
+{
+  try {
+    rpc.disconnect();
+    INFO("RPC disconnected");
+    isConnected = false;
+  }
+  catch (wisc::RPCSvc::NotConnectedException &e) {
+    INFO("Caught RPCNotConnectedException: " << e.message.c_str());
+  }
+  catch (wisc::RPCSvc::RPCException &e) {
+    ERROR("Caught exception: " << e.message.c_str());
+    throw xhal::utils::XHALRPCException("RPC exception: " + e.message);
   }
 }
 

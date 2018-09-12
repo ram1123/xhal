@@ -99,6 +99,7 @@ namespace xhal {
         xercesc::DOMNode* m_root;
         xercesc::DOMNode* m_node;
         xercesc::DOMNodeList* children;
+        static int index;
     
         /**
          * @brief fills custom node object

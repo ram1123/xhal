@@ -43,7 +43,7 @@ PyListUint32 xhal::rpc::DaqMonitor::getmonTRIGGERmain(uint32_t noh)
         } else {
             std::string t;
             result.push_back(rsp.get_word("OR_TRIGGER_RATE"));
-            for (int i = 0; i < noh; i++) {
+            for (unsigned int i = 0; i < noh; i++) {
                 t = "OH"+std::to_string(i)+".TRIGGER_RATE";
                 result.push_back(rsp.get_word(t));
             }
@@ -69,7 +69,7 @@ PyListUint32 xhal::rpc::DaqMonitor::getmonTRIGGEROHmain(uint32_t noh)
             // FIXME raise an exception
         }else {
             std::string t;
-            for (int i = 0; i < noh; i++) {
+            for (unsigned int i = 0; i < noh; i++) {
                 t = "OH"+std::to_string(i)+".LINK0_MISSED_COMMA_CNT";
                 result[i] = rsp.get_word(t);
                 t = "OH"+std::to_string(i)+".LINK1_MISSED_COMMA_CNT";
@@ -138,7 +138,7 @@ PyListUint32 xhal::rpc::DaqMonitor::getmonDAQOHmain(uint32_t noh)
             // FIXME raise an exception
         }else {
             std::string t;
-            for (int i = 0; i < noh; i++) {
+            for (unsigned int i = 0; i < noh; i++) {
                 t = "OH"+std::to_string(i)+".STATUS.EVT_SIZE_ERR";
                 result[i] = rsp.get_word(t);
                 t = "OH"+std::to_string(i)+".STATUS.EVENT_FIFO_HAD_OFLOW";
@@ -174,7 +174,7 @@ PyListUint32 xhal::rpc::DaqMonitor::getmonOHmain(uint32_t noh)
             // FIXME raise an exception
         } else {
             std::string t;
-            for (int i = 0; i < noh; i++) {
+            for (unsigned int i = 0; i < noh; i++) {
                 t = "OH"+std::to_string(i)+".FW_VERSION";
                 result[i] = rsp.get_word(t);
                 t = "OH"+std::to_string(i)+".EVENT_COUNTER";
