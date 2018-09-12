@@ -65,6 +65,12 @@ namespace xhal {
        * @param board_domain_name domain name of CTP7
        */
       XHALInterface(const std::string& board_domain_name);
+      /**
+       * @brief Constructor, taking also the external logger
+       * @param board_domain_name domain name of CTP7
+       */
+      XHALInterface(const std::string& board_domain_name, log4cplus::Logger& logger);
+
       virtual ~XHALInterface();
 
       /**

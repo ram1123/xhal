@@ -20,6 +20,17 @@ xhal::XHALInterface::XHALInterface(const std::string& board_domain_name):
   INFO("XHAL Interface connected");
 }
 
+xhal::XHALInterface::XHALInterface(const std::string& board_domain_name, log4cplus::Logger& logger):
+  m_board_domain_name(board_domain_name),
+  m_logger(logger),
+  isConnected(false)
+{
+  m_logger.setLogLevel(log4cplus::INFO_LOG_LEVEL);
+  INFO("XHAL Logger tuned up");
+  this->connect();
+  INFO("XHAL Interface connected");
+}
+
 xhal::XHALInterface::~XHALInterface()
 {
   this->disconnect();
