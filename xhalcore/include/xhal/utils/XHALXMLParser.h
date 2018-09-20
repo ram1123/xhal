@@ -41,24 +41,12 @@
 #include "log4cplus/loggingmacros.h"
 #include "log4cplus/consoleappender.h"
 
-#ifndef TRACE
-  #define TRACE(MSG) LOG4CPLUS_TRACE(m_gemLogger, MSG)
-#endif
-#ifndef DEBUG
-  #define DEBUG(MSG) LOG4CPLUS_DEBUG(m_gemLogger, MSG)
-#endif
-#ifndef INFO
-  #define INFO( MSG) LOG4CPLUS_INFO( m_gemLogger, MSG)
-#endif
-#ifndef WARN
-  #define WARN( MSG) LOG4CPLUS_WARN( m_gemLogger, MSG)
-#endif
-#ifndef ERROR
-  #define ERROR(MSG) LOG4CPLUS_ERROR(m_gemLogger, MSG)
-#endif
-#ifndef FATAL
-  #define FATAL(MSG) LOG4CPLUS_FATAL(m_gemLogger, MSG)
-#endif
+#define XHAL_TRACE(MSG) LOG4CPLUS_TRACE(m_logger, MSG)
+#define XHAL_DEBUG(MSG) LOG4CPLUS_DEBUG(m_logger, MSG)
+#define XHAL_INFO(MSG) LOG4CPLUS_INFO(m_logger, MSG)
+#define XHAL_WARN(MSG) LOG4CPLUS_WARN(m_logger, MSG)
+#define XHAL_ERROR(MSG) LOG4CPLUS_ERROR(m_logger, MSG)
+#define XHAL_FATAL(MSG) LOG4CPLUS_FATAL(m_logger, MSG)
 
 #include "xhal/utils/XHALXMLNode.h"
 #include "xhal/utils/Exception.h"
@@ -117,7 +105,7 @@ namespace xhal {
     
       private:
         std::string m_xmlFile;
-        log4cplus::Logger m_gemLogger;
+        log4cplus::Logger m_logger;
         std::unordered_map<std::string, int> m_vars;
         std::unordered_map<std::string,xhal::utils::Node>* m_nodes;
         xercesc::DOMNode* m_root;
