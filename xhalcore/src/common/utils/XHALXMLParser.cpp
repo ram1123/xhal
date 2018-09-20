@@ -10,16 +10,16 @@ xhal::utils::XHALXMLParser::XHALXMLParser(const std::string& xmlFile)
   myAppender->setLayout( myLayout );
   auto t_logger = log4cplus::Logger::getInstance(LOG4CPLUS_TEXT("XHALXMLParser_" + std::to_string(index)));
   ++index;
-  m_logger = t_logger;
-  m_logger.addAppender(myAppender);
-  m_logger.setLogLevel(log4cplus::INFO_LOG_LEVEL);
+  m_gemLogger = t_logger;
+  m_gemLogger.addAppender(myAppender);
+  m_gemLogger.setLogLevel(log4cplus::INFO_LOG_LEVEL);
   m_nodes = new std::unordered_map<std::string,Node>();
 }
 
 xhal::utils::XHALXMLParser::~XHALXMLParser()
 {
   if (m_nodes) delete m_nodes;
-  m_logger.shutdown();
+  m_gemLogger.shutdown();
 }
 
 void xhal::utils::XHALXMLParser::setLogLevel(int loglevel)
@@ -27,19 +27,19 @@ void xhal::utils::XHALXMLParser::setLogLevel(int loglevel)
   switch(loglevel)
   {
     case 0:
-      m_logger.setLogLevel(log4cplus::ERROR_LOG_LEVEL);
+      m_gemLogger.setLogLevel(log4cplus::ERROR_LOG_LEVEL);
       break;
     case 1:
-      m_logger.setLogLevel(log4cplus::WARN_LOG_LEVEL);
+      m_gemLogger.setLogLevel(log4cplus::WARN_LOG_LEVEL);
       break;
     case 2:
-      m_logger.setLogLevel(log4cplus::INFO_LOG_LEVEL);
+      m_gemLogger.setLogLevel(log4cplus::INFO_LOG_LEVEL);
       break;
     case 3:
-      m_logger.setLogLevel(log4cplus::DEBUG_LOG_LEVEL);
+      m_gemLogger.setLogLevel(log4cplus::DEBUG_LOG_LEVEL);
       break;
     case 4:
-      m_logger.setLogLevel(log4cplus::TRACE_LOG_LEVEL);
+      m_gemLogger.setLogLevel(log4cplus::TRACE_LOG_LEVEL);
       break;
   }
 }
@@ -231,7 +231,11 @@ void xhal::utils::XHALXMLParser::makeTree(xercesc::DOMNode * node, std::string b
   }
 }
 
+#ifdef __ARM_ARCH_7A__
+std::experimental::optional<std::string> xhal::utils::XHALXMLParser::getAttVal(xercesc::DOMNode * t_node_, const char * attname)
+#else
 boost::optional<std::string> xhal::utils::XHALXMLParser::getAttVal(xercesc::DOMNode * t_node_, const char * attname)
+#endif
 {
   TRACE("Call getAttVal for attribute " << attname);
   XMLCh * tmp = xercesc::XMLString::transcode(attname);
@@ -303,8 +307,11 @@ std::string xhal::utils::XHALXMLParser::replaceAll( std::string const& original,
     return results;
 }
 
-//std::experimental::optional<xhal::utils::Node> xhal::utils::XHALXMLParser::getNode(const char* nodeName)
+#ifdef __ARM_ARCH_7A__
+std::experimental::optional<xhal::utils::Node> xhal::utils::XHALXMLParser::getNode(const char* nodeName)
+#else
 boost::optional<xhal::utils::Node> xhal::utils::XHALXMLParser::getNode(const char* nodeName)
+#endif
 {
   DEBUG("Call getNode for argument " << nodeName);
   //Node * res = NULL;
@@ -319,7 +326,11 @@ boost::optional<xhal::utils::Node> xhal::utils::XHALXMLParser::getNode(const cha
 }
 
 // Not used a.t.m. Do we need it? FIXME
+#ifdef __ARM_ARCH_7A__
+std::experimental::optional<xhal::utils::Node> xhal::utils::XHALXMLParser::getNodeFromAddress(const uint32_t nodeAddress)
+#else
 boost::optional<xhal::utils::Node> xhal::utils::XHALXMLParser::getNodeFromAddress(const uint32_t nodeAddress)
+#endif
 {
   //Node * res = NULL;
   //for (auto & n: *m_nodes)

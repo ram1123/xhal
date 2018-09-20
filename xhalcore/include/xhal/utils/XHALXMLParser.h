@@ -14,7 +14,11 @@
 #include <string>
 #include <iostream>
 #include <unordered_map>
+#ifdef __ARM_ARCH_7A__ //do not include boost::optional
+#include <experimental/optional>
+#else
 #include <boost/optional.hpp>
+#endif
 
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/XMLString.hpp>
@@ -37,12 +41,24 @@
 #include "log4cplus/loggingmacros.h"
 #include "log4cplus/consoleappender.h"
 
-#define TRACE(MSG) LOG4CPLUS_TRACE(m_logger, MSG)
-#define DEBUG(MSG) LOG4CPLUS_DEBUG(m_logger, MSG)
-#define INFO( MSG) LOG4CPLUS_INFO( m_logger, MSG)
-#define WARN( MSG) LOG4CPLUS_WARN( m_logger, MSG)
-#define ERROR(MSG) LOG4CPLUS_ERROR(m_logger, MSG)
-#define FATAL(MSG) LOG4CPLUS_FATAL(m_logger, MSG)
+#ifndef TRACE
+  #define TRACE(MSG) LOG4CPLUS_TRACE(m_gemLogger, MSG)
+#endif
+#ifndef DEBUG
+  #define DEBUG(MSG) LOG4CPLUS_DEBUG(m_gemLogger, MSG)
+#endif
+#ifndef INFO
+  #define INFO( MSG) LOG4CPLUS_INFO( m_gemLogger, MSG)
+#endif
+#ifndef WARN
+  #define WARN( MSG) LOG4CPLUS_WARN( m_gemLogger, MSG)
+#endif
+#ifndef ERROR
+  #define ERROR(MSG) LOG4CPLUS_ERROR(m_gemLogger, MSG)
+#endif
+#ifndef FATAL
+  #define FATAL(MSG) LOG4CPLUS_FATAL(m_gemLogger, MSG)
+#endif
 
 #include "xhal/utils/XHALXMLNode.h"
 #include "xhal/utils/Exception.h"
@@ -81,11 +97,19 @@ namespace xhal {
         /**
          * @brief returns node object by its name or nothing if name is not found
          */
+#ifdef __ARM_ARCH_7A__
+        std::experimental::optional<xhal::utils::Node> getNode(const char* nodeName);
+#else
         boost::optional<xhal::utils::Node> getNode(const char* nodeName);
+#endif
         /**
          * @brief not implemented
          */
+#ifdef __ARM_ARCH_7A__
+        std::experimental::optional<xhal::utils::Node> getNodeFromAddress(const uint32_t nodeAddress);
+#else
         boost::optional<xhal::utils::Node> getNodeFromAddress(const uint32_t nodeAddress);
+#endif
         /**
          * @brief return all nodes
          */
@@ -93,7 +117,7 @@ namespace xhal {
     
       private:
         std::string m_xmlFile;
-        log4cplus::Logger m_logger;
+        log4cplus::Logger m_gemLogger;
         std::unordered_map<std::string, int> m_vars;
         std::unordered_map<std::string,xhal::utils::Node>* m_nodes;
         xercesc::DOMNode* m_root;
@@ -108,7 +132,11 @@ namespace xhal {
         /**
          * @brief returns node attribute value by its name if found
          */
+#ifdef __ARM_ARCH_7A__
+        std::experimental::optional<std::string> getAttVal(xercesc::DOMNode * t_node, const char * attname);
+#else
         boost::optional<std::string> getAttVal(xercesc::DOMNode * t_node, const char * attname);
+#endif
         /**
          * @brief converts string representation of hex, binary or decimal number to an integer
          */

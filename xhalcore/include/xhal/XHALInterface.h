@@ -19,12 +19,24 @@
 #include "log4cplus/loggingmacros.h"
 #include "log4cplus/consoleappender.h"
 
-#define TRACE(MSG) LOG4CPLUS_TRACE(m_logger, MSG)
-#define DEBUG(MSG) LOG4CPLUS_DEBUG(m_logger, MSG)
-#define INFO( MSG) LOG4CPLUS_INFO( m_logger, MSG)
-#define WARN( MSG) LOG4CPLUS_WARN( m_logger, MSG)
-#define ERROR(MSG) LOG4CPLUS_ERROR(m_logger, MSG)
-#define FATAL(MSG) LOG4CPLUS_FATAL(m_logger, MSG)
+#ifndef TRACE
+  #define TRACE(MSG) LOG4CPLUS_TRACE(m_gemLogger, MSG)
+#endif
+#ifndef DEBUG
+  #define DEBUG(MSG) LOG4CPLUS_DEBUG(m_gemLogger, MSG)
+#endif
+#ifndef INFO
+  #define INFO(MSG) LOG4CPLUS_INFO(m_gemLogger, MSG)
+#endif
+#ifndef WARN
+  #define WARN(MSG) LOG4CPLUS_WARN(m_gemLogger, MSG)
+#endif
+#ifndef ERROR
+  #define ERROR(MSG) LOG4CPLUS_ERROR(m_gemLogger, MSG)
+#endif
+#ifndef FATAL
+  #define FATAL(MSG) LOG4CPLUS_FATAL(m_gemLogger, MSG)
+#endif
 
 
 #define STANDARD_CATCH \
@@ -106,7 +118,7 @@ namespace xhal {
 
     protected:
       std::string m_board_domain_name;
-      log4cplus::Logger m_logger;
+      log4cplus::Logger m_gemLogger;
       wisc::RPCSvc rpc;
       wisc::RPCMsg req, rsp;
       bool isConnected;
