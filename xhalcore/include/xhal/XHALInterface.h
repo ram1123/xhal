@@ -80,7 +80,7 @@ namespace xhal {
       /**
        * @brief Reconnect to RPC service and reload required modules
        */
-      inline virtual void reconnect(){this->connect();}
+      virtual void reconnect();
 
       /**
        * @brief Initialize interface and establish RPC service connection with CTP7

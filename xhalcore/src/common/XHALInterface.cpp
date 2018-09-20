@@ -54,6 +54,11 @@ void xhal::XHALInterface::connect()
   }
 }
 
+void xhal::XHALInterface::reconnect()
+{
+  this->connect();
+}
+
 void xhal::XHALInterface::disconnect()
 {
   try {
