@@ -33,8 +33,9 @@ xhal::XHALInterface::XHALInterface(const std::string& board_domain_name, log4cpl
 
 xhal::XHALInterface::~XHALInterface()
 {
+  XHAL_INFO("XHAL destructor called");
   this->disconnect();
-  m_logger.shutdown();
+  //m_logger.shutdown();
 }
 
 void xhal::XHALInterface::connect()
