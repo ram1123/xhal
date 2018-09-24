@@ -6,7 +6,6 @@ xhal::XHALInterface::XHALInterface(const std::string& board_domain_name):
   m_board_domain_name(board_domain_name),
   isConnected(false)
 {
-  XHAL_DEBUG("XHAL constructor called");
   log4cplus::SharedAppenderPtr myAppender(new log4cplus::ConsoleAppender());
   std::auto_ptr<log4cplus::Layout> myLayout = std::auto_ptr<log4cplus::Layout>(new log4cplus::TTCCLayout());
   myAppender->setLayout( myLayout );
@@ -16,6 +15,7 @@ xhal::XHALInterface::XHALInterface(const std::string& board_domain_name):
   m_logger = t_logger;
   m_logger.addAppender(myAppender);
   m_logger.setLogLevel(log4cplus::INFO_LOG_LEVEL);
+  XHAL_DEBUG("XHAL constructor called");
   XHAL_INFO("XHAL Logger tuned up");
   try {
     this->connect();
@@ -31,8 +31,8 @@ xhal::XHALInterface::XHALInterface(const std::string& board_domain_name, log4cpl
   m_logger(logger),
   isConnected(false)
 {
-  XHAL_DEBUG("XHAL constructor called");
   m_logger.setLogLevel(log4cplus::INFO_LOG_LEVEL);
+  XHAL_DEBUG("XHAL constructor called");
   XHAL_INFO("XHAL Logger tuned up, using external logger reference");
   try {
     this->connect();
