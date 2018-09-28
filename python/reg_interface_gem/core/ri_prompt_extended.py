@@ -1,7 +1,6 @@
 import reg_utils.reg_interface.common.ri_prompt as ri_prompt
 from reg_utils.reg_interface.common.reg_xml_parser import *
 from reg_utils.reg_interface.common.reg_base_ops import readAddress, readReg, mpeek, mpoke, readReg, displayReg, writeReg, isValid, parseError, tabPad
-from xhal.reg_interface_gem.core.reg_extra_ops import *
 from xhal.reg_interface_gem.core.vfat_config import *
 
 MAX_OH_NUM = 12
@@ -258,8 +257,9 @@ class Prompt(ri_prompt.Prompt):
         if 'eagle' in hostname:
             print 'This function can only be run from a host PC'
         else:
-            update_atdb(args)
-            print 'LMDB address table updated'
+            #update_atdb(args)
+            #print 'LMDB address table updated'
+            print 'This function is disabled for the moment'
 
     def do_debug(self,args):
         """Quick read of SBit Clusters. USAGE: debug <OH_NUM>"""
