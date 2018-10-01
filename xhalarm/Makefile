@@ -64,7 +64,7 @@ $(OBJS_XHAL):$(SRCS_XHAL)
 	$(CXX) -std=c++0x -c $(CFLAGS) -o $@ $<
 
 clean: cleanrpm
-	-${RM} ${XHAL_LIB} ${OBJS_XHAL}
+	-rm -rf ${XHAL_LIB} ${OBJS_XHAL}
 	-rm -rf $(PackageDir)
 
 cleandoc: 

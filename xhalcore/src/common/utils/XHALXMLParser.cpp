@@ -50,9 +50,9 @@ void xhal::utils::XHALXMLParser::parseXML()
   /// Initialize XML4C system
   try {
     xercesc::XMLPlatformUtils::Initialize();
-    INFO("Successfully initialized XML4C system");
+    XHAL_INFO("Successfully initialized XML4C system");
   } catch(const xercesc::XMLException& toCatch) {
-    ERROR("Error during Xerces-c Initialization." << std::endl
+    XHAL_ERROR("Error during Xerces-c Initialization." << std::endl
           << "  Exception message:"
           << xercesc::XMLString::transcode(toCatch.getMessage()));
     throw xhal::utils::XHALXMLParserException("XHALParser: initialization failed"); 
@@ -63,19 +63,19 @@ void xhal::utils::XHALXMLParser::parseXML()
   //  The parser will call back to methods of the ErrorHandler if it
   //  discovers errors during the course of parsing the XML document.
 
-  TRACE("Call XMLCh");
+  XHAL_TRACE("Call XMLCh");
   XMLCh tempStr[100];
-  TRACE("XMLCh created");
+  XHAL_TRACE("XMLCh created");
   xercesc::XMLString::transcode("LS", tempStr, 99);
-  TRACE("XMLString transcode called");
+  XHAL_TRACE("XMLString transcode called");
   xercesc::DOMImplementation *impl = xercesc::DOMImplementationRegistry::getDOMImplementation(tempStr);
-  TRACE("DOM implementation created");
+  XHAL_TRACE("DOM implementation created");
   xercesc::DOMLSParser       *parser = ((xercesc::DOMImplementationLS*)impl)->createLSParser(xercesc::DOMImplementationLS::MODE_SYNCHRONOUS, 0);
-  TRACE("DOMLSParser created");
+  XHAL_TRACE("DOMLSParser created");
   xercesc::DOMConfiguration  *config = parser->getDomConfig();
-  TRACE("DOM configuration created");
+  XHAL_TRACE("DOM configuration created");
   xercesc::DOMDocument *doc;
-  DEBUG("Xerces parser created ");
+  XHAL_DEBUG("Xerces parser created ");
 
   config->setParameter(xercesc::XMLUni::fgDOMNamespaces, true);
   config->setParameter(xercesc::XMLUni::fgXercesSchema, false);
@@ -84,10 +84,10 @@ void xhal::utils::XHALXMLParser::parseXML()
 
   if(config->canSetParameter(xercesc::XMLUni::fgXercesDoXInclude, true)){
     config->setParameter(xercesc::XMLUni::fgXercesDoXInclude, true);
-    DEBUG("Xerces parser set to do XInclude ");
+    XHAL_DEBUG("Xerces parser set to do XInclude ");
   }
 
-  DEBUG("Xerces parser tuned up ");
+  XHAL_DEBUG("Xerces parser tuned up ");
 
   //  Parse the XML file, catching any XML exceptions that might propogate
   //  out of it.
@@ -98,53 +98,53 @@ void xhal::utils::XHALXMLParser::parseXML()
     doc = parser->parseURI(m_xmlFile.c_str());
 
   } catch (const xercesc::XMLException& e) {
-    ERROR("An error occured during parsing" << std::endl
+    XHAL_ERROR("An error occured during parsing" << std::endl
           << "   Message: "
           << xercesc::XMLString::transcode(e.getMessage()));
     errorsOccured = true;
     // fileError = "An error occured during parsing of selected file. Please select another configuration file.";
   } catch (const xercesc::DOMException& e) {
-    ERROR("An error occured during parsing" << std::endl
+    XHAL_ERROR("An error occured during parsing" << std::endl
           << "   Message: "
           << xercesc::XMLString::transcode(e.msg));
     errorsOccured = true;
     // fileError = "An error occured during parsing of selected file. Please select another configuration file.";
   } catch (...) {
-    ERROR("An error occured during parsing");
+    XHAL_ERROR("An error occured during parsing");
     errorsOccured = true;
     // fileError = "An error occured during parsing of selected file. Please select another configuration file.";
   }
 
   if (!errorsOccured) {
-    DEBUG("DOM tree created succesfully");
+    XHAL_DEBUG("DOM tree created succesfully");
     if (doc->getDocumentElement()!=NULL){
       m_root = doc->getDocumentElement();
     }
-    DEBUG("Root node (getDocumentElement) obtained");
+    XHAL_DEBUG("Root node (getDocumentElement) obtained");
     makeTree(m_root,"",0x0,m_nodes,NULL,m_vars,false);
-    DEBUG("Number of nodes: " << m_nodes->size());
+    XHAL_DEBUG("Number of nodes: " << m_nodes->size());
   } else{
     throw xhal::utils::XHALXMLParserException("XHALParser: an error occured during parsing"); 
   }
-  DEBUG("Parsing done!");
+  XHAL_DEBUG("Parsing done!");
   if (parser) parser->release();
   xercesc::XMLPlatformUtils::Terminate();
 }
 
 void xhal::utils::XHALXMLParser::makeTree(xercesc::DOMNode * node, std::string baseName, uint32_t baseAddress, std::unordered_map<std::string, Node> * nodes, Node * parentNode, std::unordered_map<std::string, int> vars, bool isGenerated)
 {
-  DEBUG("Call makeTree");
+  XHAL_DEBUG("Call makeTree");
   unsigned int generateSize;
   unsigned int generateAddressStep;
   std::string generateIdxVar;
-  DEBUG("Declare some local variables");
+  XHAL_DEBUG("Declare some local variables");
   if (isGenerated == false)
   {
-    DEBUG("Node is not _generated_");
+    XHAL_DEBUG("Node is not _generated_");
     if (auto tmp = getAttVal(node, "generate"))
     {
       if (*tmp == "true"){
-        DEBUG("Generate nodes");
+        XHAL_DEBUG("Generate nodes");
         tmp = getAttVal(node, "generate_size");
         generateSize = parseInt(*tmp);
         tmp = getAttVal(node, "generate_address_step");
@@ -159,10 +159,10 @@ void xhal::utils::XHALXMLParser::makeTree(xercesc::DOMNode * node, std::string b
       }
     }
   } else {
-    DEBUG("Node is _generated_");
+    XHAL_DEBUG("Node is _generated_");
   }
   Node newNode = Node();
-  DEBUG("Create Node() object");
+  XHAL_DEBUG("Create Node() object");
   std::string name;
   uint32_t address;
   name = baseName;
@@ -172,11 +172,11 @@ void xhal::utils::XHALXMLParser::makeTree(xercesc::DOMNode * node, std::string b
   { 
     name.append(*tmp);
   } else {
-    ERROR("getAttVal returned NONE, node has no id attribute");
+    XHAL_ERROR("getAttVal returned NONE, node has no id attribute");
   }
   //name += *getAttVal(node, "id");
   name = substituteVars(name, vars);
-  DEBUG("Node name: " << name);
+  XHAL_DEBUG("Node name: " << name);
   newNode.name = name;
   if (auto tmp = getAttVal(node, "description"))
   { 
@@ -188,7 +188,7 @@ void xhal::utils::XHALXMLParser::makeTree(xercesc::DOMNode * node, std::string b
     newNode.address = address;
     newNode.real_address = (address<<2)+0x64000000;
   } else {
-    TRACE("getAttVal returned NONE");
+    XHAL_TRACE("getAttVal returned NONE");
   }
   if (auto tmp = getAttVal(node, "permission"))
   { 
@@ -209,7 +209,7 @@ void xhal::utils::XHALXMLParser::makeTree(xercesc::DOMNode * node, std::string b
   }
 
   nodes->insert(std::make_pair(newNode.name,newNode));
-  TRACE("Node map size after insert " << nodes->size());
+  XHAL_TRACE("Node map size after insert " << nodes->size());
   if (parentNode)
   {
     parentNode->addChild(newNode);
@@ -218,7 +218,7 @@ void xhal::utils::XHALXMLParser::makeTree(xercesc::DOMNode * node, std::string b
   }
   xercesc::DOMNodeList *children_ = node->getChildNodes();
   const XMLSize_t nodeCount = children_->getLength();
-  DEBUG("Node children length: " << nodeCount);
+  XHAL_DEBUG("Node children length: " << nodeCount);
           
   for( XMLSize_t ix = 0 ; ix < nodeCount ; ++ix )
   {
@@ -231,25 +231,29 @@ void xhal::utils::XHALXMLParser::makeTree(xercesc::DOMNode * node, std::string b
   }
 }
 
+#ifdef __ARM_ARCH_7A__
+std::experimental::optional<std::string> xhal::utils::XHALXMLParser::getAttVal(xercesc::DOMNode * t_node_, const char * attname)
+#else
 boost::optional<std::string> xhal::utils::XHALXMLParser::getAttVal(xercesc::DOMNode * t_node_, const char * attname)
+#endif
 {
-  TRACE("Call getAttVal for attribute " << attname);
+  XHAL_TRACE("Call getAttVal for attribute " << attname);
   XMLCh * tmp = xercesc::XMLString::transcode(attname);
   xercesc::DOMElement* t_node = static_cast<xercesc::DOMElement*>(t_node_);
-  TRACE("tmp: " << tmp);
-  TRACE("successfull call of getAttribute: " << t_node->getAttribute(tmp));
+  XHAL_TRACE("tmp: " << tmp);
+  XHAL_TRACE("successfull call of getAttribute: " << t_node->getAttribute(tmp));
   char * tmp2 = xercesc::XMLString::transcode(t_node->getAttribute(tmp)); 
-  TRACE("tmp2: " << tmp2);
+  XHAL_TRACE("tmp2: " << tmp2);
   if (tmp2[0]!='\0')
   {
     std::string value = tmp2;
     xercesc::XMLString::release(&tmp);
     xercesc::XMLString::release(&tmp2);
-    TRACE("result " << value);
+    XHAL_TRACE("result " << value);
     return value;
   } else 
   {
-    TRACE("Attribute not found");
+    XHAL_TRACE("Attribute not found");
     xercesc::XMLString::release(&tmp);
     xercesc::XMLString::release(&tmp2);
     return {};
@@ -258,19 +262,19 @@ boost::optional<std::string> xhal::utils::XHALXMLParser::getAttVal(xercesc::DOMN
 
 unsigned int xhal::utils::XHALXMLParser::parseInt(std::string & s)
 {
-  TRACE("Call parseInt for argument " << s);
+  XHAL_TRACE("Call parseInt for argument " << s);
   std::stringstream converter(s);
   uint32_t value;
   if (s.find("0x") != std::string::npos) {
     converter >> std::hex >> value;
-    TRACE("result " << value);
+    XHAL_TRACE("result " << value);
     return value;
   } else if (s.find("0b") != std::string::npos) {
-    TRACE("result " << std::stoi(s,nullptr,2));
+    XHAL_TRACE("result " << std::stoi(s,nullptr,2));
     return std::stoi(s,nullptr,2);
   } else {
     converter >> std::dec >> value;
-    TRACE("result " << value);
+    XHAL_TRACE("result " << value);
     return value;
   }
 }
@@ -303,12 +307,15 @@ std::string xhal::utils::XHALXMLParser::replaceAll( std::string const& original,
     return results;
 }
 
-//std::experimental::optional<xhal::utils::Node> xhal::utils::XHALXMLParser::getNode(const char* nodeName)
+#ifdef __ARM_ARCH_7A__
+std::experimental::optional<xhal::utils::Node> xhal::utils::XHALXMLParser::getNode(const char* nodeName)
+#else
 boost::optional<xhal::utils::Node> xhal::utils::XHALXMLParser::getNode(const char* nodeName)
+#endif
 {
-  DEBUG("Call getNode for argument " << nodeName);
+  XHAL_DEBUG("Call getNode for argument " << nodeName);
   //Node * res = NULL;
-  TRACE("Searching unordered map");
+  XHAL_TRACE("Searching unordered map");
   auto search = m_nodes->find(nodeName);
   if (search!=m_nodes->end())
   {
@@ -319,7 +326,11 @@ boost::optional<xhal::utils::Node> xhal::utils::XHALXMLParser::getNode(const cha
 }
 
 // Not used a.t.m. Do we need it? FIXME
+#ifdef __ARM_ARCH_7A__
+std::experimental::optional<xhal::utils::Node> xhal::utils::XHALXMLParser::getNodeFromAddress(const uint32_t nodeAddress)
+#else
 boost::optional<xhal::utils::Node> xhal::utils::XHALXMLParser::getNodeFromAddress(const uint32_t nodeAddress)
+#endif
 {
   //Node * res = NULL;
   //for (auto & n: *m_nodes)

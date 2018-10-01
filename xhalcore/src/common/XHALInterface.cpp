@@ -15,15 +15,40 @@ xhal::XHALInterface::XHALInterface(const std::string& board_domain_name):
   m_logger = t_logger;
   m_logger.addAppender(myAppender);
   m_logger.setLogLevel(log4cplus::INFO_LOG_LEVEL);
-  INFO("XHAL Logger tuned up");
-  this->connect();
-  INFO("XHAL Interface connected");
+  XHAL_DEBUG("XHAL constructor called");
+  XHAL_INFO("XHAL Logger tuned up");
+  try {
+    this->connect();
+    XHAL_INFO("XHAL Interface connected");
+  }
+  catch (xhal::utils::XHALRPCException &e) {
+    XHAL_INFO("XHAL Interface failed to connect");
+  }
+}
+
+xhal::XHALInterface::XHALInterface(const std::string& board_domain_name, log4cplus::Logger& logger):
+  m_board_domain_name(board_domain_name),
+  m_logger(logger),
+  isConnected(false)
+{
+  m_logger.setLogLevel(log4cplus::INFO_LOG_LEVEL);
+  XHAL_DEBUG("XHAL constructor called");
+  XHAL_INFO("XHAL Logger tuned up, using external logger reference");
+  try {
+    this->connect();
+    XHAL_INFO("XHAL Interface connected");
+  }
+  catch (xhal::utils::XHALRPCException &e) {
+    XHAL_INFO("XHAL Interface failed to connect");
+    isConnected = false;
+  }
 }
 
 xhal::XHALInterface::~XHALInterface()
 {
+  XHAL_DEBUG("XHAL destructor called");
   this->disconnect();
-  m_logger.shutdown();
+  //m_logger.shutdown();
 }
 
 void xhal::XHALInterface::connect()
@@ -31,30 +56,35 @@ void xhal::XHALInterface::connect()
   try {
     rpc.connect(m_board_domain_name);
     isConnected = true;
-    INFO("RPC connected");
+    XHAL_INFO("RPC connected");
   }
   catch (wisc::RPCSvc::ConnectionFailedException &e) {
-    ERROR("Caught RPCErrorException: " << e.message.c_str());
+    XHAL_ERROR("Caught RPCErrorException: " << e.message.c_str());
     throw xhal::utils::XHALRPCException("RPC ConnectionFailedException: " + e.message);
   }
   catch (wisc::RPCSvc::RPCException &e) {
-    ERROR("Caught exception: " << e.message.c_str());
+    XHAL_ERROR("Caught exception: " << e.message.c_str());
     throw xhal::utils::XHALRPCException("RPC exception: " + e.message);
   }
+}
+
+void xhal::XHALInterface::reconnect()
+{
+  this->connect();
 }
 
 void xhal::XHALInterface::disconnect()
 {
   try {
     rpc.disconnect();
-    INFO("RPC disconnected");
+    XHAL_INFO("RPC disconnected");
     isConnected = false;
   }
   catch (wisc::RPCSvc::NotConnectedException &e) {
-    INFO("Caught RPCNotConnectedException: " << e.message.c_str());
+    XHAL_INFO("Caught RPCNotConnectedException: " << e.message.c_str());
   }
   catch (wisc::RPCSvc::RPCException &e) {
-    ERROR("Caught exception: " << e.message.c_str());
+    XHAL_ERROR("Caught exception: " << e.message.c_str());
     throw xhal::utils::XHALRPCException("RPC exception: " + e.message);
   }
 }
