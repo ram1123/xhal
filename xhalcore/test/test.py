@@ -86,6 +86,10 @@ def test_xhalrpc_exception():
     eagle64.reconnect()
   except xi.XHALRPCException as e:
     print "Caught exception: %s" %(e)
+
+def update_lmdb():
+  eagle=xi.Utils("eagle34")
+  eagle.update_atdb("/mnt/persistent/gemdaq/xml/gem_amc_top_v1_15_2_12oh_no_top_node.xml")
     
 
 test_xhaldevice()

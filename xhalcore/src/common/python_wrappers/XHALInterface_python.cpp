@@ -3,6 +3,7 @@
 #include "xhal/XHALDevice.h"
 #include "xhal/utils/PyTypes.h"
 #include "xhal/rpc/daq_monitor.h"
+#include "xhal/rpc/utils.h"
 #include <boost/python/suite/indexing/vector_indexing_suite.hpp>
 #include <boost/python/suite/indexing/map_indexing_suite.hpp>
 
@@ -78,6 +79,10 @@ BOOST_PYTHON_MODULE(xhalpy){
 
   class_<PyDictVecUint32>("PyDictVecUint32")
     .def(map_indexing_suite<PyDictVecUint32>() );
+
+  class_<xhal::rpc::Utils>("Utils", init<const std::string&>())
+    .def("update_atdb",&xhal::rpc::Utils::update_atdb)
+    .def("getRegInfoDB",&xhal::rpc::Utils::getRegInfoDB);
 
   class_<xhal::rpc::DaqMonitor>("DaqMonitor", init<const std::string&>())
     .def("getmonTTCmain",&xhal::rpc::DaqMonitor::getmonTTCmain)
