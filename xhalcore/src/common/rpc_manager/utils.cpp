@@ -10,7 +10,8 @@ uint32_t xhal::rpc::Utils::update_atdb(char * xmlfilename)
     STANDARD_CATCH;
 
     if (rsp.get_key_exists("error")) {
-        return 1;
+        XHAL_ERROR("Address table update failed!");
+        throw xhal::utils::XHALException("Error during address table update");
     }
     return 0;
 }
