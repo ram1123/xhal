@@ -3,7 +3,7 @@
  * Flat representation of firmware registers with certain attributes extracted from XML address table
  *
  * @author Mykhailo Dalchenko
- * @version 1.0 
+ * @version 1.0
  */
 
 #ifndef XHAL_UTILS_NODE_H
@@ -27,16 +27,18 @@ namespace xhal {
          */
         Node()
         {
-          name=""; 
-          description=""; 
-          vhdlname = ""; 
-          address = 0x0; 
-          real_address = 0x0; 
-          permission = ""; 
-          mask = 0xFFFFFFFF; 
-          isModule = false; 
-          parent = nullptr; 
-          level = 0; 
+          name="";
+          description="";
+          vhdlname = "";
+          address = 0x0;
+          real_address = 0x0;
+          permission = "";
+          mode = "single";
+          size = 1;
+          mask = 0xFFFFFFFF;
+          isModule = false;
+          parent = nullptr;
+          level = 0;
           warn_min_value = -1;
           error_min_value = -1;
         }
@@ -59,11 +61,13 @@ namespace xhal {
           //print 'Description:',self.description
           //print 'Address:','{0:#010x}'.format(self.address)
           //print 'Permission:',self.permission
+          //print 'Mode:',self.mode
+          //print 'Size:',self.size
           //print 'Mask:','{0:#010x}'.format(self.mask)
           //print 'Module:',self.isModule
           //print 'Parent:',self.parent.name
         }
-    
+
         /**
          * @brief Returns all hierarchy of chlid nodes
          * @param node parent node
@@ -71,7 +75,7 @@ namespace xhal {
          */
         void getAllChildren(Node node, std::vector<Node> kids)
         {
-          if (node.children.empty()) 
+          if (node.children.empty())
           {
             kids.push_back(node);
           } else {
@@ -81,13 +85,15 @@ namespace xhal {
             }
           }
         }
-    
+
         std::string name;
         std::string description;
         std::string vhdlname;
         uint32_t address;
         uint32_t real_address;
         std::string permission;
+        std::string mode;
+        uint32_t size;
         uint32_t mask;
         bool isModule;
         Node *parent;

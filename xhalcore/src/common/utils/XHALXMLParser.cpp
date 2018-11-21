@@ -55,7 +55,7 @@ void xhal::utils::XHALXMLParser::parseXML()
     XHAL_ERROR("Error during Xerces-c Initialization." << std::endl
           << "  Exception message:"
           << xercesc::XMLString::transcode(toCatch.getMessage()));
-    throw xhal::utils::XHALXMLParserException("XHALParser: initialization failed"); 
+    throw xhal::utils::XHALXMLParserException("XHALParser: initialization failed");
     return;
   }
 
@@ -124,7 +124,7 @@ void xhal::utils::XHALXMLParser::parseXML()
     makeTree(m_root,"",0x0,m_nodes,NULL,m_vars,false);
     XHAL_DEBUG("Number of nodes: " << m_nodes->size());
   } else{
-    throw xhal::utils::XHALXMLParserException("XHALParser: an error occured during parsing"); 
+    throw xhal::utils::XHALXMLParserException("XHALParser: an error occured during parsing");
   }
   XHAL_DEBUG("Parsing done!");
   if (parser) parser->release();
@@ -169,7 +169,7 @@ void xhal::utils::XHALXMLParser::makeTree(xercesc::DOMNode * node, std::string b
   address = baseAddress;
   if (baseName != "") {name += ".";}
   if (auto tmp = getAttVal(node, "id"))
-  { 
+  {
     name.append(*tmp);
   } else {
     XHAL_ERROR("getAttVal returned NONE, node has no id attribute");
@@ -179,11 +179,11 @@ void xhal::utils::XHALXMLParser::makeTree(xercesc::DOMNode * node, std::string b
   XHAL_DEBUG("Node name: " << name);
   newNode.name = name;
   if (auto tmp = getAttVal(node, "description"))
-  { 
+  {
     newNode.description = *tmp;
   }
   if (auto tmp = getAttVal(node, "address"))
-  { 
+  {
     address = baseAddress + parseInt(*tmp);
     newNode.address = address;
     newNode.real_address = (address<<2)+0x64000000;
@@ -191,20 +191,28 @@ void xhal::utils::XHALXMLParser::makeTree(xercesc::DOMNode * node, std::string b
     XHAL_TRACE("getAttVal returned NONE");
   }
   if (auto tmp = getAttVal(node, "permission"))
-  { 
+  {
     newNode.permission = *tmp;
   }
+  if (auto tmp = getAttVal(node, "mode"))
+  {
+    newNode.mode = *tmp;
+  }
+  if (auto tmp = getAttVal(node, "size"))
+  {
+    newNode.size = *tmp;
+  }
   if (auto tmp = getAttVal(node, "mask"))
-  { 
+  {
     newNode.mask = parseInt(*tmp);
   }
   newNode.isModule = (getAttVal(node, "fw_is_module")) && (*getAttVal(node, "fw_is_module") == "true");
   if (auto tmp = getAttVal(node, "sw_monitor_warn_min_threshold"))
-  { 
+  {
     newNode.warn_min_value = parseInt(*tmp);
   }
   if (auto tmp = getAttVal(node, "sw_monitor_error_min_threshold"))
-  { 
+  {
     newNode.warn_min_value = parseInt(*tmp);
   }
 
@@ -219,10 +227,10 @@ void xhal::utils::XHALXMLParser::makeTree(xercesc::DOMNode * node, std::string b
   xercesc::DOMNodeList *children_ = node->getChildNodes();
   const XMLSize_t nodeCount = children_->getLength();
   XHAL_DEBUG("Node children length: " << nodeCount);
-          
+
   for( XMLSize_t ix = 0 ; ix < nodeCount ; ++ix )
   {
-    if (children_->item(ix)->getNodeType() == xercesc::DOMNode::ELEMENT_NODE) 
+    if (children_->item(ix)->getNodeType() == xercesc::DOMNode::ELEMENT_NODE)
     {
       makeTree(children_->item(ix),name,address,nodes,&newNode,vars,false);
     } else {
@@ -242,7 +250,7 @@ boost::optional<std::string> xhal::utils::XHALXMLParser::getAttVal(xercesc::DOMN
   xercesc::DOMElement* t_node = static_cast<xercesc::DOMElement*>(t_node_);
   XHAL_TRACE("tmp: " << tmp);
   XHAL_TRACE("successfull call of getAttribute: " << t_node->getAttribute(tmp));
-  char * tmp2 = xercesc::XMLString::transcode(t_node->getAttribute(tmp)); 
+  char * tmp2 = xercesc::XMLString::transcode(t_node->getAttribute(tmp));
   XHAL_TRACE("tmp2: " << tmp2);
   if (tmp2[0]!='\0')
   {
@@ -251,7 +259,7 @@ boost::optional<std::string> xhal::utils::XHALXMLParser::getAttVal(xercesc::DOMN
     xercesc::XMLString::release(&tmp2);
     XHAL_TRACE("result " << value);
     return value;
-  } else 
+  } else
   {
     XHAL_TRACE("Attribute not found");
     xercesc::XMLString::release(&tmp);
@@ -335,13 +343,13 @@ boost::optional<xhal::utils::Node> xhal::utils::XHALXMLParser::getNodeFromAddres
   //Node * res = NULL;
   //for (auto & n: *m_nodes)
   //{
-  //  if (nodeAddress == n.real_address) 
+  //  if (nodeAddress == n.real_address)
   //  {
   //    res = &n;
   //    break;
   //  }
   //}
-  //if (res) 
+  //if (res)
   //{
   //  return *res;
   //} else {
