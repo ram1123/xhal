@@ -200,7 +200,7 @@ void xhal::utils::XHALXMLParser::makeTree(xercesc::DOMNode * node, std::string b
   }
   if (auto tmp = getAttVal(node, "size"))
   {
-    newNode.size = *tmp;
+    newNode.size = parseInt(*tmp);
   }
   if (auto tmp = getAttVal(node, "mask"))
   {
