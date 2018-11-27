@@ -1,7 +1,7 @@
 SUBPACKAGES := \
         python \
-        xhalcore \
-	xhalarm
+	xhalarm \
+        xhalcore
 
 SUBPACKAGES.DEBUG    := $(patsubst %,%.debug,    ${SUBPACKAGES})
 SUBPACKAGES.RPM      := $(patsubst %,%.rpm,      ${SUBPACKAGES})
@@ -39,3 +39,11 @@ $(SUBPACKAGES.CLEANDOC):
 
 $(SUBPACKAGES.CLEAN):
 	$(MAKE) -C $(patsubst %.clean,%, $@) clean
+
+# .PHONY: $(SUBPACKAGES) $(SUBPACKAGES.INSTALL) $(SUBPACKAGES.CLEAN)
+
+# python:
+
+# xhalarm:
+
+# xhalcore: xhalarm

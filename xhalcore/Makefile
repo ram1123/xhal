@@ -7,7 +7,7 @@ PackageName  := $(ShortPackage)
 PackagePath  := $(shell pwd)
 PackageDir   := pkg/$(ShortPackage)
 Packager     := Mykhailo Dalchenko
-Arch         := x86_64
+#Arch         := x86_64
 
 XHAL_VER_MAJOR:=$(shell $(BUILD_HOME)/$(Project)/config/tag2rel.sh | awk '{split($$0,a," "); print a[1];}' | awk '{split($$0,b,":"); print b[2];}')
 XHAL_VER_MINOR:=$(shell $(BUILD_HOME)/$(Project)/config/tag2rel.sh | awk '{split($$0,a," "); print a[2];}' | awk '{split($$0,b,":"); print b[2];}')
@@ -21,7 +21,7 @@ CCFLAGS=-O0 -g3 -fno-inline -Wall -fPIC -pthread -m64
 ADDFLAGS=-std=c++11
 
 IncludeDirs+= /opt/xdaq/include
-IncludeDirs+= /opt/rh/devtoolset-6/root/usr/include
+# IncludeDirs+= /opt/rh/devtoolset-6/root/usr/include
 IncludeDirs+= ${BUILD_HOME}/${Project}/${LongPackage}/include
 INC=$(IncludeDirs:%=-I%)
 
@@ -47,14 +47,16 @@ XHALPY_LIB=${BUILD_HOME}/${Project}/${LongPackage}/lib/xhalpy.so
 
 .PHONY: clean xhalcore rpc prerpm
 
-default:
+default: build
 	@echo "Running default target"
 	$(MakeDir) $(PackageDir)
 
 _rpmprep: preprpm
 	@echo "Running _rpmprep target"
+
 preprpm: default
 	@echo "Running preprpm target"
+	@cp -rf ../xhalarm/lib lib/arm
 	@cp -rf lib $(PackageDir)
 
 build: xhalcore rpc
