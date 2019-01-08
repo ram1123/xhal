@@ -1,12 +1,14 @@
 SUBPACKAGES := \
         reg_interface_gem \
 
-SUBPACKAGES.DEBUG    := $(patsubst %,%.debug,    ${SUBPACKAGES})
-SUBPACKAGES.DOC      := $(patsubst %,%.doc,      ${SUBPACKAGES})
-SUBPACKAGES.RPM      := $(patsubst %,%.rpm,      ${SUBPACKAGES})
-SUBPACKAGES.CLEANRPM := $(patsubst %,%.cleanrpm, ${SUBPACKAGES})
-SUBPACKAGES.CLEANDOC := $(patsubst %,%.cleandoc,    ${SUBPACKAGES})
-SUBPACKAGES.CLEAN    := $(patsubst %,%.clean,    ${SUBPACKAGES})
+SUBPACKAGES.DEBUG    := $(patsubst %,%.debug,    $(SUBPACKAGES))
+SUBPACKAGES.DOC      := $(patsubst %,%.doc,      $(SUBPACKAGES))
+SUBPACKAGES.RPM      := $(patsubst %,%.rpm,      $(SUBPACKAGES))
+SUBPACKAGES.CLEANRPM := $(patsubst %,%.cleanrpm, $(SUBPACKAGES))
+SUBPACKAGES.CLEANDOC := $(patsubst %,%.cleandoc, $(SUBPACKAGES))
+SUBPACKAGES.CLEAN    := $(patsubst %,%.clean,    $(SUBPACKAGES))
+
+.PHONY: $(SUBPACKAGES) $(SUBPACKAGES.INSTALL) $(SUBPACKAGES.CLEAN) $(SUBPACKAGES.DOC) $(SUBPACKAGES.RPM) $(SUBPACKAGES.CLEANRPM) $(SUBPACKAGES.CLEANDOC)
 
 rpm: $(SUBPACKAGES) $(SUBPACKAGES.RPM)
 

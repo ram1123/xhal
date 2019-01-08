@@ -19,52 +19,59 @@ include $(BUILD_HOME)/$(Project)/config/mfRPMRules.mk
 
 ADDFLAGS=-std=gnu++14
 
-IncludeDirs  = ${BUILD_HOME}/${Project}/xhalcore/include
+IncludeDirs = $(BUILD_HOME)/$(Project)/xhalcore/include
 INC=$(IncludeDirs:%=-I%)
 
 Libraries+= -llog4cplus -lxerces-c -lstdc++
-LIB=$(LibraryDirs)
-LIB+= $(Libraries)
 
-LDFLAGS= -shared
-SRCS_XHAL = $(shell echo ../xhalcore/src/common/utils/*.cpp)
-OBJS_XHAL = $(SRCS_XHAL:.cpp=.o)
+LDFLAGS+=-shared $(LibraryDirs)
 
-XHAL_LIB=${BUILD_HOME}/${Project}/${LongPackage}/lib/libxhal.so
+SrcLocation =$(BUILD_HOME)/$(Project)/xhalcore/src/common
+SRCS_XHAL   = $(shell echo $(SrcLocation)/utils/*.cpp)
+
+## Place object files in lib/linux?
+ObjLocation = src/linux/$(Arch)
+OBJS_XHAL   = $(patsubst $(SrcLocation)/%,$(ObjLocation)/%, $(SRCS_XHAL:.cpp=.o))
+
+XHAL_LIB=$(BUILD_HOME)/$(Project)/$(LongPackage)/lib/libxhal.so
 
 .PHONY: clean rpc prerpm
 
-default: clean
+default: build
 	@echo "Running default target"
 	$(MakeDir) $(PackageDir)
 
 _rpmprep: preprpm
 	@echo "Running _rpmprep target"
+
 preprpm: default
 	@echo "Running preprpm target"
 	@cp -rf lib $(PackageDir)
 
-build:${XHAL_LIB}
+build: clean $(XHAL_LIB)
 
-_all: clean ${XHAL_LIB} 
+_all: clean $(XHAL_LIB) 
 
 doc:
 	@echo "TO DO"
 
 $(XHAL_LIB): $(OBJS_XHAL) 
-	@mkdir -p ${BUILD_HOME}/${Project}/${LongPackage}/lib
-	$(CC) $(CFLAGS) $(ADDFLAGS) ${LDFLAGS} $(INC) $(LIB) -o $@ $^
+	@mkdir -p $(BUILD_HOME)/$(Project)/$(LongPackage)/lib
+	$(CC) $(ADDFLAGS) $(LDFLAGS) -o $@ $^ $(Libraries)
 
-$(OBJS_XHAL):$(SRCS_XHAL)
-	$(CC) $(CFLAGS) $(ADDFLAGS) $(INC) $(LIB) -c -o $@ $<
+$(OBJS_XHAL): $(SRCS_XHAL)
+	$(MakeDir) -p $(shell dirname $@)
+	$(CC) $(CFLAGS) $(ADDFLAGS) $(INC) -c -o $@ $<
 
 %.o: %.c
 	$(CC) -std=gnu99 -c $(CFLAGS) -o $@ $<
 %.o: %.cc
 	$(CXX) -std=c++0x -c $(CFLAGS) -o $@ $<
 
-clean: cleanrpm
-	-rm -rf ${XHAL_LIB} ${OBJS_XHAL}
+clean:
+	-rm -rf $(OBJS_XHAL)
+	-rm -rf $(XHAL_LIB)
+	-rm -rf $(BUILD_HOME)/$(Project)/$(LongPackage)/lib
 	-rm -rf $(PackageDir)
 
 cleandoc: 
