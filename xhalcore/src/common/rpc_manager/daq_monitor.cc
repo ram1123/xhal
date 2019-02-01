@@ -187,6 +187,94 @@ DLLEXPORT uint32_t getmonDAQOHmain(uint32_t* result, uint32_t noh, uint32_t ohMa
     return 0;
 }
 
+DLLEXPORT uint32_t getmonGBTLink(struct OHLinkMonitor *ohLinkMon, uint32_t noh, bool doReset)
+{
+    req = wisc::RPCMsg("daq_montior.getmonGBTLink");
+    req.set_word("NOH",noh);
+    req.set_word("doReset",doReset);
+    wisc::RPCSvc* rpc_loc = getRPCptr();
+    try {
+        rsp = rpc_loc->call_method(req);
+    }
+    STANDARD_CATCH;
+
+    try{
+        if (rsp.get_key_exists("error")) {
+            printf("Error: %s",rsp.get_string("error").c_str());
+            return 1;
+        } else {
+            for(int ohN = 0; ohN < noh; ++ohN){
+                // If this Optohybrid is masked skip it
+                if(!((ohMask >> ohN) & 0x1)){
+                    continue;
+                }
+
+                std::string strOHN = "OH" + std::to_string(ohN) + ".";
+
+                for(int gbtN = 0; gbtN < 3; ++gbtN){
+                    std::string strGBTN = "GBT" + std::to_string(gbtN) + ".";
+
+                    ohLinkMon[ohN].gbtRdy[gbtN] = rsp.get_word(strOHN + strGBTN + "READY");
+                    ohLinkMon[ohN].gbtNotRdy[gbtN] = rsp.get_word(strOHN + strGBTN + "WAS_NOT_READY");
+                    ohLinkMon[ohN].gbtRxOverflow[gbtN] = rsp.get_word(strOHN + strGBTN + "RX_HAD_OVERFLOW");
+                    ohLinkMon[ohN].gbtRxUnderflow[gbtN] = rsp.get_word(strOHN + strGBTN + "RX_HAD_UNDERFLOW");
+                } //End Loop Over GBT
+            } //End Loop Over OH
+        } //End Case: No Error
+    } //End try block
+    STANDARD_CATCH;
+
+    return 0;
+} //End getmonGBTLink()
+
+DLLEXPORT uint32_t getmonOHLink(struct OHLinkMonitor *ohLinkMon, struct VFATLinkMonitor *vfatLinkMon, uint32_t noh, bool doReset)
+{
+    req = wisc::RPCMsg("daq_montior.getmonOHLink");
+    req.set_word("NOH",noh);
+    req.set_word("doReset",doReset);
+    wisc::RPCSvc* rpc_loc = getRPCptr();
+    try {
+        rsp = rpc_loc->call_method(req);
+    }
+    STANDARD_CATCH;
+
+    try{
+        if (rsp.get_key_exists("error")) {
+            printf("Error: %s",rsp.get_string("error").c_str());
+            return 1;
+        } else {
+            for(int ohN = 0; ohN < noh; ++ohN){
+                // If this Optohybrid is masked skip it
+                if(!((ohMask >> ohN) & 0x1)){
+                    continue;
+                }
+
+                std::string strOHN = "OH" + std::to_string(ohN) + ".";
+
+                for(int gbtN = 0; gbtN < 3; ++gbtN){
+                    std::string strGBTN = "GBT" + std::to_string(gbtN) + ".";
+
+                    ohLinkMon[ohN].gbtRdy[gbtN] = rsp.get_word(strOHN + strGBTN + "READY");
+                    ohLinkMon[ohN].gbtNotRdy[gbtN] = rsp.get_word(strOHN + strGBTN + "WAS_NOT_READY");
+                    ohLinkMon[ohN].gbtRxOverflow[gbtN] = rsp.get_word(strOHN + strGBTN + "RX_HAD_OVERFLOW");
+                    ohLinkMon[ohN].gbtRxUnderflow[gbtN] = rsp.get_word(strOHN + strGBTN + "RX_HAD_UNDERFLOW");
+                } //End Loop Over GBT
+
+                for(int vfatN = 0; vfatN < 24; ++vfatN){
+                    std::string strVFATN = "VFAT" + std::to_string(vfatN) + ".";
+
+                    vfatLinkMon[ohN].daqCRCErrCnt[vfatN] = rsp.get_word(strOHN + strVFATN + "SYNC_ERR_CNT");
+                    vfatLinkMon[ohN].daqEvtCnt[vfatN] = rsp.get_word(strOHN + strVFATN + "DAQ_EVENT_CNT");
+                    vfatLinkMon[ohN].syncErrCnt[vfatN] = rsp.get_word(strOHN + strVFATN + "DAQ_CRC_ERROR_CNT");
+                } //End Loop Over VFAT
+            } //End Loop Over OH
+        } //End Case: No Error
+    } //End try block
+    STANDARD_CATCH;
+
+    return 0;
+} //End getmonOHLink()
+
 /***
  * @brief get an array of values for OH main monitoring table
  */
@@ -342,3 +430,42 @@ DLLEXPORT uint32_t getmonOHSysmon(struct SysmonMonitor *sysmon, uint32_t noh, ui
 
     return 0;
 } //End getmonOHSysmon()
+
+DLLEXPORT uint32_t getmonVFATLink(struct VFATLinkMonitor *vfatLinkMon, uint32_t noh, bool doReset)
+{
+    req = wisc::RPCMsg("daq_montior.getmonOHLink");
+    req.set_word("NOH",noh);
+    req.set_word("doReset",doReset);
+    wisc::RPCSvc* rpc_loc = getRPCptr();
+    try {
+        rsp = rpc_loc->call_method(req);
+    }
+    STANDARD_CATCH;
+
+    try{
+        if (rsp.get_key_exists("error")) {
+            printf("Error: %s",rsp.get_string("error").c_str());
+            return 1;
+        } else {
+            for(int ohN = 0; ohN < noh; ++ohN){
+                // If this Optohybrid is masked skip it
+                if(!((ohMask >> ohN) & 0x1)){
+                    continue;
+                }
+
+                std::string strOHN = "OH" + std::to_string(ohN) + ".";
+
+                for(int vfatN = 0; vfatN < 24; ++vfatN){
+                    std::string strVFATN = "VFAT" + std::to_string(vfatN) + ".";
+
+                    vfatLinkMon[ohN].daqCRCErrCnt[vfatN] = rsp.get_word(strOHN + strVFATN + "SYNC_ERR_CNT");
+                    vfatLinkMon[ohN].daqEvtCnt[vfatN] = rsp.get_word(strOHN + strVFATN + "DAQ_EVENT_CNT");
+                    vfatLinkMon[ohN].syncErrCnt[vfatN] = rsp.get_word(strOHN + strVFATN + "DAQ_CRC_ERROR_CNT");
+                } //End Loop Over VFAT
+            } //End Loop Over OH
+        } //End Case: No Error
+    } //End try block
+    STANDARD_CATCH;
+
+    return 0;
+} //End getmonVFATLink()
