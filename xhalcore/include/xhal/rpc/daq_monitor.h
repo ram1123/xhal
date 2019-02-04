@@ -10,13 +10,6 @@ struct OHLinkMonitor{
     uint32_t gbtRxUnderflow[3];
 };
 
-struct VFATLinkMonitor{
-    uint32_t daqCRCErrCnt[24];
-    uint32_t daqEvtCnt[24];
-    //uint32_t linkGood[24];
-    uint32_t syncErrCnt[24];
-};
-
 struct SCAMonitor{
     //Temperature Data
     uint32_t ohBoardTemp[9];
@@ -51,6 +44,13 @@ struct SysmonMonitor{
     uint32_t fpgaCoreTemp;
     uint32_t fpgaCore1V0;
     uint32_t fpgaCore2V5_IO;
+};
+
+struct VFATLinkMonitor{
+    uint32_t daqCRCErrCnt[24];
+    uint32_t daqEvtCnt[24];
+    //uint32_t linkGood[24];
+    uint32_t syncErrCnt[24];
 };
 
 DLLEXPORT uint32_t getmonTTCmain(uint32_t* result);
