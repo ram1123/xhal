@@ -187,7 +187,7 @@ DLLEXPORT uint32_t getmonDAQOHmain(uint32_t* result, uint32_t noh, uint32_t ohMa
     return 0;
 }
 
-DLLEXPORT uint32_t getmonGBTLink(struct OHLinkMonitor *ohLinkMon, uint32_t noh, bool doReset)
+DLLEXPORT uint32_t getmonGBTLink(struct OHLinkMonitor *ohLinkMon, uint32_t noh, uint32_t ohMask, bool doReset)
 {
     req = wisc::RPCMsg("daq_montior.getmonGBTLink");
     req.set_word("NOH",noh);
@@ -227,7 +227,7 @@ DLLEXPORT uint32_t getmonGBTLink(struct OHLinkMonitor *ohLinkMon, uint32_t noh, 
     return 0;
 } //End getmonGBTLink()
 
-DLLEXPORT uint32_t getmonOHLink(struct OHLinkMonitor *ohLinkMon, struct VFATLinkMonitor *vfatLinkMon, uint32_t noh, bool doReset)
+DLLEXPORT uint32_t getmonOHLink(struct OHLinkMonitor *ohLinkMon, struct VFATLinkMonitor *vfatLinkMon, uint32_t noh, uint32_t ohMask, bool doReset)
 {
     req = wisc::RPCMsg("daq_montior.getmonOHLink");
     req.set_word("NOH",noh);
@@ -431,7 +431,7 @@ DLLEXPORT uint32_t getmonOHSysmon(struct SysmonMonitor *sysmon, uint32_t noh, ui
     return 0;
 } //End getmonOHSysmon()
 
-DLLEXPORT uint32_t getmonVFATLink(struct VFATLinkMonitor *vfatLinkMon, uint32_t noh, bool doReset)
+DLLEXPORT uint32_t getmonVFATLink(struct VFATLinkMonitor *vfatLinkMon, uint32_t noh, uint32_t ohMask, bool doReset)
 {
     req = wisc::RPCMsg("daq_montior.getmonOHLink");
     req.set_word("NOH",noh);
