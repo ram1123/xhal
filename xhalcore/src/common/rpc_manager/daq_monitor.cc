@@ -49,7 +49,7 @@ DLLEXPORT uint32_t getmonTRIGGERmain(uint32_t* result, uint32_t noh, uint32_t oh
         } else {
             std::string t;
             result[0] = rsp.get_word("OR_TRIGGER_RATE");
-            for (int ohN = 0; ohN < noh; ohN++) {
+            for (unsigned int ohN = 0; ohN < noh; ohN++) {
                 // If this Optohybrid is masked skip it
                 if(!((ohMask >> ohN) & 0x1)){
                     continue;
@@ -83,7 +83,7 @@ DLLEXPORT uint32_t getmonTRIGGEROHmain(uint32_t* result, uint32_t noh, uint32_t 
             return 1;
         }else {
             std::string t;
-            for (int ohN = 0; ohN < noh; ohN++) {
+            for (unsigned int ohN = 0; ohN < noh; ohN++) {
                 // If this Optohybrid is masked skip it
                 if(!((ohMask >> ohN) & 0x1)){
                     continue;
@@ -163,7 +163,7 @@ DLLEXPORT uint32_t getmonDAQOHmain(uint32_t* result, uint32_t noh, uint32_t ohMa
             return 1;
         }else {
             std::string t;
-            for (int ohN = 0; ohN < noh; ohN++) {
+            for (unsigned int ohN = 0; ohN < noh; ohN++) {
                 // If this Optohybrid is masked skip it
                 if(!((ohMask >> ohN) & 0x1)){
                     continue;
@@ -203,7 +203,7 @@ DLLEXPORT uint32_t getmonGBTLink(struct OHLinkMonitor *ohLinkMon, uint32_t noh, 
             printf("Error: %s",rsp.get_string("error").c_str());
             return 1;
         } else {
-            for(int ohN = 0; ohN < noh; ++ohN){
+            for(unsigned int ohN = 0; ohN < noh; ++ohN){
                 // If this Optohybrid is masked skip it
                 if(!((ohMask >> ohN) & 0x1)){
                     continue;
@@ -243,7 +243,7 @@ DLLEXPORT uint32_t getmonOHLink(struct OHLinkMonitor *ohLinkMon, struct VFATLink
             printf("Error: %s",rsp.get_string("error").c_str());
             return 1;
         } else {
-            for(int ohN = 0; ohN < noh; ++ohN){
+            for(unsigned int ohN = 0; ohN < noh; ++ohN){
                 // If this Optohybrid is masked skip it
                 if(!((ohMask >> ohN) & 0x1)){
                     continue;
@@ -295,7 +295,7 @@ DLLEXPORT uint32_t getmonOHmain(uint32_t* result, uint32_t noh, uint32_t ohMask)
             return 1;
         } else {
             std::string t;
-            for (int ohN = 0; ohN < noh; ohN++) {
+            for (unsigned int ohN = 0; ohN < noh; ohN++) {
                 // If this Optohybrid is masked skip it
                 if(!((ohMask >> ohN) & 0x1)){
                     continue;
@@ -337,7 +337,7 @@ DLLEXPORT uint32_t getmonOHSCAmain(struct SCAMonitor *scaMon, uint32_t noh, uint
             printf("Error: %s",rsp.get_string("error").c_str());
             return 1;
         } else {
-            for (int ohN = 0; ohN < noh; ++ohN) {
+            for (unsigned int ohN = 0; ohN < noh; ++ohN) {
                 // If this Optohybrid is masked skip it
                 if(!((ohMask >> ohN) & 0x1)){
                     continue;
@@ -387,7 +387,7 @@ DLLEXPORT uint32_t getmonOHSysmon(struct SysmonMonitor *sysmon, uint32_t noh, ui
             printf("Error: %s",rsp.get_string("error").c_str());
             return 1;
         } else {
-            for (int ohN = 0; ohN < noh; ++ohN) {
+            for (unsigned int ohN = 0; ohN < noh; ++ohN) {
                 // If this Optohybrid is masked skip it
                 if(!((ohMask >> ohN) & 0x1)){
                     continue;
@@ -447,7 +447,7 @@ DLLEXPORT uint32_t getmonVFATLink(struct VFATLinkMonitor *vfatLinkMon, uint32_t 
             printf("Error: %s",rsp.get_string("error").c_str());
             return 1;
         } else {
-            for(int ohN = 0; ohN < noh; ++ohN){
+            for(unsigned int ohN = 0; ohN < noh; ++ohN){
                 // If this Optohybrid is masked skip it
                 if(!((ohMask >> ohN) & 0x1)){
                     continue;
