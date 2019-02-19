@@ -458,9 +458,9 @@ DLLEXPORT uint32_t getmonVFATLink(struct VFATLinkMonitor *vfatLinkMon, uint32_t 
                 for(int vfatN = 0; vfatN < 24; ++vfatN){
                     std::string strVFATN = "VFAT" + std::to_string(vfatN) + ".";
 
-                    vfatLinkMon[ohN].daqCRCErrCnt[vfatN] = rsp.get_word(strOHN + strVFATN + "SYNC_ERR_CNT");
+                    vfatLinkMon[ohN].daqCRCErrCnt[vfatN] = rsp.get_word(strOHN + strVFATN + "DAQ_CRC_ERROR_CNT");
                     vfatLinkMon[ohN].daqEvtCnt[vfatN] = rsp.get_word(strOHN + strVFATN + "DAQ_EVENT_CNT");
-                    vfatLinkMon[ohN].syncErrCnt[vfatN] = rsp.get_word(strOHN + strVFATN + "DAQ_CRC_ERROR_CNT");
+                    vfatLinkMon[ohN].syncErrCnt[vfatN] = rsp.get_word(strOHN + strVFATN + "SYNC_ERR_CNT");
                 } //End Loop Over VFAT
             } //End Loop Over OH
         } //End Case: No Error
