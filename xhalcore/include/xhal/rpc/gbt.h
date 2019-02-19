@@ -8,4 +8,3 @@ DLLEXPORT uint32_t writeGBTConfig(uint32_t ohN, uint32_t gbtN, uint32_t configSi
 DLLEXPORT uint32_t writeGBTPhase(uint32_t ohN, uint32_t vfatN, uint8_t phase);
 
 #endif
-
