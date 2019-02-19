@@ -39,6 +39,43 @@ def configGBT(cardName, listOfconfigFiles, ohMask = 0xfff, nOHs=12):
 
     return
 
+def gbtPhaseScan(cardName, ohMask = 0xfff, nOHs=12, nOfRepetitions=100, silent=True, outputFile=None):
+    """
+    Scan the VFAT phases for all optohybrids defined in ohMask.
+
+    cardName            - network alias of backend AMC
+    ohMask              - ohMask to apply, a 1 in the n^th bit indicates the n^th OH should be considered
+    nOHs                - Number of OH's on this AMC
+    nOfRepetitions      - Number of times the scan is performed.
+    outputFile          - If provided creates a text file with this name and writes phase scan results to the file
+    """
+        
+    rpc_connect(cardName)
+
+    dict_phaseScanResults = {}
+    for ohN in range(nOHs):
+        # Skip masked OH's
+        if( not ((ohMask >> ohN) & 0x1)):
+            continue
+
+        # Scan phases
+        phasesBlob = (c_uint32 * (24*16))()
+        scanGBTPhases(phasesBlob, ohN, nOfRepetitions, 0, 15, 1)
+        dict_phaseScanResults[ohN] = phasesBlob
+
+        # stdout output
+        if not silent:
+            printGBTPhaseScanResults(phasesBlob)
+            pass
+
+        # File output
+        if outputFile is not None:
+            saveGBTPhaseScanResults(outputFile, ohN, phasesBlob, nOfRepetitions)
+            pass
+        pass
+
+    return dict_phaseScanResults
+
 def printGBTPhaseScanResults(phasesBlob):
     from tabulate import tabulate
 
@@ -93,43 +130,6 @@ def saveGBTPhaseScanResults(filename, ohN, phasesBlob, nOfRepetitions=100):
         f.write(header)
         writer = csv.writer(f, delimiter = ' ')
         writer.writerows(data)
-
-def scanGBTPhases(cardName, ohMask = 0xfff, nOHs=12, nOfRepetitions=100, silent=True, outputFile=None):
-    """
-    Scan the VFAT phases for all optohybrids defined in ohMask.
-
-    cardName            - network alias of backend AMC
-    ohMask              - ohMask to apply, a 1 in the n^th bit indicates the n^th OH should be considered
-    nOHs                - Number of OH's on this AMC
-    nOfRepetitions      - Number of times the scan is performed.
-    outputFile          - If provided creates a text file with this name and writes phase scan results to the file
-    """
-        
-    rpc_connect(cardName)
-
-    dict_phaseScanResults = {}
-    for ohN in range(nOHs):
-        # Skip masked OH's
-        if( not ((ohMask >> ohN) & 0x1)):
-            continue
-
-        # Scan phases
-        phasesBlob = (c_uint32 * (24*16))()
-        scanGBTPhases(phasesBlob, ohN, nOfRepetitions, 0, 15, 1)
-        dict_phaseScanResults[ohN] = phasesBlob
-
-        # stdout output
-        if not silent:
-            printGBTPhaseScanResults(phasesBlob)
-            pass
-
-        # File output
-        if outputFile is not None:
-            saveGBTPhaseScanResults(outputFile, ohN, phasesBlob, nOfRepetitions)
-            pass
-        pass
-
-    return dict_phaseScanResults
 
 def setPhase(cardName, ohN, vfatN, phase):
     """
