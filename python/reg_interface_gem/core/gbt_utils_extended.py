@@ -168,9 +168,9 @@ def setPhaseAllVFATs(cardName, ohN, listOfPhases, debug=False):
             print("Setting Phase {0} to OH{1} VFAT{2}".format(phase,ohN,vfat))
             pass
 
-        writeGBTPhase(ohN, vfatN, phase)
+        rpcRsp = writeGBTPhase(ohN, vfat, phase)
         if rpcRsp > 0:
-            raise RuntimeError("Failed to write phase {0} to VFAT{1} of OH{2}".format(phase,vfatN,ohN))
+            raise RuntimeError("Failed to write phase {0} to VFAT{1} of OH{2}".format(phase,vfat,ohN))
         pass
 
     return
@@ -199,9 +199,9 @@ def setPhaseAllOHs(cardName, dictOfPhases, ohMask=0xfff, nOHs=12, debug=False):
                 print("Setting Phase {0} to OH{1} VFAT{2}".format(phase,ohN,vfat))
                 pass
 
-            writeGBTPhase(ohN, vfatN, phase)
+            rpcRsp = writeGBTPhase(ohN, vfat, phase)
             if rpcRsp > 0:
-                raise RuntimeError("Failed to write phase {0} to VFAT{1} of OH{2}".format(phase,vfatN,ohN))
+                raise RuntimeError("Failed to write phase {0} to VFAT{1} of OH{2}".format(phase,vfat,ohN))
             pass
         pass
 
