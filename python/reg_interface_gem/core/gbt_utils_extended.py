@@ -137,6 +137,7 @@ def setPhase(cardName, ohN, vfatN, phase):
 
     V3 electronics only.
 
+    cardName - network alias of backend AMC
     ohN - OptoHybrid to configure.
     vaftN - VFAT to configure.
     phase - Phase value to write. (Min = 0; max = 15).
@@ -150,9 +151,38 @@ def setPhase(cardName, ohN, vfatN, phase):
     
     return
 
-def setPhaseAllOHs(cardName, vfatN, phase, ohMask=0xfff, nOHs=12):
+def setPhaseAllVFATs(cardName, ohN, listOfPhases, debug=False):
+    """
+    Writes all vfat phases on the provided ohN.
+ 
+    cardName - network alias of backend AMC
+    ohN - OptoHybrid to configure.
+    listOfPhases - List of phases to write, list position should follow vfat position
+    """
+
+    rpc_connect(cardName)
+
+    for vfat,phase in enumerate(listOfPhases):
+        if debug:
+            print("Setting Phase {0} to OH{1} VFAT{2}".format(phase,ohN,vfat))
+            pass
+
+        writeGBTPhase(ohN, vfatN, phase)
+        if rpcRsp > 0:
+            raise RuntimeError("Failed to write phase {0} to VFAT{1} of OH{2}".format(phase,vfatN,ohN))
+        pass
+
+    return
+
+def setVFATPhaseAllOHs(cardName, vfatN, phase, ohMask=0xfff, nOHs=12):
     """
     For all OH's in ohMask writes the phase to the specified vfat
+    
+    cardName - network alias of backend AMC
+    vaftN - VFAT to configure.
+    phase - Phase value to write. (Min = 0; max = 15).
+    ohMask - ohMask to apply, a 1 in the n^th bit indicates the n^th OH should be considered
+    nOHs   - Number of OH's on this AMC
     """
 
     rpc_connect(cardName)
