@@ -139,7 +139,7 @@ def setPhase(cardName, ohN, vfatN, phase):
 
     cardName - network alias of backend AMC
     ohN - OptoHybrid to configure.
-    vaftN - VFAT to configure.
+    vfatN - VFAT to configure.
     phase - Phase value to write. (Min = 0; max = 15).
     """
 
@@ -155,9 +155,10 @@ def setPhaseAllVFATs(cardName, ohN, listOfPhases, debug=False):
     """
     Writes all vfat phases on the provided ohN.
  
-    cardName - network alias of backend AMC
-    ohN - OptoHybrid to configure.
+    cardName     - network alias of backend AMC
+    ohN          - OptoHybrid to configure.
     listOfPhases - List of phases to write, list position should follow vfat position
+    debug        - prints additional debugging info
     """
 
     rpc_connect(cardName)
@@ -174,15 +175,16 @@ def setPhaseAllVFATs(cardName, ohN, listOfPhases, debug=False):
 
     return
 
-def setVFATPhaseAllOHs(cardName, vfatN, phase, ohMask=0xfff, nOHs=12):
+def setPhaseAllOHs(cardName, dictOfPhases, ohMask=0xfff, nOHs=12, debug=False):
     """
-    For all OH's in ohMask writes the phase to the specified vfat
+    For all OH's in ohMask writes the phase for all VFATs
     
     cardName - network alias of backend AMC
-    vaftN - VFAT to configure.
-    phase - Phase value to write. (Min = 0; max = 15).
+    dictOfPhases - dictionary where key is OH number, each key stores a list of phases for each vfat, 
+                   the index of the list should match the vfat position
     ohMask - ohMask to apply, a 1 in the n^th bit indicates the n^th OH should be considered
     nOHs   - Number of OH's on this AMC
+    debug - prints additional debugging info
     """
 
     rpc_connect(cardName)
@@ -192,9 +194,15 @@ def setVFATPhaseAllOHs(cardName, vfatN, phase, ohMask=0xfff, nOHs=12):
         if( not ((ohMask >> ohN) & 0x1)):
             continue
 
-        rpcRsp = writeGBTPhase(ohN, vfatN, phase)
-        if rpcRsp > 0:
-            raise RuntimeError("Failed to write phase {0} to VFAT{1} of OH{2}".format(phase,vfatN,ohN))
+        for vfat,phase in enumerate(dictOfPhases[ohN]):
+            if debug:
+                print("Setting Phase {0} to OH{1} VFAT{2}".format(phase,ohN,vfat))
+                pass
+
+            writeGBTPhase(ohN, vfatN, phase)
+            if rpcRsp > 0:
+                raise RuntimeError("Failed to write phase {0} to VFAT{1} of OH{2}".format(phase,vfatN,ohN))
+            pass
         pass
 
     return
