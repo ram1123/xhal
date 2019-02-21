@@ -447,10 +447,6 @@ DLLEXPORT uint32_t getmonVFATLink(struct VFATLinkMonitor *vfatLinkMon, uint32_t 
             printf("Error: %s",rsp.get_string("error").c_str());
             return 1;
         } else {
-            if (rsp.get_key_exists("warning")){
-                printf("Warning: %s",rsp.get_string("warning").c_str());
-            }
-
             for(unsigned int ohN = 0; ohN < noh; ++ohN){
                 // If this Optohybrid is masked skip it
                 if(!((ohMask >> ohN) & 0x1)){
