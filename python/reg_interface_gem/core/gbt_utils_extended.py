@@ -65,6 +65,9 @@ def gbtPhaseScan(cardName, ohMask = 0xfff, nOHs=12, nOfRepetitions=100, silent=T
 
         # stdout output
         if not silent:
+            print("="*20)
+            print("Phase Scan Results for OH{0}".format(ohN))
+            print("="*20)
             printGBTPhaseScanResults(phasesBlob)
             pass
 
@@ -157,13 +160,18 @@ def setPhaseAllVFATs(cardName, ohN, listOfPhases, debug=False):
  
     cardName     - network alias of backend AMC
     ohN          - OptoHybrid to configure.
-    listOfPhases - List of phases to write, list position should follow vfat position
+    listOfPhases - List of phases to write, list position should follow vfat position.
+                   If phase is assigned as 0xdeaddead it will not be written
     debug        - prints additional debugging info
     """
 
     rpc_connect(cardName)
 
     for vfat,phase in enumerate(listOfPhases):
+            if phase == 0xdeaddead:
+                print("Bad phase for OH{0} VFAT{1}".format(ohN,vfat))
+                continue
+
         if debug:
             print("Setting Phase {0} to OH{1} VFAT{2}".format(phase,ohN,vfat))
             pass
@@ -181,7 +189,8 @@ def setPhaseAllOHs(cardName, dictOfPhases, ohMask=0xfff, nOHs=12, debug=False):
     
     cardName - network alias of backend AMC
     dictOfPhases - dictionary where key is OH number, each key stores a list of phases for each vfat, 
-                   the index of the list should match the vfat position
+                   the index of the list should match the vfat position.
+                   If phase is assigned as 0xdeaddead it will not be written
     ohMask - ohMask to apply, a 1 in the n^th bit indicates the n^th OH should be considered
     nOHs   - Number of OH's on this AMC
     debug - prints additional debugging info
@@ -195,6 +204,10 @@ def setPhaseAllOHs(cardName, dictOfPhases, ohMask=0xfff, nOHs=12, debug=False):
             continue
 
         for vfat,phase in enumerate(dictOfPhases[ohN]):
+            if phase == 0xdeaddead:
+                print("Bad phase for OH{0} VFAT{1}".format(ohN,vfat))
+                continue
+
             if debug:
                 print("Setting Phase {0} to OH{1} VFAT{2}".format(phase,ohN,vfat))
                 pass
