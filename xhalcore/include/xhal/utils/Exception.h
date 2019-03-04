@@ -26,7 +26,7 @@ namespace xhal {                                                         \
                                                                          \
         }                                                                \
                                                                          \
-        virtual const char* what() {                                     \
+        virtual const char* what() const noexcept (true) override {      \
             return msg.c_str();                                          \
         }                                                                \
                                                                          \
