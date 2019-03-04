@@ -3,6 +3,13 @@
 
 #include "xhal/rpc/utils.h"
 
+struct OHLinkMonitor{
+    uint32_t gbtRdy[3];
+    uint32_t gbtNotRdy[3];
+    uint32_t gbtRxOverflow[3];
+    uint32_t gbtRxUnderflow[3];
+};
+
 struct SCAMonitor{
     //Temperature Data
     uint32_t ohBoardTemp[9];
@@ -39,13 +46,23 @@ struct SysmonMonitor{
     uint32_t fpgaCore2V5_IO;
 };
 
+struct VFATLinkMonitor{
+    uint32_t daqCRCErrCnt[24];
+    uint32_t daqEvtCnt[24];
+    //uint32_t linkGood[24];
+    uint32_t syncErrCnt[24];
+};
+
 DLLEXPORT uint32_t getmonTTCmain(uint32_t* result);
 DLLEXPORT uint32_t getmonTRIGGERmain(uint32_t* result, uint32_t noh = 12, uint32_t ohMask = 0xfff);
 DLLEXPORT uint32_t getmonTRIGGEROHmain(uint32_t* result, uint32_t noh = 12, uint32_t ohMask = 0xff);
 DLLEXPORT uint32_t getmonDAQmain(uint32_t* result);
 DLLEXPORT uint32_t getmonDAQOHmain(uint32_t* result, uint32_t noh = 12, uint32_t ohMask = 0xfff);
+DLLEXPORT uint32_t getmonGBTLink(struct OHLinkMonitor *ohLinkMon, uint32_t noh = 12, uint32_t ohMask = 0xfff, bool doReset = false);
+DLLEXPORT uint32_t getmonOHLink(struct OHLinkMonitor *ohLinkMon, struct VFATLinkMonitor *vfatLinkMon, uint32_t noh = 12, uint32_t ohMask = 0xfff, bool doReset = false);
 DLLEXPORT uint32_t getmonOHmain(uint32_t* result, uint32_t noh = 12, uint32_t ohMask = 0xfff);
 DLLEXPORT uint32_t getmonOHSCAmain(struct SCAMonitor *scaMon, uint32_t noh = 12, uint32_t ohMask = 0xfff);
 DLLEXPORT uint32_t getmonOHSysmon(struct SysmonMonitor *sysmon, uint32_t noh =12, uint32_t ohMask = 0xfff, bool doReset=false);
+DLLEXPORT uint32_t getmonVFATLink(struct VFATLinkMonitor *vfatLinkMon, uint32_t noh =12, uint32_t ohMask = 0xfff, bool doReset = false);
 
 #endif

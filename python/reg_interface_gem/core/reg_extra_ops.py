@@ -42,6 +42,18 @@ rList = lib.getList
 rList.restype = c_uint
 rList.argtypes=[POINTER(c_uint32),POINTER(c_uint32)]
 
+scanGBTPhases = lib.scanGBTPhases
+scanGBTPhases.restype = c_uint
+scanGBTPhases.argtype = [POINTER(c_uint), c_uint, c_uint, c_uint, c_uint, c_uint]
+
 update_atdb = lib.update_atdb
 update_atdb.argtypes = [c_char_p]
 update_atdb.restype = c_uint
+
+writeGBTConfig = lib.writeGBTConfig
+writeGBTConfig.restype = c_uint
+writeGBTConfig.argtype = [c_uint, c_uint, c_uint, POINTER(c_char)]
+
+writeGBTPhase = lib.writeGBTPhase
+writeGBTPhase.restype = c_uint
+writeGBTPhase.argtype = [c_uint, c_uint, c_char]
