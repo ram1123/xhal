@@ -110,9 +110,9 @@ DLLEXPORT uint32_t sbitReadOut(uint32_t ohN, uint32_t acquireTime, char * outFil
             return 1;
         }
 
-        fileTrigData<<"evtNum/i:";
+        fileTrigData<<"evtNum/I:";
         for(int cluster=0; cluster < 8; ++cluster){
-            fileTrigData<<"sbitClusterData" << cluster << "/i:";
+            fileTrigData<<"sbitClusterData" << cluster << "/I:";
         }
         fileTrigData<<std::endl;
 
