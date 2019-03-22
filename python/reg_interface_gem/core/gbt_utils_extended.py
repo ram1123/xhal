@@ -168,9 +168,9 @@ def setPhaseAllVFATs(cardName, ohN, listOfPhases, debug=False):
     rpc_connect(cardName)
 
     for vfat,phase in enumerate(listOfPhases):
-            if phase == 0xdeaddead:
-                print("Bad phase for OH{0} VFAT{1}".format(ohN,vfat))
-                continue
+        if phase == 0xdeaddead:
+            print("Bad phase for OH{0} VFAT{1}".format(ohN,vfat))
+            continue
 
         if debug:
             print("Setting Phase {0} to OH{1} VFAT{2}".format(phase,ohN,vfat))
