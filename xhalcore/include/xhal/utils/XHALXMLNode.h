@@ -61,6 +61,8 @@ namespace xhal {
           //print 'Description:',self.description
           //print 'Address:','{0:#010x}'.format(self.address)
           //print 'Permission:',self.permission
+          //print 'Mode:',self.mode
+          //print 'Size:',self.size
           //print 'Mask:','{0:#010x}'.format(self.mask)
           //print 'Module:',self.isModule
           //print 'Parent:',self.parent.name
@@ -90,6 +92,8 @@ namespace xhal {
         uint32_t address;
         uint32_t real_address;
         std::string permission;
+        std::string mode;
+        uint32_t size;
         uint32_t mask;
         bool isModule;
         Node *parent;
