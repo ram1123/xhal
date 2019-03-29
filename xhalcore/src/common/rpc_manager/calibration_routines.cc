@@ -252,20 +252,16 @@ DLLEXPORT uint32_t genChannelScan(uint32_t nevts, uint32_t ohN, uint32_t mask, u
     return 0;
 } //End genChannelScan()
 
-DLLEXPORT uint32_t sbitRateScan(uint32_t ohN, uint32_t dacMin, uint32_t dacMax, uint32_t dacStep, uint32_t ch, uint32_t maskOh, bool invertVFATPos, char * scanReg, uint32_t waitTime, uint32_t * resultDacVal, uint32_t * resultTrigRate, uint32_t * resultTrigRatePerVFAT, bool isParallel){
+DLLEXPORT uint32_t sbitRateScan(uint32_t ohMask, uint32_t dacMin, uint32_t dacMax, uint32_t dacStep, uint32_t ch, char * scanReg, uint32_t * resultDacVal, uint32_t * resultTrigRate, uint32_t * resultTrigRatePerVFAT)
+{
     req = wisc::RPCMsg("calibration_routines.sbitRateScan");
 
-
-    req.set_word("ohN", ohN);
-    req.set_word("maskOh", maskOh);
-    req.set_word("invertVFATPos", invertVFATPos);
-    req.set_word("isParallel", isParallel);
     req.set_word("dacMin", dacMin);
     req.set_word("dacMax", dacMax);
     req.set_word("dacStep", dacStep);
     req.set_word("ch", ch);
+    req.set_word("ohMask", ohMask);
     req.set_string("scanReg", std::string(scanReg));
-    req.set_word("waitTime", waitTime);
 
     wisc::RPCSvc* rpc_loc = getRPCptr();
 
@@ -274,7 +270,7 @@ DLLEXPORT uint32_t sbitRateScan(uint32_t ohN, uint32_t dacMin, uint32_t dacMax, 
         printf("Caught an error: (dacMax - dacMin + 1)/dacStep must be an integer!\n");
         return 1;
     }
-    const uint32_t size = (dacMax - dacMin+1)/dacStep;
+    const uint32_t size = 12 * (dacMax - dacMin+1)/dacStep;
 
     try {
         rsp = rpc_loc->call_method(req);
@@ -302,15 +298,13 @@ DLLEXPORT uint32_t sbitRateScan(uint32_t ohN, uint32_t dacMin, uint32_t dacMax, 
         return 1;
     }
 
-    if(isParallel){
-        if (rsp.get_key_exists("outDataVFATRate")) {
-            ASSERT(rsp.get_word_array_size("outDataVFATRate") == (size*24));
-            rsp.get_word_array("outDataVFATRate", resultTrigRatePerVFAT);
-        }
-        else{
-            printf("No key found for data trigger rate per vfat values\n");
-            return 1;
-        }
+    if (rsp.get_key_exists("outDataVFATRate")) {
+        ASSERT(rsp.get_word_array_size("outDataVFATRate") == (size*24));
+        rsp.get_word_array("outDataVFATRate", resultTrigRatePerVFAT);
+    }
+    else{
+        printf("No key found for data trigger rate per vfat values\n");
+        return 1;
     }
 
     return 0;
