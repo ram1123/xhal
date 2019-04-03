@@ -29,6 +29,14 @@ DLLEXPORT uint32_t configureVFAT3DacMonitorMultiLink(uint32_t ohMask, uint32_t *
  */
 DLLEXPORT uint32_t getChannelRegistersVFAT3(uint32_t ohN, uint32_t vfatMask, uint32_t *chanRegData);
 
+/*! \fn DLLEXPORT uint32_t getVFAT3ChipIDs(uint32_t ohN, uint32_t vfatMask=0xFF000000, bool rawID=false)
+ *  \param chipIDData Array of size 24 that will hold the VFAT ChipID data
+ *  \param ohN Optohybrid optical link number
+ *  \param vfatMask Bitmask of chip positions determining which chips to use
+ *  \param rawID If true the rawID will be returned and reed-muller decoding will not be performed
+ */
+DLLEXPORT uint32_t getVFAT3ChipIDs(uint32_t * chipIDData, uint32_t ohN, uint32_t vfatMask=0xFF000000, bool rawID=false);
+
 /*! \fn DLLEXPORT uint32_t readVFAT3ADC(uint32_t ohN, uint32_t *adcData, bool useExtRefADC=false, uint32_t vfatMask=0xFF000000)
  *  \brief Reads the ADC value from all unmasked VFATs
  *  \param adcData pointer to the array containing the ADC results; length of array is expected to be 24

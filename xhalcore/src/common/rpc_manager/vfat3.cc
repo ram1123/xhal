@@ -94,6 +94,38 @@ DLLEXPORT uint32_t getChannelRegistersVFAT3(uint32_t ohN, uint32_t vfatMask, uin
     return 0;
 }
 
+DLLEXPORT uint32_t getVFAT3ChipIDs(uint32_t * chipIDData, uint32_t ohN, uint32_t vfatMask, bool rawID)
+{
+    req = wisc::RPCMsg("vfat3.getVFAT3ChipIDs");
+
+    req.set_word("ohN",ohN);
+    req.set_word("vfatMask",vfatMask);
+    req.set_word("rawID",rawID);
+
+    wisc::RPCSvc* rpc_loc = getRPCptr();
+
+    try {
+        rsp = rpc_loc->call_method(req);
+    }
+    STANDARD_CATCH;
+
+    if (rsp.get_key_exists("error")) {
+        printf("Caught an error: %s\n", (rsp.get_string("error")).c_str());
+        return 1;
+    }
+
+    std::string regBase = "GEM_AMC.OH.OH" + std::to_string(ohN) + ".GEB.VFAT";
+    for(int vfat=0; vfat < 24; ++vfat)
+    {
+        if((vfatMask >> vfat) & 0x1){
+            continue;
+        }
+        chipIDData[vfat] = rsp.get_word(regBase + std::to_string(vfat) + ".HW_CHIP_ID");
+    }
+
+    return 0;
+} //End getVFAT3ChipIDs()
+
 DLLEXPORT uint32_t readVFAT3ADC(uint32_t ohN, uint32_t *adcData, bool useExtRefADC, uint32_t vfatMask){
     req = wisc::RPCMsg("vfat3.readVFAT3ADC");
 
