@@ -1,7 +1,7 @@
 SUBPACKAGES := \
         python \
-	xhalarm \
-        xhalcore
+        xhalcore \
+        xhalarm
 
 SUBPACKAGES.DEBUG    := $(patsubst %,%.debug,    $(SUBPACKAGES))
 SUBPACKAGES.RPM      := $(patsubst %,%.rpm,      $(SUBPACKAGES))
