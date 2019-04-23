@@ -115,11 +115,11 @@ def saveGBTPhaseScanResults(filename, ohN, phasesBlob, nOfRepetitions=100):
     import csv
 
     # Header for the ROOT file
-    header = "ohN/I;"
+    header = "ohN/I:"
     header += "vfatN/I:"
     header += "phase/I:"
     header += "nRepetitions/I:"
-    header += "nSuccesses/I"
+    header += "nSuccesses/I\n"
 
     # Parse the data
     data = []
