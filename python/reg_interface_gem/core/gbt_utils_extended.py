@@ -119,7 +119,7 @@ def saveGBTPhaseScanResults(filename, ohN, phasesBlob, nOfRepetitions=100):
     header += "vfatN/I:"
     header += "phase/I:"
     header += "nRepetitions/I:"
-    header += "nSuccesses/I"
+    header += "nSuccesses/I\n"
 
     # Parse the data
     data = []
