@@ -2,6 +2,23 @@
 
 wisc::RPCSvc* getRPCptr(){return &rpc;}
 
+DLLEXPORT uint32_t deinit()
+{
+    try {
+        rpc.disconnect();
+    }
+    catch (wisc::RPCSvc::NotConnectedException &e) {
+        printf("Caught exception: Cannot disconnect because I wasn't connected: %s\n", e.message.c_str());
+        return 0;
+    }
+    catch (wisc::RPCSvc::RPCException &e) {
+        printf("Caught exception: %s\n", e.message.c_str());
+        return 1;
+    }
+
+    return 0;
+}
+
 DLLEXPORT uint32_t init(char * hostname)
 {
     try {

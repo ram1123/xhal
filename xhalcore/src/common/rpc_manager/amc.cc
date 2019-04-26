@@ -51,6 +51,36 @@ DLLEXPORT uint32_t getOHVFATMaskMultiLink(uint32_t ohMask, uint32_t * ohVfatMask
     return 0;
 } //End getOHVFATMaskMultiLink(...)
 
+DLLEXPORT uint32_t repeatedRegRead( const char * regName, uint32_t nReads, bool breakOnFailure)
+{
+    req = wisc::RPCMsg("amc.repeatedRegRead");
+
+    //Not sure what the best way using ctypes in python is to get a list of strings
+    //An array of char's might be better? But then do they need to have same length...?
+    std::vector<std::string> vec_regList;
+    vec_regList.push_back(regName); //type assignment issue? Maybe case this as a string first...?
+
+    //Set the request keys
+    req.set_string_array("regList",vec_regList);
+    req.set_word("nReads",nReads);
+    req.set_word("breakOnFailure",breakOnFailure);
+
+    wisc::RPCSvc* rpc_loc = getRPCptr();
+
+    try{
+        rsp = rpc_loc->call_method(req);
+    }
+    STANDARD_CATCH;
+
+    if (rsp.get_key_exists("error")){
+        printf("Caught an error: %s\n", (rsp.get_string("error")).c_str());
+        //throw xhal::utils::Exception(strcat("repeatedRegRead: caught an error:", rsp.get_string("error").c_str()));
+        return 0xffffffff;
+    }
+
+    return rsp.get_word("SUM");
+} //End repeatedRegRead
+
 DLLEXPORT uint32_t sbitReadOut(uint32_t ohN, uint32_t acquireTime, char * outFilePath){
     req = wisc::RPCMsg("amc.sbitReadOut");
 

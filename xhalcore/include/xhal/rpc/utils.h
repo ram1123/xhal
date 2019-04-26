@@ -25,7 +25,7 @@
 	catch (wisc::RPCMsg::BadKeyException &e) { \
 		printf("Caught exception: %s\n", e.key.c_str()); \
 		return 0xdeaddead; \
-	} 
+	}
 
 #define ASSERT(x) do { \
     if (!(x)) { \
@@ -38,7 +38,8 @@ static wisc::RPCSvc rpc;
 static wisc::RPCMsg req, rsp;
 
 wisc::RPCSvc* getRPCptr();
-DLLEXPORT uint32_t init(char * hostname);
+DLLEXPORT uint32_t deinit();                //disconnect
+DLLEXPORT uint32_t init(char * hostname);   //connect
 DLLEXPORT uint32_t getReg(uint32_t address);
 DLLEXPORT uint32_t putReg(uint32_t address, uint32_t value);
 DLLEXPORT uint32_t getList(uint32_t* addresses, uint32_t* result, ssize_t size);
