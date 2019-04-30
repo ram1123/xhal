@@ -16,6 +16,9 @@ if __name__ == '__main__':
     if options.exe:
         parseXML()
         if (options.hostname):
+            if (options.hostname == ""):
+                print 'Please provide non-empty hostname'
+                exit
             if (rpc_connect(options.hostname)):
                 print '[Connection error] RPC connection failed'
                 exit
