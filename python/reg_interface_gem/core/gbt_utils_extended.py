@@ -129,9 +129,24 @@ def saveGBTPhaseScanResults(filename, ohN, phasesBlob, nOfRepetitions=100):
             data.append([ohN, vfatN, phase, nOfRepetitions, nOfSuccesses])
 
     # Write the file
-    with open(filename, 'wb') as f:
-        f.write(header)
-        writer = csv.writer(f, delimiter = ' ')
+    # FIXME (Python 3) : The file cannot be opened in binary mode for the csv writer.
+    with open(filename, 'a+b') as f:
+        # Write header for empty (new) files
+        f.seek(0, 2) # Go to EOF
+        if f.tell() == 0:
+            f.write(header)
+
+        # Sanity checks
+        f.seek(0, 0) # Go to SOF
+        if f.readline() != header:
+            raise RuntimeError("The provided file ({0}) is either corrupted or not a GBT phase scan results file (invalid header).".format(filename))
+
+        f.seek(-1, 2) # Go to last character
+        if f.read(1) != '\n':
+            raise RuntimeError("The provided file ({0}) is either corrupted or not a GBT phase scan results file (no EOL before EOF).".format(filename))
+
+        # Write data
+        writer = csv.writer(f, delimiter = ' ', lineterminator = '\n')
         writer.writerows(data)
 
 def setPhase(cardName, ohN, vfatN, phase):
