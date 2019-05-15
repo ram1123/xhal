@@ -10,10 +10,18 @@ wReg.argtypes=[c_uint,c_uint]
 rpc_connect = lib.init
 rpc_connect.argtypes = [c_char_p]
 rpc_connect.restype = c_uint
+rpc_disconnect = lib.deinit
+rpc_disconnect.argtypes = [ ]
+rpc_disconnect.restype = c_uint
 
 rBlock = lib.getBlock
 rBlock.restype = c_uint
 rBlock.argtypes=[c_uint,POINTER(c_uint32)]
+
+repeatedRead = lib.repeatedRegRead
+repeatedRead.argtypes = [c_char_p, c_uint, c_bool ]
+repeatedRead.restype = c_uint
+
 getRPCTTCmain = lib.getmonTTCmain
 getRPCTTCmain.argtypes = [POINTER(c_uint32)]
 getRPCTTCmain.restype = c_uint

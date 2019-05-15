@@ -2,6 +2,10 @@
 #define AMC_H
 
 #include "xhal/rpc/utils.h"
+#include "xhal/utils/Exception.h"
+
+#include<vector>
+#include<string>
 
 /*! \fn DLLEXPORT uint32_t getOHVFATMask(uint32_t ohN, uint32_t * vfatMask)
  *  \brief Determines the vfatMask for optohybrid ohN.
@@ -17,6 +21,15 @@ DLLEXPORT uint32_t getOHVFATMask(uint32_t ohN);
  *  \param ohVfatMaskArray Pointer to an array of length 12.  After the call completes each element will be the bitmask of chip positions determining which chips to use for the optohybrid number corresponding to the element index.
  */
 DLLEXPORT uint32_t getOHVFATMaskMultiLink(uint32_t ohMask, uint32_t * ohVfatMaskArray);
+
+/*! \fn DLLEXPORT uint32_t repeatedRegRead( const char * regName, uint32_t nReads, bool breakOnFailure)
+ *  \brief repeatedly reads the register regName up to nReads number of times
+ *  \param regName full node name of the register to be read
+ *  \param nReads maximum number of read attempts to be performed
+ *  \param breakOnFailure if true the read process will stop before nReads is reached if a single read fails
+ *  \returns sum of VFAT slow control error counters
+ */
+DLLEXPORT uint32_t repeatedRegRead( const char * regName, uint32_t nReads=1000, bool breakOnFailure=true);
 
 /*! \fn DLLEXPORT uint32_t sbitReadOut(uint32_t ohN, uint32_t acquireTime, uint32_t * approxLiveTime, bool * maxNetworkSizeReached, uint32_t * storedSbits)
  *  \brief SBIT readout from optohybrid ohN for a number of seconds given by acquireTime; data is written to a file directory specified by outFilePath
