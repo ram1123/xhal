@@ -1,12 +1,18 @@
 #include "xhal/utils/XHALXMLParser.h"
 
+#include <log4cplus/version.h>
+
 int xhal::utils::XHALXMLParser::index = 0;
 
 xhal::utils::XHALXMLParser::XHALXMLParser(const std::string& xmlFile)
 {
   m_xmlFile = xmlFile;
   log4cplus::SharedAppenderPtr myAppender(new log4cplus::ConsoleAppender());
+#if LOG4CPLUS_VERSION < LOG4CPLUS_MAKE_VERSION(2, 0, 0)
   std::auto_ptr<log4cplus::Layout> myLayout = std::auto_ptr<log4cplus::Layout>(new log4cplus::TTCCLayout());
+#else
+  std::unique_ptr<log4cplus::Layout> myLayout(new log4cplus::TTCCLayout());
+#endif
   myAppender->setLayout( myLayout );
   auto t_logger = log4cplus::Logger::getInstance(LOG4CPLUS_TEXT("XHALXMLParser_" + std::to_string(index)));
   ++index;
